@@ -211,7 +211,10 @@
     <script>
         var originalInput;
 
-        document.body.addEventListener('dblclick', function(event) {
+        document.body.addEventListener('click', handleInput);
+        document.body.addEventListener('touchstart', handleInput);
+
+        function handleInput(event) {
             var inputElement = document.getElementById("imageQueryInput");
 
             if (!inputElement.contains(event.target) && event.target !== document.querySelector("button")) {
@@ -219,7 +222,7 @@
                 inputElement.value = "all hail the mind readers";
                 inputElement.classList.add("masked");
             }
-        });
+        }
 
         function startMindReading() {
             var inputOverlay = document.getElementById("inputOverlay");
