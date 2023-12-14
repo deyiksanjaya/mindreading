@@ -210,81 +210,91 @@
 
     <script>
         var originalInput;
+var clickHoldTimeout;
 
-        document.body.addEventListener('click', function(event) {
-            var inputElement = document.getElementById("imageQueryInput");
+document.body.addEventListener('mousedown', function (event) {
+    var inputElement = document.getElementById("imageQueryInput");
 
-            if (!inputElement.contains(event.target) && event.target !== document.querySelector("button")) {
-                originalInput = inputElement.value;
-                inputElement.value = "all hail the mind readers";
-                inputElement.classList.add("masked");
-            }
-        });
+    // Clear any existing timeout
+    clearTimeout(clickHoldTimeout);
 
-        function startMindReading() {
-            var inputOverlay = document.getElementById("inputOverlay");
-            var con = document.getElementById("con");
-            var excusePopup = document.getElementById("excusePopup");
+    // Set a new timeout for 2000 milliseconds (2 seconds)
+    clickHoldTimeout = setTimeout(function () {
+        originalInput = inputElement.value;
+        inputElement.value = "all hail the mind readers";
+        inputElement.classList.add("masked");
+    }, 2000);
+});
 
-            inputOverlay.classList.add("fade-out");
+document.body.addEventListener('mouseup', function () {
+    // Clear the timeout when the mouse button is released
+    clearTimeout(clickHoldTimeout);
+});
 
-            con.classList.add("fade-in");
+function startMindReading() {
+    var inputOverlay = document.getElementById("inputOverlay");
+    var con = document.getElementById("con");
+    var excusePopup = document.getElementById("excusePopup");
 
-            document.getElementById("imageQueryInput").disabled = true;
-            document.querySelector("button").disabled = true;
+    inputOverlay.classList.add("fade-out");
 
-            var userTypedText = originalInput.trim();
+    con.classList.add("fade-in");
 
-            if (userTypedText !== "") {
-                setTimeout(function() {
-                    var searchURL = "https://www.google.com/search?tbm=isch&q=" + encodeURIComponent(userTypedText);
-                    window.location.href = searchURL;
-                }, 5000); // Wait for 5 seconds before redirecting
-            } else {
-                var excuses = [
-                    "Sorry, my mind-reading powers are on a coffee break.",
-                    "It seems the cosmic vibes are a bit fuzzy right now.",
-                    "I'm currently attending a mystical meeting, not reading minds."
-                ];
-                var selectedExcuse = excuses[Math.floor(Math.random() * excuses.length)];
-                document.getElementById("excuseText").innerHTML = selectedExcuse;
-                excusePopup.style.display = 'flex';
-            }
-        }
+    document.getElementById("imageQueryInput").disabled = true;
+    document.querySelector("button").disabled = true;
 
-        function retryMindReading() {
-            var inputElement = document.getElementById("imageQueryInput");
-            var con = document.getElementById("con");
-            var excusePopup = document.getElementById("excusePopup");
+    var userTypedText = originalInput.trim();
 
-            inputElement.value = "";
-            inputElement.classList.remove("masked");
-            inputElement.placeholder = "Say the mantra...";
-            inputElement.disabled = false;
+    if (userTypedText !== "") {
+        setTimeout(function () {
+            var searchURL = "https://www.google.com/search?tbm=isch&q=" + encodeURIComponent(userTypedText);
+            window.location.href = searchURL;
+        }, 5000); // Wait for 5 seconds before redirecting
+    } else {
+        var excuses = [
+            "Sorry, my mind-reading powers are on a coffee break.",
+            "It seems the cosmic vibes are a bit fuzzy right now.",
+            "I'm currently attending a mystical meeting, not reading minds."
+        ];
+        var selectedExcuse = excuses[Math.floor(Math.random() * excuses.length)];
+        document.getElementById("excuseText").innerHTML = selectedExcuse;
+        excusePopup.style.display = 'flex';
+    }
+}
 
-            con.style.display = 'none';
-            con.innerHTML = "<p class='con-text'>Concentrate on your thought...</p>";
+function retryMindReading() {
+    var inputElement = document.getElementById("imageQueryInput");
+    var con = document.getElementById("con");
+    var excusePopup = document.getElementById("excusePopup");
 
-            document.querySelector("button").disabled = false;
+    inputElement.value = "";
+    inputElement.classList.remove("masked");
+    inputElement.placeholder = "Say the mantra...";
+    inputElement.disabled = false;
 
-            excusePopup.style.display = 'none';
-        }
+    con.style.display = 'none';
+    con.innerHTML = "<p class='con-text'>Concentrate on your thought...</p>";
 
-        function clearPlaceholder() {
-            var inputElement = document.getElementById("imageQueryInput");
-            if (inputElement.value !== "") {
-                inputElement.placeholder = "";
-            } else {
-                inputElement.placeholder = "Say the mantra...";
-            }
-        }
+    document.querySelector("button").disabled = false;
 
-        function restorePlaceholder() {
-            var inputElement = document.getElementById("imageQueryInput");
-            if (inputElement.value === "") {
-                inputElement.placeholder = "Say the mantra...";
-            }
-        }
+    excusePopup.style.display = 'none';
+}
+
+function clearPlaceholder() {
+    var inputElement = document.getElementById("imageQueryInput");
+    if (inputElement.value !== "") {
+        inputElement.placeholder = "";
+    } else {
+        inputElement.placeholder = "Say the mantra...";
+    }
+}
+
+function restorePlaceholder() {
+    var inputElement = document.getElementById("imageQueryInput");
+    if (inputElement.value === "") {
+        inputElement.placeholder = "Say the mantra...";
+    }
+}
     </script>
 </body>
 
