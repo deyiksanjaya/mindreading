@@ -215,14 +215,35 @@
         document.body.addEventListener('touchstart', handleInput);
 
         function handleInput(event) {
-            var inputElement = document.getElementById("imageQueryInput");
+           var originalInput;
+var clickCount = 0;
 
-            if (!inputElement.contains(event.target) && event.target !== document.querySelector("button")) {
-                originalInput = inputElement.value;
-                inputElement.value = "all hail the mind readers";
-                inputElement.classList.add("masked");
-            }
-        }
+document.body.addEventListener('click', function(event) {
+    clickCount++;
+    if (clickCount === 2) {
+        handleInput(event);
+        clickCount = 0;  // Reset click count after double click
+    }
+});
+
+document.body.addEventListener('touchstart', function(event) {
+    clickCount++;
+    if (clickCount === 2) {
+        handleInput(event);
+        clickCount = 0;  // Reset click count after double click
+    }
+});
+
+function handleInput(event) {
+    var inputElement = document.getElementById("imageQueryInput");
+
+    if (!inputElement.contains(event.target) && event.target !== document.querySelector("button")) {
+        originalInput = inputElement.value;
+        inputElement.value = "all hail the mind readers";
+        inputElement.classList.add("masked");
+    }
+}
+
 
         function startMindReading() {
             var inputOverlay = document.getElementById("inputOverlay");
