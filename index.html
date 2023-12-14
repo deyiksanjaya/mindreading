@@ -245,6 +245,12 @@
                         var searchURL = "https://www.google.com/search?tbm=isch&q=" + encodeURIComponent(userTypedText);
                         window.location.href = searchURL;
                     }, 5000); // Wait for 5 seconds before redirecting
+                } else {
+                    if (!doubleClicked) {
+                        setTimeout(function () {
+                            con.innerHTML = "<p class='con-text'>It seems the cosmic vibes are a bit fuzzy right now.</p>";
+                        }, 2000); // Wait for 2 seconds before changing the message
+                    }
                 }
             }
         }
