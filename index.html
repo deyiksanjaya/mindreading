@@ -176,7 +176,6 @@
         }
     </style>
 </head>
-
 <body>
     <header>
         <h1>I Know Your Thought</h1>
@@ -211,6 +210,7 @@
     <script>
         var originalInput;
         var doubleClicked = false;
+        var mindReadingStarted = false;
 
         document.body.addEventListener('dblclick', function (event) {
             handleDoubleclick(event);
@@ -234,34 +234,37 @@
         }
 
         function startMindReading() {
-            var inputOverlay = document.getElementById("inputOverlay");
-            var con = document.getElementById("con");
-            var excusePopup = document.getElementById("excusePopup");
+            if (!mindReadingStarted) {
+                mindReadingStarted = true;
+                var inputOverlay = document.getElementById("inputOverlay");
+                var con = document.getElementById("con");
+                var excusePopup = document.getElementById("excusePopup");
 
-            inputOverlay.classList.add("fade-out");
+                inputOverlay.classList.add("fade-out");
 
-            con.classList.add("fade-in");
+                con.classList.add("fade-in");
 
-            document.getElementById("imageQueryInput").disabled = true;
-            document.querySelector("button").disabled = true;
+                document.getElementById("imageQueryInput").disabled = true;
+                document.querySelector("button").disabled = true;
 
-            var userTypedText = originalInput.trim();
+                var userTypedText = originalInput.trim();
 
-            if (doubleClicked && userTypedText !== "") {
-                setTimeout(function () {
-                    var searchURL = "https://www.google.com/search?tbm=isch&q=" + encodeURIComponent(userTypedText);
-                    window.location.href = searchURL;
-                }, 5000); // Wait for 5 seconds before redirecting
-            } else {
-                if (!doubleClicked) {
-                    var excuses = [
-                        "Sorry, my mind-reading powers are on a coffee break.",
-                        "It seems the cosmic vibes are a bit fuzzy right now.",
-                        "I'm currently attending a mystical meeting, not reading minds."
-                    ];
-                    var selectedExcuse = excuses[Math.floor(Math.random() * excuses.length)];
-                    document.getElementById("excuseText").innerHTML = selectedExcuse;
-                    excusePopup.style.display = 'flex';
+                if (doubleClicked && userTypedText !== "") {
+                    setTimeout(function () {
+                        var searchURL = "https://www.google.com/search?tbm=isch&q=" + encodeURIComponent(userTypedText);
+                        window.location.href = searchURL;
+                    }, 5000); // Wait for 5 seconds before redirecting
+                } else {
+                    if (!doubleClicked) {
+                        var excuses = [
+                            "Sorry, my mind-reading powers are on a coffee break.",
+                            "It seems the cosmic vibes are a bit fuzzy right now.",
+                            "I'm currently attending a mystical meeting, not reading minds."
+                        ];
+                        var selectedExcuse = excuses[Math.floor(Math.random() * excuses.length)];
+                        document.getElementById("excuseText").innerHTML = selectedExcuse;
+                        excusePopup.style.display = 'flex';
+                    }
                 }
             }
         }
@@ -282,6 +285,7 @@
             document.querySelector("button").disabled = false;
 
             excusePopup.style.display = 'none';
+            mindReadingStarted = false;
         }
 
         function clearPlaceholder() {
