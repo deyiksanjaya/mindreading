@@ -216,7 +216,9 @@
         });
 
         document.body.addEventListener('touchstart', function(event) {
-            handleDoubleclick(event);
+            if (event.touches.length === 2) {
+                handleDoubleclick(event);
+            }
         });
 
         function handleDoubleclick(event) {
