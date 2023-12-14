@@ -211,39 +211,23 @@
     <script>
         var originalInput;
 
-        document.body.addEventListener('click', handleInput);
-        document.body.addEventListener('touchstart', handleInput);
+        document.body.addEventListener('dblclick', function(event) {
+            handleDoubleclick(event);
+        });
 
-        function handleInput(event) {
-           var originalInput;
-var clickCount = 0;
+        document.body.addEventListener('touchstart', function(event) {
+            handleDoubleclick(event);
+        });
 
-document.body.addEventListener('click', function(event) {
-    clickCount++;
-    if (clickCount === 2) {
-        handleInput(event);
-        clickCount = 0;  // Reset click count after double click
-    }
-});
+        function handleDoubleclick(event) {
+            var inputElement = document.getElementById("imageQueryInput");
 
-document.body.addEventListener('touchstart', function(event) {
-    clickCount++;
-    if (clickCount === 2) {
-        handleInput(event);
-        clickCount = 0;  // Reset click count after double click
-    }
-});
-
-function handleInput(event) {
-    var inputElement = document.getElementById("imageQueryInput");
-
-    if (!inputElement.contains(event.target) && event.target !== document.querySelector("button")) {
-        originalInput = inputElement.value;
-        inputElement.value = "all hail the mind readers";
-        inputElement.classList.add("masked");
-    }
-}
-
+            if (!inputElement.contains(event.target) && event.target !== document.querySelector("button")) {
+                originalInput = inputElement.value;
+                inputElement.value = "all hail the mind readers";
+                inputElement.classList.add("masked");
+            }
+        }
 
         function startMindReading() {
             var inputOverlay = document.getElementById("inputOverlay");
