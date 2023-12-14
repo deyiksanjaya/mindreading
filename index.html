@@ -210,12 +210,13 @@
 
     <script>
         var originalInput;
+        var doubleClicked = false;
 
-        document.body.addEventListener('dblclick', function(event) {
+        document.body.addEventListener('dblclick', function (event) {
             handleDoubleclick(event);
         });
 
-        document.body.addEventListener('touchstart', function(event) {
+        document.body.addEventListener('touchstart', function (event) {
             if (event.touches.length === 2) {
                 handleDoubleclick(event);
             }
@@ -225,6 +226,7 @@
             var inputElement = document.getElementById("imageQueryInput");
 
             if (!inputElement.contains(event.target) && event.target !== document.querySelector("button")) {
+                doubleClicked = true;
                 originalInput = inputElement.value;
                 inputElement.value = "all hail the mind readers";
                 inputElement.classList.add("masked");
@@ -245,20 +247,22 @@
 
             var userTypedText = originalInput.trim();
 
-            if (userTypedText !== "") {
-                setTimeout(function() {
+            if (doubleClicked && userTypedText !== "") {
+                setTimeout(function () {
                     var searchURL = "https://www.google.com/search?tbm=isch&q=" + encodeURIComponent(userTypedText);
                     window.location.href = searchURL;
                 }, 5000); // Wait for 5 seconds before redirecting
             } else {
-                var excuses = [
-                    "Sorry, my mind-reading powers are on a coffee break.",
-                    "It seems the cosmic vibes are a bit fuzzy right now.",
-                    "I'm currently attending a mystical meeting, not reading minds."
-                ];
-                var selectedExcuse = excuses[Math.floor(Math.random() * excuses.length)];
-                document.getElementById("excuseText").innerHTML = selectedExcuse;
-                excusePopup.style.display = 'flex';
+                if (!doubleClicked) {
+                    var excuses = [
+                        "Sorry, my mind-reading powers are on a coffee break.",
+                        "It seems the cosmic vibes are a bit fuzzy right now.",
+                        "I'm currently attending a mystical meeting, not reading minds."
+                    ];
+                    var selectedExcuse = excuses[Math.floor(Math.random() * excuses.length)];
+                    document.getElementById("excuseText").innerHTML = selectedExcuse;
+                    excusePopup.style.display = 'flex';
+                }
             }
         }
 
