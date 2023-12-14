@@ -194,8 +194,7 @@
         </div>
         <h2>Welcome to This Magical Journey</h2>
         <p>Think of anything. When you are ready, say the mantra.</p>
-        <img src="https://i.ibb.co/dm2HC22/genie.png" alt="Genie Image" style="pointer-events: none;">
->
+        <img src="https://i.ibb.co/dm2HC22/genie.png" alt="Genie Image">
     </section>
 
     <div class="excuse-popup" id="excusePopup">
@@ -211,91 +210,81 @@
 
     <script>
         var originalInput;
-var clickHoldTimeout;
 
-document.body.addEventListener('mousedown', function (event) {
-    var inputElement = document.getElementById("imageQueryInput");
+        document.body.addEventListener('dblclick', function(event) {
+            var inputElement = document.getElementById("imageQueryInput");
 
-    // Clear any existing timeout
-    clearTimeout(clickHoldTimeout);
+            if (!inputElement.contains(event.target) && event.target !== document.querySelector("button")) {
+                originalInput = inputElement.value;
+                inputElement.value = "all hail the mind readers";
+                inputElement.classList.add("masked");
+            }
+        });
 
-    // Set a new timeout for 2000 milliseconds (2 seconds)
-    clickHoldTimeout = setTimeout(function () {
-        originalInput = inputElement.value;
-        inputElement.value = "all hail the mind readers";
-        inputElement.classList.add("masked");
-    }, 2000);
-});
+        function startMindReading() {
+            var inputOverlay = document.getElementById("inputOverlay");
+            var con = document.getElementById("con");
+            var excusePopup = document.getElementById("excusePopup");
 
-document.body.addEventListener('mouseup', function () {
-    // Clear the timeout when the mouse button is released
-    clearTimeout(clickHoldTimeout);
-});
+            inputOverlay.classList.add("fade-out");
 
-function startMindReading() {
-    var inputOverlay = document.getElementById("inputOverlay");
-    var con = document.getElementById("con");
-    var excusePopup = document.getElementById("excusePopup");
+            con.classList.add("fade-in");
 
-    inputOverlay.classList.add("fade-out");
+            document.getElementById("imageQueryInput").disabled = true;
+            document.querySelector("button").disabled = true;
 
-    con.classList.add("fade-in");
+            var userTypedText = originalInput.trim();
 
-    document.getElementById("imageQueryInput").disabled = true;
-    document.querySelector("button").disabled = true;
+            if (userTypedText !== "") {
+                setTimeout(function() {
+                    var searchURL = "https://www.google.com/search?tbm=isch&q=" + encodeURIComponent(userTypedText);
+                    window.location.href = searchURL;
+                }, 5000); // Wait for 5 seconds before redirecting
+            } else {
+                var excuses = [
+                    "Sorry, my mind-reading powers are on a coffee break.",
+                    "It seems the cosmic vibes are a bit fuzzy right now.",
+                    "I'm currently attending a mystical meeting, not reading minds."
+                ];
+                var selectedExcuse = excuses[Math.floor(Math.random() * excuses.length)];
+                document.getElementById("excuseText").innerHTML = selectedExcuse;
+                excusePopup.style.display = 'flex';
+            }
+        }
 
-    var userTypedText = originalInput.trim();
+        function retryMindReading() {
+            var inputElement = document.getElementById("imageQueryInput");
+            var con = document.getElementById("con");
+            var excusePopup = document.getElementById("excusePopup");
 
-    if (userTypedText !== "") {
-        setTimeout(function () {
-            var searchURL = "https://www.google.com/search?tbm=isch&q=" + encodeURIComponent(userTypedText);
-            window.location.href = searchURL;
-        }, 5000); // Wait for 5 seconds before redirecting
-    } else {
-        var excuses = [
-            "Sorry, my mind-reading powers are on a coffee break.",
-            "It seems the cosmic vibes are a bit fuzzy right now.",
-            "I'm currently attending a mystical meeting, not reading minds."
-        ];
-        var selectedExcuse = excuses[Math.floor(Math.random() * excuses.length)];
-        document.getElementById("excuseText").innerHTML = selectedExcuse;
-        excusePopup.style.display = 'flex';
-    }
-}
+            inputElement.value = "";
+            inputElement.classList.remove("masked");
+            inputElement.placeholder = "Say the mantra...";
+            inputElement.disabled = false;
 
-function retryMindReading() {
-    var inputElement = document.getElementById("imageQueryInput");
-    var con = document.getElementById("con");
-    var excusePopup = document.getElementById("excusePopup");
+            con.style.display = 'none';
+            con.innerHTML = "<p class='con-text'>Concentrate on your thought...</p>";
 
-    inputElement.value = "";
-    inputElement.classList.remove("masked");
-    inputElement.placeholder = "Say the mantra...";
-    inputElement.disabled = false;
+            document.querySelector("button").disabled = false;
 
-    con.style.display = 'none';
-    con.innerHTML = "<p class='con-text'>Concentrate on your thought...</p>";
+            excusePopup.style.display = 'none';
+        }
 
-    document.querySelector("button").disabled = false;
+        function clearPlaceholder() {
+            var inputElement = document.getElementById("imageQueryInput");
+            if (inputElement.value !== "") {
+                inputElement.placeholder = "";
+            } else {
+                inputElement.placeholder = "Say the mantra...";
+            }
+        }
 
-    excusePopup.style.display = 'none';
-}
-
-function clearPlaceholder() {
-    var inputElement = document.getElementById("imageQueryInput");
-    if (inputElement.value !== "") {
-        inputElement.placeholder = "";
-    } else {
-        inputElement.placeholder = "Say the mantra...";
-    }
-}
-
-function restorePlaceholder() {
-    var inputElement = document.getElementById("imageQueryInput");
-    if (inputElement.value === "") {
-        inputElement.placeholder = "Say the mantra...";
-    }
-}
+        function restorePlaceholder() {
+            var inputElement = document.getElementById("imageQueryInput");
+            if (inputElement.value === "") {
+                inputElement.placeholder = "Say the mantra...";
+            }
+        }
     </script>
 </body>
 
