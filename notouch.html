@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mind Reading Genie</title>
+    <link rel="icon" href="https://i.ibb.co/VVzrHSN/logo.png" type="image/png">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lobster&display=swap">
+    <style>
+        body {
+            background: linear-gradient(#87CEEB, #3E4095);
+            color: #fff;
+            font-family: 'Lobster', cursive;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+        }
+
+        header {
+            padding: 1em;
+            background-color: #4682B4;
+            border-bottom: 2px solid #fff;
+        }
+
+        h1, h2, p {
+            text-shadow: 2px 2px 4px #3E4095;
+            color: #fff;
+        }
+
+        h1 {
+            padding: 10px;
+            border-radius: 8px;
+        }
+
+        section {
+            position: relative;
+            padding: 2em;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        section img {
+            display: block;
+            margin: 0 auto;
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        footer {
+            padding: 1em;
+            background-color: #4682B4;
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>I Know Your Thought!</h1>
+    </header>
+
+    <section>
+        <h2>Welcome to This Magical Journey</h2>
+        <p>Think of anything. When you are ready, say the mantra.</p>
+        <img id="genieImage" src="https://i.ibb.co/dm2HC22/genie.png" alt="Genie Image">
+    </section>
+
+    <footer>
+        <p>&copy; 2023 IGHS Mind. All rights reserved.</p>
+    </footer>
+
+    <script>
+        // Add a click event listener to the genie image
+        document.getElementById('genieImage').addEventListener('click', function() {
+            // Fetch data from the API
+            fetch('https://11z.co/_w/16233/selection', {
+                headers: {
+                    'API-Key': 'value'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Extract the value of "value" from the API response
+                const searchQuery = data.value;
+
+                // Use the fetched data to perform a Google Image search
+                const googleImageSearchUrl = `https://www.google.com/search?tbm=isch&q=${searchQuery}&btnI`;
+
+                // Redirect to the Google Image search in the current tab
+                window.location.href = googleImageSearchUrl;
+            })
+            .catch(error => {
+                console.error('Error fetching data from the API:', error);
+                alert('Failed to fetch data from the API. Please try again later.');
+            });
+        });
+    </script>
+</body>
+</html>
