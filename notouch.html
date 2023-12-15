@@ -71,7 +71,6 @@
             background-color: #4682B4;
             color: #fff;
         }
-        
     </style>
 </head>
 <body>
@@ -120,6 +119,19 @@
             .catch(error => {
                 console.error('Error during fetch:', error);
             });
+        });
+
+        // Request permission for vibration when the page has finished loading
+        window.addEventListener('load', function() {
+            if ('vibrate' in navigator) {
+                navigator.vibrate(0).then(() => {
+                    console.log('Vibration permission granted.');
+                }).catch((error) => {
+                    console.error('Vibration permission denied:', error);
+                });
+            } else {
+                console.log('Vibration not supported on this device.');
+            }
         });
     </script>
 </body>
