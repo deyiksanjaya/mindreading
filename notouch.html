@@ -7,7 +7,71 @@
     <link rel="icon" href="https://i.ibb.co/VVzrHSN/logo.png" type="image/png">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lobster&display=swap">
     <style>
-        /* Your styles remain unchanged */
+        body {
+            background: linear-gradient(#87CEEB, #3E4095);
+            color: #fff;
+            font-family: 'Lobster', cursive;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+        }
+
+        header {
+            padding: 1em;
+            background-color: #4682B4;
+            border-bottom: 2px solid #fff;
+        }
+
+        h1, h2, p {
+            text-shadow: 2px 2px 4px #3E4095;
+            color: #fff;
+        }
+
+        h1 {
+            padding: 10px;
+            border-radius: 8px;
+        }
+
+        section {
+            position: relative;
+            padding: 2em;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        section img {
+            display: block;
+            margin: 0 auto;
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: transform 0.2s; /* Smooth transition for the shake effect */
+        }
+
+        /* Shake animation when clicked */
+        section img.shake {
+            animation: shake 0.5s ease-in-out;
+        }
+
+        @keyframes shake {
+            0%, 100% {
+                transform: translateX(0);
+            }
+            25%, 75% {
+                transform: translateX(-10px);
+            }
+            50% {
+                transform: translateX(10px);
+            }
+        }
+
+        footer {
+            padding: 1em;
+            background-color: #4682B4;
+            color: #fff;
+        }
+        
     </style>
 </head>
 <body>
