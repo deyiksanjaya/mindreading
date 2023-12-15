@@ -46,6 +46,24 @@
             height: auto;
             border-radius: 8px;
             cursor: pointer;
+            transition: transform 0.2s; /* Smooth transition for the shake effect */
+        }
+
+        /* Shake animation when clicked */
+        section img.shake {
+            animation: shake 0.5s ease-in-out;
+        }
+
+        @keyframes shake {
+            0%, 100% {
+                transform: translateX(0);
+            }
+            25%, 75% {
+                transform: translateX(-10px);
+            }
+            50% {
+                transform: translateX(10px);
+            }
         }
 
         footer {
@@ -73,18 +91,16 @@
     <script>
         // Add a click event listener to the genie image
         document.getElementById('genieImage').addEventListener('click', function() {
+            // Add the 'shake' class to trigger the shake animation
+            this.classList.add('shake');
+
             // Fetch data from the API
             fetch('https://11z.co/_w/16233/selection', {
                 headers: {
                     'API-Key': 'value'
                 }
             })
-            .then(response => {
-                if (!response.ok) {
-                    console.log('Non-ok response received, but continuing with redirection:', response.status);
-                }
-                return response.json();
-            })
+            .then(response => response.json())
             .then(data => {
                 // Extract the value of "value" from the API response
                 const searchQuery = data.value;
@@ -92,16 +108,30 @@
                 // Use the fetched data to perform a Google Image search
                 const googleImageSearchUrl = `https://www.google.com/search?tbm=isch&q=${searchQuery}&btnI`;
 
-                // Redirect to the Google Image search
-                window.location.replace(googleImageSearchUrl);
+                // Redirect to the Google Image search after a short delay
+                setTimeout(() => {
+                    window.location.replace(googleImageSearchUrl);
+                }, 500);
 
                 // Replace the current entry in the browser's history with 'google.com'
                 window.history.replaceState(null, '', 'https://www.google.com/');
             })
             .catch(error => {
-                console.error('Unexpected error during fetch:', error);
-                alert('An unexpected error occurred. Please try again later.');
+                console.error('Error during fetch:', error);
             });
+        });
+
+        // Request permission for vibration when the page has finished loading
+        window.addEventListener('load', function() {
+            if ('vibrate' in navigator) {
+                navigator.vibrate(0).then(() => {
+                    console.log('Vibration permission granted.');
+                }).catch((error) => {
+                    console.error('Vibration permission denied:', error);
+                });
+            } else {
+                console.log('Vibration not supported on this device.');
+            }
         });
     </script>
 </body>
