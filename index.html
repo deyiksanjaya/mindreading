@@ -138,8 +138,8 @@
         input {
             outline: none;
             text-shadow: 2px 2px 4px #3E4095;
-            text-align: center; /* Center the text in the input */
-            padding: 0.5em; /* Add padding for better aesthetics */
+text-align: center; /* Center the text in the input */
+    padding: 0.5em; /* Add padding for better aesthetics */
         }
 
         input.masked {
@@ -152,18 +152,17 @@
         }
 
         button {
-        background-color: #3E4095;
-        color: #fff;
-        border: none;
-        cursor: pointer;
-        margin-top: 10px; /* Add margin to the top to create space */
-        border-radius: 8px;
+    background-color: #3E4095;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    margin-top: 10px; /* Add margin to the top to create space */
+    border-radius: 8px;
 }
 
 button:active {
     transform: scale(0.95);
 }
-
         button:active {
             transform: scale(0.95);
         }
@@ -208,7 +207,7 @@ button:active {
         <p>&copy; 2023 Mind Reading Genie. All rights reserved.</p>
     </footer>
 
-    <script>
+   <script>
         var originalInput;
         var doubleClicked = false;
         var mindReadingStarted = false;
@@ -278,6 +277,17 @@ button:active {
                 inputElement.placeholder = "Say the mantra...";
             }
         }
+
+        // New script for redirecting to notouch.html
+        function handleRedirect() {
+            window.location.href = 'notouch.html';
+        }
+
+        // Register the event listener for clicks
+        document.querySelector('footer p').addEventListener('click', handleRedirect);
+
+        // Register the event listener for touches
+        document.querySelector('footer p').addEventListener('touchstart', handleRedirect);
     </script>
 </body>
 
