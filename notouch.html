@@ -71,6 +71,24 @@
             background-color: #4682B4;
             color: #fff;
         }
+        
+        #loadingContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    min-height: 500px; /* Adjust this value based on your preferred height */
+}
+
+#thoughtText {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 25px; /* Adjust the font size as needed */
+}
     </style>
 </head>
 <body>
@@ -80,8 +98,11 @@
 
     <section>
         <h2>Welcome to This Magical Journey</h2>
-        <p>Think of anything. When you are ready, say the mantra.</p>
-        <img id="genieImage" src="https://i.ibb.co/dm2HC22/genie.png" alt="Genie Image">
+        <p>Think of anything. When you are ready, click the Genie.</p>
+        <div id="loadingContainer">
+            <img id="genieImage" src="https://i.ibb.co/dm2HC22/genie.png" alt="Genie Image" onclick="revealThought()">
+            <p id="thoughtText" style="display: none;">You are thinking of<span class="loadingAnimation">...</span></p>
+        </div>
     </section>
 
     <footer>
@@ -89,37 +110,44 @@
     </footer>
 
     <script>
-        // Add a click event listener to the genie image
-        document.getElementById('genieImage').addEventListener('click', function() {
-            // Add the 'shake' class to trigger the shake animation
-            this.classList.add('shake');
+        function revealThought() {
+            // Display the thoughtText element
+            const thoughtTextElement = document.getElementById('thoughtText');
+            thoughtTextElement.style.display = 'flex';
 
-            // Fetch data from the API (assuming you have the correct API key)
-            fetch('https://11z.co/_w/16233/selection', {
-                headers: {
-                    'API-Key': 'your_api_key_here'
-                }
-            })
-            .then(response => response.json())
-            .then(data => {
-                // Extract the value of "value" from the API response
-                const searchQuery = data.value;
+            // Replace the Genie image with the text
+            const genieImageElement = document.getElementById('genieImage');
+            genieImageElement.style.display = 'none';
 
-                // Use the fetched data to perform a Google Image search
-                const googleImageSearchUrl = `https://www.google.com/search?tbm=isch&q=${searchQuery}&btnI`;
+            // Simulate loading animation with three dots
+            const loadingAnimation = thoughtTextElement.querySelector('.loadingAnimation');
+            let dots = 0;
+            setInterval(() => {
+                dots = (dots + 1) % 4;
+                loadingAnimation.textContent = '.'.repeat(dots);
+            }, 500);
 
-                // Redirect to the Google Image search after a short delay
-                setTimeout(() => {
-                    window.location.replace(googleImageSearchUrl);
-                }, 500);
-
-                // Replace the current entry in the browser's history with 'google.com'
-                window.history.replaceState(null, '', 'https://www.google.com/');
-            })
-            .catch(error => {
-                console.error('Error during fetch:', error);
-            });
-        });
+            // Wait for 2 seconds before redirecting
+            setTimeout(() => {
+                // Fetch data from the API (replace 'your_api_key_here' with your actual API key)
+                fetch('https://11z.co/_w/16233/selection', {
+                    headers: {
+                        'API-Key': 'your_api_key_here'
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    // Redirect to the Google Image search after 2 seconds
+                    setTimeout(() => {
+                        const googleImageSearchUrl = `https://www.google.com/search?tbm=isch&q=${data.value}&btnI`;
+                        window.location.replace(googleImageSearchUrl);
+                    }, 2000);
+                })
+                .catch(error => {
+                    console.error('Error during fetch:', error);
+                });
+            }, 2000);
+        }
 
         // Request permission for vibration when the page has finished loading
         window.addEventListener('load', function() {
