@@ -81,12 +81,7 @@
         }
 
         function setAndDisplayExcuse() {
-            const storedExcuse = localStorage.getItem('mindReadingExcuse');
-            const excuseToShow = storedExcuse || getRandomExcuse();
-
-            const excuseTextElement = document.getElementById('excuseText');
-            excuseTextElement.textContent = excuseToShow;
-
+            const excuseToShow = getRandomExcuse();
             localStorage.setItem('mindReadingExcuse', excuseToShow);
         }
 
