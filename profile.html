@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f8f8;
+        }
+
+        header {
+            background-color: #333;
+            color: #fff;
+            padding: 20px;
+            text-align: center;
+            position: relative;
+            z-index: 2;
+        }
+
+        .burger-menu {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            color: #fff;
+            position: relative;
+            z-index: 2;
+        }
+
+        .burger-icon {
+            font-size: 24px;
+            margin-right: 10px;
+        }
+
+        .menu {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 100%;
+            background-color: #333; /* Gunmetal color */
+            color: #fff;
+            transform: translateX(-100%);
+            transition: transform 0.5s ease-in-out;
+            overflow-y: auto;
+            z-index: 1;
+        }
+
+        .menu-content {
+            padding: 20px;
+        }
+
+        .close-button {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            cursor: pointer;
+            font-size: 20px;
+            color: #fff;
+        }
+
+        .content {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 5px;
+            z-index: 0;
+        }
+
+        .main-content {
+            text-align: center;
+            margin: 0 auto;
+            color: #333; /* Gunmetal color */
+        }
+
+        .indented-text {
+            text-indent: 20px; /* Adjust the value to set the desired indentation */
+        }
+
+        /* Styling for links */
+        a {
+            color: #6b8e23; /* Olive Drab color, complementing gunmetal */
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        a:hover {
+            color: #8fbc8f; /* Dark Olive Green color, a lighter shade of green */
+        }
+    </style>
+    <title>Heri's Magic World</title>
+</head>
+<body>
+
+    <header>
+        <div class="burger-menu" onclick="toggleMenu()">
+            <div class="burger-icon">&#9776;</div>
+            < Click Here For More!
+        </div>
+    </header>
+
+    <div id="menu" class="menu">
+        <div class="menu-content">
+            <span class="close-button" onclick="toggleMenu()">&#10006;</span>
+            <h2>Menu</h2>
+            <ul>
+                <li><a href="index.html">Meet My Genie</a></li>
+                <li><a href="https://www.youtube.com/channel/UCrcKTBeWKTrTHX9tHG1inBg" target="_blank">Youtube</a></li>
+                <li><a href="https://www.tiktok.com/@_ighs_" target="_blank">TikTok</a></li>
+                <li><a href="https://www.instagram.com/_ighs_" target="_blank">Instagram</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="content">
+        <div class="main-content">
+            <h1>Hi, There!<br>My Name Is Heri</h1>
+            <p class="indented-text">Step into the enchanting world of magic and creativity, curated just for you!</p>
+            <p class="indented-text">Greetings! I'm Heri, your guide through the mystical wonders of Bali, Indonesia. Born in 1996, I've dedicated my life to the art of magic. Join me on a quest to become the most awe-inspiring magician alive!</p>
+            <p class="indented-text">Beyond the realm of magic, I find joy in the rhythm of songwriting and the harmony of technology.</p>
+            <p class="indented-text">Unveil the magic by exploring videos on my <a href="https://www.youtube.com/channel/UCrcKTBeWKTrTHX9tHG1inBg" target="_blank">YouTube channel</a>, catching glimpses on <a href="https://www.tiktok.com/@_ighs_" target="_blank">TikTok</a>, and immersing yourself in captivating moments on <a href="https://www.instagram.com/_ighs_" target="_blank">Instagram</a>.</p>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var menu = document.getElementById('menu');
+            var burgerMenu = document.querySelector('.burger-menu');
+    
+            burgerMenu.addEventListener('click', function () {
+                toggleMenu();
+            });
+    
+            function toggleMenu() {
+                // Toggle the active class on the menu
+                menu.classList.toggle('active');
+                // Toggle the active class on the burger icon
+                burgerMenu.classList.toggle('active');
+    
+                // Toggle the body overflow property
+                document.body.style.overflow = (menu.classList.contains('active')) ? 'hidden' : 'auto';
+    
+                // If the menu is closed, reset the menu items after a delay
+                if (!menu.classList.contains('active')) {
+                    setTimeout(function () {
+                        var menuItems = document.querySelectorAll('.menu ul li');
+                        menuItems.forEach(function (item) {
+                            item.style.opacity = '0';
+                            item.style.transform = 'translateX(-100%)';
+                        });
+                    }, 500); // Delay reset by 0.5s
+                } else {
+                    // If the menu is open, set the initial styles immediately
+                    var menuItems = document.querySelectorAll('.menu ul li');
+                    menuItems.forEach(function (item) {
+                        item.style.opacity = '1';
+                        item.style.transform = 'translateX(0)';
+                    });
+                }
+            }
+    
+            // Add this function to prevent the menu from closing when clicking on its content
+            document.querySelector('.menu-content').onclick = function (event) {
+                event.stopPropagation();
+            };
+    
+            // Add this function to close the menu when clicking outside its content or the close button
+            window.onclick = function (event) {
+                if (event.target !== menu && event.target !== burgerMenu) {
+                    menu.classList.remove('active');
+                    burgerMenu.classList.remove('active');
+    
+                    document.body.style.overflow = 'auto';
+                    
+                }
+            };
+        });
+        function toggleMenu() {
+    console.log("Clicked!"); // Add this line for debugging
+    // ... rest of the code
+}
+    </script>     
+</body>
+</html>
