@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <link href='https://fonts.googleapis.com/css?family=ADLaM Display' rel='stylesheet'>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500&display=swap" rel="stylesheet">
     <style>
         body {
-    font-family: 'ADLaM Display';
+            font-family: 'Nunito', sans-serif;
             font-size: 22px;
             margin: 0;
             padding: 0;
@@ -84,11 +84,11 @@
         .profile-image {
             display: block;
             margin: 20px auto;
-            width: 150px; /* Adjust the size as needed */
-            height: 150px; /* Adjust the size as needed */
+            width: 150px;
+            height: 150px;
             object-fit: cover;
             border-radius: 50%;
-            border: 5px solid #fff; /* Adjust the border color */
+            border: 5px solid #fff;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
         }
 
@@ -103,17 +103,37 @@
             color: #8fbc8f;
         }
         .new-image {
-    display: block;
-    margin: 20px auto;
-    max-width: 80%; /* Ensures the image doesn't exceed its natural size */
-    height: auto;   /* Maintains the aspect ratio */
-    border-radius: 30px;
-    box-shadow: 0 0 10px rgba(0, 0, , 0.3);
-}
-.article_title {
+            display: block;
+            margin: 20px auto;
+            max-width: 80%;
+            height: auto;
+            border-radius: 30px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+        }
+        .article_title {
             text-align: center;
             margin: 0 auto;
-            color: #333;
+            color: #333; background-color: #3587404b;
+            padding: 20px;
+            border-radius: 30px;
+        }
+        .prediction {
+            text-align: center;
+            margin: 0 auto;
+        }
+        
+        /* Added styles for the iframe container */
+        .iframe-container {
+            text-align: center;
+            margin: 20px auto;
+            border-radius: 30px;
+            overflow: hidden;
+        }
+
+        iframe {
+            width: 80%;
+            height: 600px;
+            border: 0;
         }
     </style>
     <title>Heri's Magic World</title>
@@ -149,8 +169,15 @@
             <img class="new-image" src="https://i.ibb.co/nQ7w0nG/277-A44-B0-81-A9-4147-9195-613-F5-E8-AD398.jpg" alt="Spreading The Magic!">
             <p class="indented-text">Beyond the realm of magic, I find joy in the rhythm of songwriting and the harmony of technology.</p>
             <p class="indented-text">Unveil the magic by exploring videos on my <a href="https://www.youtube.com/channel/UCrcKTBeWKTrTHX9tHG1inBg" target="_blank">YouTube channel</a>, catching glimpses on <a href="https://www.tiktok.com/@_ighs_" target="_blank">TikTok</a>, and immersing yourself in captivating moments on <a href="https://www.instagram.com/_ighs_" target="_blank">Instagram</a>.</p>
+            <h1 class="prediction"> My Role  Model</h1>
         </div>
     </div>
+
+    <!-- Added the iframe container -->
+    <div class="iframe-container">
+        <iframe src="https://11z.co/ighs/houdini.jpg" frameborder="0"></iframe>
+    </div>
+
     <script>
         document.addEventListener("DOMContentLoaded", function () {
             var menu = document.getElementById('menu');
@@ -161,15 +188,10 @@
             });
     
             function toggleMenu() {
-                // Toggle the active class on the menu
                 menu.classList.toggle('active');
-                // Toggle the active class on the burger icon
                 burgerMenu.classList.toggle('active');
-    
-                // Toggle the body overflow property
                 document.body.style.overflow = (menu.classList.contains('active')) ? 'hidden' : 'auto';
     
-                // If the menu is closed, reset the menu items after a delay
                 if (!menu.classList.contains('active')) {
                     setTimeout(function () {
                         var menuItems = document.querySelectorAll('.menu ul li');
@@ -177,9 +199,8 @@
                             item.style.opacity = '0';
                             item.style.transform = 'translateX(-100%)';
                         });
-                    }, 500); // Delay reset by 0.5s
+                    }, 500);
                 } else {
-                    // If the menu is open, set the initial styles immediately
                     var menuItems = document.querySelectorAll('.menu ul li');
                     menuItems.forEach(function (item) {
                         item.style.opacity = '1';
@@ -188,17 +209,14 @@
                 }
             }
     
-            // Add this function to prevent the menu from closing when clicking on its content
             document.querySelector('.menu-content').onclick = function (event) {
                 event.stopPropagation();
             };
     
-            // Add this function to close the menu when clicking outside its content or the close button
             window.onclick = function (event) {
                 if (event.target !== menu && event.target !== burgerMenu) {
                     menu.classList.remove('active');
                     burgerMenu.classList.remove('active');
-    
                     document.body.style.overflow = 'auto';
                 }
             };
