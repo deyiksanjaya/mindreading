@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mind Reading Genie</title>
+    <link rel="icon" href="https://i.ibb.co/VVzrHSN/logo.png" type="image/png">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lobster&display=swap">
+    <style>
+        body {
+            background: linear-gradient(#87CEEB, #3E4095);
+            color: #fff;
+            font-family: 'Lobster', cursive;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        h1, h2, p {
+            text-shadow: 2px 2px 4px #3E4095;
+            color: #fff;
+        }
+
+        h1 {
+            padding: 10px;
+            border-radius: 8px;
+        }
+
+        button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #4682B4;
+            color: #fff;
+            border: none;
+            border-radius: 25px; /* Rounded corners */
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+
+        button:hover,
+        button:active {
+            background-color: #35608F;
+            transform: scale(1.1); /* Scale effect on interaction */
+        }
+
+        @media screen and (max-width: 600px) {
+            h1 {
+                font-size: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1 id="excuseText">Welcome to My Magic World</h1>
+    <button onclick="retry()">Retry</button>
+
+    <script>
+        function getRandomExcuse() {
+            const excuses = [
+                "Your thoughts were too fast, like a sneaky ninja!",
+                "Your mind played hide and seek, and I got a bit lost.",
+                "Your thoughts went for a coffee break, leaving me hanging.",
+                "Your mind took a scenic route; I needed a moment to catch up.",
+                "Your thoughts are like a mystery novel; I got caught in the plot.",
+                "Your mind went on vacation; hope it enjoyed the mental beach!",
+                "Your thoughts are a surprise party; I needed time to prepare.",
+                "Your mind is a free spirit; it wandered into the wilderness.",
+                "Your thoughts went incognito; my mind-reading browser needed a refresh.",
+                "Your mind is full of surprises; I needed a moment to adjust."
+            ];
+
+            const randomIndex = Math.floor(Math.random() * excuses.length);
+
+            return excuses[randomIndex];
+        }
+
+        function setAndDisplayExcuse() {
+            const storedExcuse = localStorage.getItem('mindReadingExcuse');
+            const excuseToShow = storedExcuse || getRandomExcuse();
+
+            const excuseTextElement = document.getElementById('excuseText');
+            excuseTextElement.textContent = excuseToShow;
+
+            localStorage.setItem('mindReadingExcuse', excuseToShow);
+        }
+
+        function retry() {
+            window.location.href = 'index.html';
+        }
+
+        setAndDisplayExcuse();
+    </script>
+</body>
+</html>
