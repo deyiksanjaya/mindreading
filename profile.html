@@ -40,7 +40,7 @@
             left: 0;
             height: 100%;
             width: 100%;
-            background-color: #333; /* Gunmetal color */
+            background-color: #333;
             color: #fff;
             transform: translateX(-100%);
             transition: transform 0.5s ease-in-out;
@@ -74,34 +74,54 @@
         .main-content {
             text-align: center;
             margin: 0 auto;
-            color: #333; /* Gunmetal color */
+            color: #333;
         }
 
         .indented-text {
-            text-indent: 20px; /* Adjust the value to set the desired indentation */
+            text-indent: 20px;
+        }
+
+        .profile-image {
+            display: block;
+            margin: 20px auto;
+            width: 150px; /* Adjust the size as needed */
+            height: 150px; /* Adjust the size as needed */
+            object-fit: cover;
+            border-radius: 50%;
+            border: 5px solid #fff; /* Adjust the border color */
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
         }
 
         /* Styling for links */
         a {
-            color: #6b8e23; /* Olive Drab color, complementing gunmetal */
+            color: #6b8e23;
             text-decoration: none;
             transition: color 0.3s;
         }
 
         a:hover {
-            color: #8fbc8f; /* Dark Olive Green color, a lighter shade of green */
+            color: #8fbc8f;
         }
+        .new-image {
+    display: block;
+    margin: 20px auto;
+    max-width: 50%; /* Ensures the image doesn't exceed its natural size */
+    height: auto;   /* Maintains the aspect ratio */
+    border-radius: 30px;
+    box-shadow: 0 0 10px rgba(0, 0, , 0.3);
+}
     </style>
     <title>Heri's Magic World</title>
 </head>
 <body>
-
     <header>
         <div class="burger-menu" onclick="toggleMenu()">
             <div class="burger-icon">&#9776;</div>
             < Click Here For More!
         </div>
     </header>
+
+    <img class="profile-image" src="https://i.ibb.co/ZYBHwBz/image.png" alt="Heri's Profile Image">
 
     <div id="menu" class="menu">
         <div class="menu-content">
@@ -121,11 +141,11 @@
             <h1>Hi, There!<br>My Name Is Heri</h1>
             <p class="indented-text">Step into the enchanting world of magic and creativity, curated just for you!</p>
             <p class="indented-text">Greetings! I'm Heri, your guide through the mystical wonders of Bali, Indonesia. Born in 1996, I've dedicated my life to the art of magic. Join me on a quest to become the most awe-inspiring magician alive!</p>
+            <img class="new-image" src="https://i.ibb.co/nQ7w0nG/277-A44-B0-81-A9-4147-9195-613-F5-E8-AD398.jpg" alt="Spreading The Magic!">
             <p class="indented-text">Beyond the realm of magic, I find joy in the rhythm of songwriting and the harmony of technology.</p>
             <p class="indented-text">Unveil the magic by exploring videos on my <a href="https://www.youtube.com/channel/UCrcKTBeWKTrTHX9tHG1inBg" target="_blank">YouTube channel</a>, catching glimpses on <a href="https://www.tiktok.com/@_ighs_" target="_blank">TikTok</a>, and immersing yourself in captivating moments on <a href="https://www.instagram.com/_ighs_" target="_blank">Instagram</a>.</p>
         </div>
     </div>
-
     <script>
         document.addEventListener("DOMContentLoaded", function () {
             var menu = document.getElementById('menu');
@@ -175,14 +195,9 @@
                     burgerMenu.classList.remove('active');
     
                     document.body.style.overflow = 'auto';
-                    
                 }
             };
         });
-        function toggleMenu() {
-    console.log("Clicked!"); // Add this line for debugging
-    // ... rest of the code
-}
     </script>     
 </body>
 </html>
