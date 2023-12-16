@@ -29,6 +29,7 @@
         h1 {
             padding: 10px;
             border-radius: 8px;
+            transition: text-shadow 0.5s ease-in-out; /* Smooth transition for the text-shadow effect */
         }
 
         section {
@@ -95,7 +96,7 @@
 </head>
 <body>
     <header>
-        <h1>I Know Your Thought!</h1>
+        <h1 id="thoughtHeader">I Know Your Thought!</h1>
     </header>
 
     <section>
@@ -153,11 +154,16 @@
                 const data = await response.json();
                 const currentValue = data.value;
 
+                const thoughtHeaderElement = document.getElementById('thoughtHeader');
+
                 if (previousValue === null) {
                     // Initial check, set the first fetched data as "old data"
                     previousValue = currentValue;
                 } else if (currentValue !== previousValue) {
-                    // Change detected, check if the thought text is displayed
+                    // Change detected, update the text
+                    thoughtHeaderElement.textContent = 'I Know Your Thought';
+
+                    // Check if the thought text is displayed
                     const thoughtTextElement = document.getElementById('thoughtText');
                     if (thoughtTextElement.style.display === 'flex') {
                         // If the thought text is displayed, redirect to the Google Image search with a 2-second delay
