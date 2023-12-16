@@ -40,6 +40,11 @@
             transform: scale(1.1);
         }
 
+        #excuseArea {
+            margin-top: 20px;
+            font-size: 18px;
+        }
+
         @media screen and (max-width: 600px) {
             h1 {
                 font-size: 24px;
@@ -49,6 +54,7 @@
 </head>
 
 <body>
+    <div id="excuseArea"></div>
     <button onclick="retry()">Retry</button>
 
     <script>
@@ -68,21 +74,16 @@
 
             const randomIndex = Math.floor(Math.random() * excuses.length);
 
-            return excuses[randomIndex];
-        }
-
-        function setAndDisplayExcuse() {
-            const excuseToShow = getRandomExcuse();
-
-            const excuseTextElement = document.getElementById('excuseText');
-            localStorage.setItem('mindReadingExcuse', excuseToShow);
+            const excuseArea = document.getElementById('excuseArea');
+            excuseArea.textContent = excuses[randomIndex];
         }
 
         function retry() {
             window.location.href = 'index.html';
         }
 
-        setAndDisplayExcuse();
+        // Call the function when the page loads
+        getRandomExcuse();
     </script>
 </body>
 
