@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -21,16 +22,6 @@
             min-height: 100vh;
         }
 
-        h1, h2, p {
-            text-shadow: 2px 2px 4px #3E4095;
-            color: #fff;
-        }
-
-        h1 {
-            padding: 10px;
-            border-radius: 8px;
-        }
-
         button {
             margin-top: 20px;
             padding: 10px 20px;
@@ -38,7 +29,7 @@
             background-color: #4682B4;
             color: #fff;
             border: none;
-            border-radius: 25px; /* Rounded corners */
+            border-radius: 25px;
             cursor: pointer;
             transition: background-color 0.3s, transform 0.3s;
         }
@@ -46,7 +37,7 @@
         button:hover,
         button:active {
             background-color: #35608F;
-            transform: scale(1.1); /* Scale effect on interaction */
+            transform: scale(1.1);
         }
 
         @media screen and (max-width: 600px) {
@@ -56,6 +47,7 @@
         }
     </style>
 </head>
+
 <body>
     <button onclick="retry()">Retry</button>
 
@@ -81,6 +73,8 @@
 
         function setAndDisplayExcuse() {
             const excuseToShow = getRandomExcuse();
+
+            const excuseTextElement = document.getElementById('excuseText');
             localStorage.setItem('mindReadingExcuse', excuseToShow);
         }
 
@@ -91,4 +85,5 @@
         setAndDisplayExcuse();
     </script>
 </body>
+
 </html>
