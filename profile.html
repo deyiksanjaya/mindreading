@@ -147,8 +147,8 @@
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
         }
     </style>
-    <title>About Heri</title>
-    <meta http-equiv="Cache-Control" content="max-age=3600, public">
+    <title>Heri's Magic World</title>
+    <meta http-equiv="Cache-Control" content="max-age=2592000, public">
     <meta http-equiv="Expires" content="2592000">
 </head>
 <body>
@@ -179,7 +179,7 @@
     <div class="content">
         <div class="main-content">
             <p>Step into the enchanting world of magic and creativity, curated just for you!</p>
-            <p>Greetings! I'm Heri, your guide through the mystical wonders of Bali, Indonesia. Born in 1996, I've dedicated my life to the art of magic. Join me on a quest to become the most awe-inspiring magician alive!</p>
+            <p>Greetings! I'm Heri, your guide through the world of wonders. I am from the island of god Bali, Indonesia. I've dedicated my life to the art of magic. Join me on a quest to become the most awe-inspiring magician alive!</p>
             <img class="new-image" src="https://i.ibb.co/nQ7w0nG/277-A44-B0-81-A9-4147-9195-613-F5-E8-AD398.jpg" alt="Spreading The Magic!">
             <h1 class="prediction"> My Role  Model :<br> Banachek</h1>
             <p>Banachek is an English mentalist, magician, and "thought reader". He first came to public attention as a teenager for his role in James Randi's Project Alpha experiment, which exposed the lack of objectivity in parapsychology research.</p>
@@ -196,50 +196,34 @@
             </div>
         </div>
     </div>
-
     <script>
         document.addEventListener("DOMContentLoaded", function () {
             var menu = document.getElementById('menu');
             var burgerMenu = document.querySelector('.burger-menu');
-    
-            burgerMenu.addEventListener('click', function () {
-                toggleMenu();
-            });
-    
+
             function toggleMenu() {
                 menu.classList.toggle('active');
                 burgerMenu.classList.toggle('active');
                 document.body.style.overflow = (menu.classList.contains('active')) ? 'hidden' : 'auto';
-    
-                if (!menu.classList.contains('active')) {
-                    setTimeout(function () {
-                        var menuItems = document.querySelectorAll('.menu ul li');
-                        menuItems.forEach(function (item) {
-                            item.style.opacity = '0';
-                            item.style.transform = 'translateX(-100%)';
-                        });
-                    }, 500);
-                } else {
-                    var menuItems = document.querySelectorAll('.menu ul li');
-                    menuItems.forEach(function (item) {
-                        item.style.opacity = '1';
-                        item.style.transform = 'translateX(0)';
-                    });
-                }
             }
-    
-            document.querySelector('.menu-content').onclick = function (event) {
-                event.stopPropagation();
-            };
-    
-            window.onclick = function (event) {
-                if (event.target !== menu && event.target !== burgerMenu) {
-                    menu.classList.remove('active');
-                    burgerMenu.classList.remove('active');
-                    document.body.style.overflow = 'auto';
+
+            burgerMenu.addEventListener('click', function (event) {
+                event.stopPropagation(); // Prevent the click event from propagating to the document
+                toggleMenu();
+            });
+
+            document.addEventListener('click', function (event) {
+                if (!event.target.closest('.menu') && event.target !== burgerMenu) {
+                    closeMenu();
                 }
-            };
+            });
+
+            function closeMenu() {
+                menu.classList.remove('active');
+                burgerMenu.classList.remove('active');
+                document.body.style.overflow = 'auto';
+            }
         });
-    </script>
+    </script>      
 </body>
 </html>
