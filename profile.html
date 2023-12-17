@@ -105,6 +105,28 @@
             text-align: center;
             margin: 30px auto;
         }
+
+        .barcode-container {
+            text-align: center;
+        }
+
+        .barcode-link {
+            /* Add your styles for the clickable area here */
+            display: inline-block;
+        }
+
+        .barcode-image {
+            /* Style for the barcode image */
+            max-width: 100%;
+            height: auto;
+        }
+
+        .prediction {
+            text-align: center;
+            margin: 0 auto;
+            padding: 40px
+        }
+
         /* Styling for links */
         a {
             color: #c72400;
@@ -124,14 +146,8 @@
             border-radius: 30px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
         }
-
-        .prediction {
-            text-align: center;
-            margin: 0 auto;
-            padding: 40px
-        }
     </style>
-    <title>Heri's Magic World</title>
+    <title>About Heri</title>
     <meta http-equiv="Cache-Control" content="max-age=3600, public">
     <meta http-equiv="Expires" content="2592000">
 </head>
@@ -169,19 +185,15 @@
             <p>Banachek is an English mentalist, magician, and "thought reader". He first came to public attention as a teenager for his role in James Randi's Project Alpha experiment, which exposed the lack of objectivity in parapsychology research.</p>
             <img class="new-image" src="https://upload.wikimedia.org/wikipedia/commons/2/28/Banacheck.jpg" alt="Stephen Shaw a.k.a Banachek">
             <p class="social_media">Discover more magic by exploring videos on my <a href="https://www.youtube.com/channel/UCrcKTBeWKTrTHX9tHG1inBg" target="_blank">YouTube channel</a>, catching glimpses on <a href="https://www.tiktok.com/@_ighs_" target="_blank">TikTok</a>, and immersing yourself in captivating moments on <a href="https://www.instagram.com/_ighs_" target="_blank">Instagram</a>.</p>
-            <div style="text-align: center;">
+            <div class="barcode-container">
                 <h1 class="prediction"> One last thing..<br></h1>
-                <img alt="Aspose Barcode"
-                     src="https://products.aspose.app/barcode/embed/image.Png?BarcodeType=QR&Content=http%3A%2F%2Fgoogleimg.org%2Fighs%3A0&TextLocation=None&Height=138&Width=138" />
-                     <div style="text-align: center;">
-                        <!-- Link to Aspose Barcode is required -->
-                        <a href="http://googleimg.org/ighs:0" title="Aspose Barcode" target="_blank">
-                            <!-- You can include an image of a barcode here if you have one -->
-                        </a>
-                        <p style="font-size: 14px; color: #555;">Click / scan to reveal the hidden message</p>
-                    </div>
-                    
-            
+                <div class="barcode-link">
+                    <a href="http://googleimg.org/ighs:0" title="Aspose Barcode" target="_blank">
+                        <img src="https://products.aspose.app/barcode/embed/image.Png?BarcodeType=QR&Content=http%3A%2F%2Fgoogleimg.org%2Fighs%3A0&TextLocation=None&Height=138&Width=138" alt="Aspose Barcode" class="barcode-image" />
+                    </a>
+                </div>
+                <p style="font-size: 14px; color: #555;">Click / scan to reveal the hidden message</p>
+            </div>
         </div>
     </div>
 
