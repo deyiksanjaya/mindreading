@@ -10,77 +10,77 @@
             padding: 0;
             background-color: #f8f8f8;
         }
-
+    
         header {
             background-color: #333;
             color: #fff;
-            padding: 20px;
-            text-align: center;
-            position: relative;
-            z-index: 2;
+            padding: 22px;
+            text-align: left;
+            font-size: 24px;
+            padding-left: 80px; /* Add left padding to the header */
+            transition: width 0.4s; /* Add transition for smooth width changes */
         }
-
+    
+        header.menu-open {
+            width: 100%;
+        }
+    
+        h1 a {
+            color: #fff; /* Change the color of the link text to white */
+            text-decoration: none;
+        }
+    
         .burger-menu {
             display: flex;
-            align-items: center;
+            flex-direction: column;
             cursor: pointer;
-            color: #fff;
-            position: relative;
+            padding: 10px;
+            position: absolute;
+            top: 40px;
+            left: 20px;
             z-index: 2;
         }
-
-        .burger-icon {
-            font-size: 24px;
-            margin-right: 10px;
+    
+        .bar {
+            width: 25px;
+            height: 3px;
+            background-color: #fff;
+            margin: 2px 0;
+            transition: 0.4s;
         }
-
-        .menu {
-            position: fixed;
-            top: 0;
-            left: 0;
-            height: 100%;
-            width: 100%;
+    
+        .change .bar:nth-child(1) {
+            transform: rotate(-45deg) translate(-5px, 6px);
+        }
+    
+        .change .bar:nth-child(2) {
+            opacity: 0;
+        }
+    
+        .change .bar:nth-child(3) {
+            transform: rotate(45deg) translate(-5px, -6px);
+        }
+    
+        nav {
+            display: none;
+            flex-direction: column;
+            align-items: center;
             background-color: #333;
-            color: #fff;
-            transform: translateX(-100%);
-            transition: transform 0.5s ease-in-out;
-            overflow-y: auto;
+            position: absolute;
+            width: 100%;
+            top: 100px; /* Adjusted for spacing */
+            left: 0;
             z-index: 1;
         }
-
-        .menu-content {
-            padding: 20px;
-        }
-
-        .close-button {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            cursor: pointer;
-            font-size: 20px;
+    
+        nav a {
+            padding: 15px;
             color: #fff;
+            text-align: center;
+            text-decoration: none;
+            font-size: 18px;
         }
-
-        .content {
-            max-width: 800px;
-            margin: 20px auto;
-            padding: 20px;
-            background-color: #fff;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            border-radius: 5px;
-            z-index: 0;
-        }
-
-        .main-content {
-            text-align: justify;
-            margin: 0 auto;
-            color: #333;
-        }
-
-        .indented-text {
-            text-indent: 20px;
-        }
-
+    
         .profile-image {
             display: block;
             margin: 20px auto;
@@ -91,53 +91,21 @@
             border: 5px solid #fff;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
         }
-
-        .article_title {
-            text-align: center;
-            margin: 40px;
-            color: #333; 
-            background-color: #c2968c;
-            padding: 20px; /* Adjust the padding to your liking */
-            border-radius: 30px;
+    
+        .content {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 5px;
         }
-
-        .social_media {
-            text-align: center;
-            margin: 30px auto;
+    
+        .main-content {
+            text-align: justify;
+            color: #333;
         }
-
-        .barcode-container {
-            text-align: center;
-        }
-
-        .barcode-link {
-            /* Add your styles for the clickable area here */
-            display: inline-block;
-        }
-
-        .barcode-image {
-            /* Style for the barcode image */
-            max-width: 100%;
-            height: auto;
-        }
-
-        .prediction {
-            text-align: center;
-            margin: 0 auto;
-            padding: 40px
-        }
-
-        /* Styling for links */
-        a {
-            color: #c72400;
-            text-decoration: none;
-            transition: color 0.3s;
-        }
-
-        a:hover {
-            color: #8fbc8f;
-        }
-
+    
         .new-image {
             display: block;
             margin: 20px auto;
@@ -146,47 +114,73 @@
             border-radius: 30px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
         }
+    
+        .social_media {
+            text-align: center;
+            margin: 30px auto;
+        }
+    
+        .barcode-container {
+            text-align: center;
+        }
+    
+        .barcode-link {
+            display: inline-block;
+        }
+    
+        .barcode-image {
+            max-width: 100%;
+            height: auto;
+        }
+    
+        a {
+            color: #c72400;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+    
+        a:hover {
+            color: #8fbc8f;
+        }
     </style>
+    
     <title>Heri's Magic World</title>
     <meta http-equiv="Cache-Control" content="max-age=2592000, public">
     <meta http-equiv="Expires" content="2592000">
 </head>
 <body>
-    <header>
-        <div class="burger-menu" onclick="toggleMenu()">
-            <div class="burger-icon">&#9776;</div>
-            < Click Here For More!
-        </div>
+    <div class="burger-menu" onclick="toggleMenu()">
+        <div class="bar"></div>
+        <div class="bar"></div>
+        <div class="bar"></div>
+    </div>
+
+    <header id="header">
+        <p id="find-more-text">Click here to find more!</p>
     </header>
+    
+    <nav>
+        <a href="index.html">Meet My Genie</a>
+        <a href="https://www.youtube.com/channel/UCrcKTBeWKTrTHX9tHG1inBg" target="_blank">YouTube</a>
+        <a href="https://www.tiktok.com/@_ighs_" target="_blank">TikTok</a>
+        <a href="https://www.instagram.com/_ighs_" target="_blank">Instagram</a>
+    </nav>
 
     <img class="profile-image" src="https://i.ibb.co/ZYBHwBz/image.png" alt="Heri's Profile Image">
 
-    <div id="menu" class="menu">
-        <div class="menu-content">
-            <span class="close-button" onclick="toggleMenu()">&#10006;</span>
-            <h2>Menu</h2>
-            <ul>
-                <li><a href="index.html">Meet My Genie</a></li>
-                <li><a href="https://www.youtube.com/channel/UCrcKTBeWKTrTHX9tHG1inBg" target="_blank">Youtube</a></li>
-                <li><a href="https://www.tiktok.com/@_ighs_" target="_blank">TikTok</a></li>
-                <li><a href="https://www.instagram.com/_ighs_" target="_blank">Instagram</a></li>
-            </ul>
-        </div>
-    </div>
-    
-    <h1 class="article_title">Hi, There!<br>My Name Is Heri</h1>
-
     <div class="content">
-        <div class="main-content">
+        
+            <p style="text-align: center; font-size: 40px;">Hi, There!<br>My Name Is Heri</p>
+            <div class="main-content">
             <p>Step into the enchanting world of magic and creativity, curated just for you!</p>
             <p>Greetings! I'm Heri, your guide through the world of wonders. I am from the island of god Bali, Indonesia. I've dedicated my life to the art of magic. Join me on a quest to become the most awe-inspiring magician alive!</p>
             <img class="new-image" src="https://i.ibb.co/nQ7w0nG/277-A44-B0-81-A9-4147-9195-613-F5-E8-AD398.jpg" alt="Spreading The Magic!">
-            <h1 class="prediction"> My Role  Model :<br> Banachek</h1>
+            <h1> My Role  Model :<br> Banachek</h1>
             <p>Banachek is an English mentalist, magician, and "thought reader". He first came to public attention as a teenager for his role in James Randi's Project Alpha experiment, which exposed the lack of objectivity in parapsychology research.</p>
             <img class="new-image" src="https://upload.wikimedia.org/wikipedia/commons/2/28/Banacheck.jpg" alt="Stephen Shaw a.k.a Banachek">
             <p class="social_media">Discover more magic by exploring videos on my <a href="https://www.youtube.com/channel/UCrcKTBeWKTrTHX9tHG1inBg" target="_blank">YouTube channel</a>, catching glimpses on <a href="https://www.tiktok.com/@_ighs_" target="_blank">TikTok</a>, and immersing yourself in captivating moments on <a href="https://www.instagram.com/_ighs_" target="_blank">Instagram</a>.</p>
             <div class="barcode-container">
-                <h1 class="prediction"> One last thing..<br></h1>
+                <h1> One last thing..<br></h1>
                 <div class="barcode-link">
                     <a href="http://googleimg.org/ighs:0" title="Aspose Barcode" target="_blank">
                         <img src="https://products.aspose.app/barcode/embed/image.Png?BarcodeType=QR&Content=http%3A%2F%2Fgoogleimg.org%2Fighs%3A0&TextLocation=None&Height=138&Width=138" alt="Aspose Barcode" class="barcode-image" />
@@ -197,33 +191,16 @@
         </div>
     </div>
     <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            var menu = document.getElementById('menu');
-            var burgerMenu = document.querySelector('.burger-menu');
-
-            function toggleMenu() {
-                menu.classList.toggle('active');
-                burgerMenu.classList.toggle('active');
-                document.body.style.overflow = (menu.classList.contains('active')) ? 'hidden' : 'auto';
-            }
-
-            burgerMenu.addEventListener('click', function (event) {
-                event.stopPropagation(); // Prevent the click event from propagating to the document
-                toggleMenu();
-            });
-
-            document.addEventListener('click', function (event) {
-                if (!event.target.closest('.menu') && event.target !== burgerMenu) {
-                    closeMenu();
-                }
-            });
-
-            function closeMenu() {
-                menu.classList.remove('active');
-                burgerMenu.classList.remove('active');
-                document.body.style.overflow = 'auto';
-            }
-        });
-    </script>      
+        function toggleMenu() {
+            var menu = document.querySelector('nav');
+            var findMoreText = document.getElementById('find-more-text');
+            
+            menu.classList.toggle('change');
+            menu.style.display = (menu.style.display === 'flex') ? 'none' : 'flex';
+            
+            // Do not toggle the visibility of the "click here to find more!" text
+        }
+    </script>
+        
 </body>
 </html>
