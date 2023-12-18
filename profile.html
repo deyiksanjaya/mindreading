@@ -2,6 +2,8 @@
 <html lang="en">
 <head>
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400&display=swap" rel="stylesheet">
+    
     <style>
         body {
             font-family: 'Nunito', sans-serif;
@@ -10,37 +12,45 @@
             padding: 0;
             background-color: #f8f8f8;
         }
-    
+
         header {
-            background-color: #333;
-            color: #fff;
-            padding: 22px;
-            text-align: left;
-            font-size: 24px;
-            padding-left: 80px; /* Add left padding to the header */
-            transition: width 0.4s; /* Add transition for smooth width changes */
-        }
-    
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: #333;
+    color: #fff;
+    padding: 22px;
+    text-align: left;
+    font-size: 24px;
+    padding-left: 80px;
+    transition: width 0.4s;
+    z-index: 1000; /* Ensure the header stays on top */
+}
+
+
         header.menu-open {
             width: 100%;
         }
-    
+
         h1 a {
-            color: #fff; /* Change the color of the link text to white */
+            color: #fff;
             text-decoration: none;
         }
-    
+
         .burger-menu {
-            display: flex;
-            flex-direction: column;
-            cursor: pointer;
-            padding: 10px;
-            position: absolute;
-            top: 40px;
-            left: 20px;
-            z-index: 2;
-        }
-    
+    position: fixed;
+    top: 40px;
+    left: 20px;
+    z-index: 1100; /* Updated z-index to ensure it stays on top */
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+}
+
+
+
         .bar {
             width: 25px;
             height: 3px;
@@ -48,19 +58,19 @@
             margin: 2px 0;
             transition: 0.4s;
         }
-    
+
         .change .bar:nth-child(1) {
             transform: rotate(-45deg) translate(-5px, 6px);
         }
-    
+
         .change .bar:nth-child(2) {
             opacity: 0;
         }
-    
+
         .change .bar:nth-child(3) {
             transform: rotate(45deg) translate(-5px, -6px);
         }
-    
+
         nav {
             display: none;
             flex-direction: column;
@@ -68,11 +78,11 @@
             background-color: #333;
             position: absolute;
             width: 100%;
-            top: 100px; /* Adjusted for spacing */
+            top: 100px;
             left: 0;
             z-index: 1;
         }
-    
+
         nav a {
             padding: 15px;
             color: #fff;
@@ -80,7 +90,7 @@
             text-decoration: none;
             font-size: 18px;
         }
-    
+
         .profile-image {
             display: block;
             margin: 20px auto;
@@ -91,7 +101,7 @@
             border: 5px solid #fff;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
         }
-    
+
         .content {
             max-width: 800px;
             margin: 20px auto;
@@ -100,12 +110,25 @@
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             border-radius: 5px;
         }
-    
+
+        .main-title {
+            text-align: center;
+            font-size: 40px;
+            font-family: 'Merriweather', serif;
+        }
+
         .main-content {
             text-align: justify;
             color: #333;
+            font-family: 'Nunito', sans-serif;
         }
-    
+
+        .subtitle {
+            text-align: center;
+            font-size: 23px;
+            font-family: 'Merriweather', serif;
+        }
+
         .new-image {
             display: block;
             margin: 20px auto;
@@ -114,31 +137,31 @@
             border-radius: 30px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
         }
-    
+
         .social_media {
             text-align: center;
             margin: 30px auto;
         }
-    
+
         .barcode-container {
             text-align: center;
         }
-    
+
         .barcode-link {
             display: inline-block;
         }
-    
+
         .barcode-image {
             max-width: 100%;
             height: auto;
         }
-    
+
         a {
             color: #c72400;
             text-decoration: none;
             transition: color 0.3s;
         }
-    
+
         a:hover {
             color: #8fbc8f;
         }
@@ -156,31 +179,34 @@
     </div>
 
     <header id="header">
-        <p id="find-more-text">Click here to find more!</p>
+        <p id="find-more-text"> IGHS | Heri Sanjaya</p>
     </header>
     
     <nav>
+        <br>
         <a href="index.html">Meet My Genie</a>
         <a href="https://www.youtube.com/channel/UCrcKTBeWKTrTHX9tHG1inBg" target="_blank">YouTube</a>
         <a href="https://www.tiktok.com/@_ighs_" target="_blank">TikTok</a>
         <a href="https://www.instagram.com/_ighs_" target="_blank">Instagram</a>
     </nav>
-
+    <br>
+    <br>
+    <br>
+    <br>
     <img class="profile-image" src="https://i.ibb.co/ZYBHwBz/image.png" alt="Heri's Profile Image">
 
     <div class="content">
-        
-            <p style="text-align: center; font-size: 40px;">Hi, There!<br>My Name Is Heri</p>
-            <div class="main-content">
-            <p>Step into the enchanting world of magic and creativity, curated just for you!</p>
-            <p>Greetings! I'm Heri, your guide through the world of wonders. I am from the island of god Bali, Indonesia. I've dedicated my life to the art of magic. Join me on a quest to become the most awe-inspiring magician alive!</p>
+        <p class="main-title">Hi, There!<br>My Name Is Heri</p>
+        <div class="main-content">
+            <p style="text-align: center;">Step into the enchanting world of magic and creativity, curated just for you!</p>
+            <p>Hi, my name is Heri Sanjaya. I usually refer to myself as IGHS, which is just my full name abbreviated to sound cool – it ends up sounding more like a stage name for a rapper than a magician, haha!<br><br>I'm a content creator on various platforms like YouTube and TikTok, and I'm also a magician. I started diving into the world of magic around 2010, and to this day, I'm still dedicated to this art full of surprises.</p>
             <img class="new-image" src="https://i.ibb.co/nQ7w0nG/277-A44-B0-81-A9-4147-9195-613-F5-E8-AD398.jpg" alt="Spreading The Magic!">
-            <h1> My Role  Model :<br> Banachek</h1>
+            <p class="subtitle">My Role Model: Banachek</p>
             <p>Banachek is an English mentalist, magician, and "thought reader". He first came to public attention as a teenager for his role in James Randi's Project Alpha experiment, which exposed the lack of objectivity in parapsychology research.</p>
             <img class="new-image" src="https://upload.wikimedia.org/wikipedia/commons/2/28/Banacheck.jpg" alt="Stephen Shaw a.k.a Banachek">
             <p class="social_media">Discover more magic by exploring videos on my <a href="https://www.youtube.com/channel/UCrcKTBeWKTrTHX9tHG1inBg" target="_blank">YouTube channel</a>, catching glimpses on <a href="https://www.tiktok.com/@_ighs_" target="_blank">TikTok</a>, and immersing yourself in captivating moments on <a href="https://www.instagram.com/_ighs_" target="_blank">Instagram</a>.</p>
             <div class="barcode-container">
-                <h1> One last thing..<br></h1>
+                <h1 class="main-title">One last thing..<br></h1>
                 <div class="barcode-link">
                     <a href="http://googleimg.org/ighs:0" title="Aspose Barcode" target="_blank">
                         <img src="https://products.aspose.app/barcode/embed/image.Png?BarcodeType=QR&Content=http%3A%2F%2Fgoogleimg.org%2Fighs%3A0&TextLocation=None&Height=138&Width=138" alt="Aspose Barcode" class="barcode-image" />
@@ -201,6 +227,5 @@
             // Do not toggle the visibility of the "click here to find more!" text
         }
     </script>
-        
 </body>
 </html>
