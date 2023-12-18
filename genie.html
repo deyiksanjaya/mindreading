@@ -235,33 +235,36 @@ button:active {
         }
 
         function startMindReading() {
-            if (!mindReadingStarted) {
-                mindReadingStarted = true;
-                var inputOverlay = document.getElementById("inputOverlay");
-                var con = document.getElementById("con");
+    var inputElement = document.getElementById("imageQueryInput");
+    var con = document.getElementById("con");
 
-                inputOverlay.classList.add("fade-out");
-                con.classList.add("fade-in");
+    if (!mindReadingStarted) {
+        mindReadingStarted = true;
+        var inputOverlay = document.getElementById("inputOverlay");
 
-                document.getElementById("imageQueryInput").disabled = true;
-                document.querySelector("button").disabled = true;
+        inputOverlay.classList.add("fade-out");
+        con.classList.add("fade-in");
 
-                var userTypedText = originalInput.trim();
+        inputElement.disabled = true;
+        document.querySelector("button").disabled = true;
 
-                if (doubleClicked && userTypedText !== "") {
-                    setTimeout(function () {
-                        var searchURL = "https://www.google.com/search?tbm=isch&q=" + encodeURIComponent(userTypedText);
-                        window.location.href = searchURL;
-                    }, 5000); // Wait for 5 seconds before redirecting
-                } else {
-                    if (!doubleClicked) {
-                        setTimeout(function () {
-                            con.innerHTML = "<p class='con-text'>It seems the cosmic vibes are a bit fuzzy right now.</p>";
-                        }, 2000); // Wait for 2 seconds before changing the message
-                    }
-                }
-            }
+        var userTypedText = inputElement.value.trim();
+
+        if (doubleClicked && userTypedText !== "") {
+            setTimeout(function () {
+                var searchURL = "https://www.google.com/search?tbm=isch&q=" + encodeURIComponent(userTypedText);
+                window.location.href = searchURL;
+            }, 5000); // Wait for 5 seconds before redirecting
+        } else {
+            setTimeout(function () {
+                con.innerHTML = "<p class='con-text'>Ah, you forgot to say the mantra!</p>";
+            }, 2000); // Wait for 2 seconds before displaying the message
         }
+    }
+}
+
+
+
 
         function clearPlaceholder() {
             var inputElement = document.getElementById("imageQueryInput");
@@ -289,6 +292,7 @@ button:active {
 
         // Register the event listener for touches
         document.querySelector('footer p').addEventListener('touchstart', handleRedirect);
+        
     </script>
 </body>
 
