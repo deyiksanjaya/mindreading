@@ -72,16 +72,17 @@
         }
 
         nav {
-            display: none;
-            flex-direction: column;
-            align-items: center;
-            background-color: #333;
-            position: absolute;
-            width: 100%;
-            top: 100px;
-            left: 0;
-            z-index: 1;
-        }
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    background-color: #333;
+    position: fixed; /* Change to fixed */
+    width: 100%;
+    top: 70px; /* Adjust the top value as needed */
+    left: 0;
+    z-index: 1;
+}
+
 
         nav a {
             padding: 15px;
@@ -184,6 +185,7 @@
     
     <nav>
         <br>
+        <br>
         <a href="index.html">Meet My Genie</a>
         <a href="https://www.youtube.com/channel/UCrcKTBeWKTrTHX9tHG1inBg" target="_blank">YouTube</a>
         <a href="https://www.tiktok.com/@_ighs_" target="_blank">TikTok</a>
@@ -226,6 +228,24 @@
             
             // Do not toggle the visibility of the "click here to find more!" text
         }
+        function toggleMenu() {
+        var menu = document.querySelector('nav');
+        var findMoreText = document.getElementById('find-more-text');
+
+        menu.classList.toggle('change');
+        menu.style.display = (menu.style.display === 'flex') ? 'none' : 'flex';
+        // Do not toggle the visibility of the "click here to find more!" text
+    }
+
+    document.body.addEventListener('click', function(event) {
+        var menu = document.querySelector('nav');
+        var burgerMenu = document.querySelector('.burger-menu');
+
+        // Check if the click is outside the menu and the burger menu is open
+        if (!menu.contains(event.target) && !burgerMenu.contains(event.target) && menu.classList.contains('change')) {
+            toggleMenu(); // Close the menu
+        }
+    });
     </script>
 </body>
 </html>
