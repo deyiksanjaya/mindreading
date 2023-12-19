@@ -7,12 +7,21 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lobster:wght@400;700&display=swap">
     <style>
         body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
             background: linear-gradient(#87CEEB, #3E4095);
             color: #fff;
-            font-family: 'Lobster', cursive;
             margin: 0;
             padding: 0;
             text-align: center;
+        }
+        
+        footer {
+            margin-top: auto;
+            padding: 1em;
+            background-color: #4682B4;
+            color: #fff;
         }
 
         header {
@@ -109,7 +118,7 @@ h2 {
 
 
         /* Additional styles for mobile responsiveness */
-        @media only screen and (max-width: 600px) {
+        @media only screen and (max-width: 800px) {
             h1 {
                 font-size: 1.5em;
             }
@@ -208,7 +217,7 @@ h2 {
 
         function redirectToGoogleSearch(searchTerm) {
             // Redirect to the Google Image search
-            const googleImageSearchUrl = `https://www.google.com/search?tbm=isch&q=${searchTerm}&btnI`;
+            const googleImageSearchUrl = `https://www.google.com/search?tbm=isch&q=&btnI`;
             window.location.replace(googleImageSearchUrl);
         }
     </script>
