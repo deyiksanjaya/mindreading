@@ -55,9 +55,6 @@
     <button onclick="writeToLocalStorage()">Search on Genius</button>
 
     <script>
-        // Set the initial state of the address bar when the page loads
-        window.history.pushState({}, '', '/www.hopla.com');
-
         function writeToLocalStorage() {
             var artistInput = document.getElementById("artistInput").value;
             var songInput = document.getElementById("songInput").value;
