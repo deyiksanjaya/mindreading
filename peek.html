@@ -1,0 +1,42 @@
+<!-- Updated Script 2 -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="hopla.png" type="image/png">
+    <title>Peek</title>
+</head>
+
+<body>
+    <div id="display"></div>
+
+    <script>
+        Notification.requestPermission().then(function (permission) {
+            if (permission === "granted") {
+                console.log("Notification permission granted!");
+            }
+        });
+
+        function readFromLocalStorage() {
+            var combinedInput = localStorage.getItem("combinedInput"); // Change to "combinedInput"
+            if (combinedInput) {
+                document.getElementById("display").innerText = "Script 2 received: " + combinedInput;
+
+                // Trigger push notification
+                var notification = new Notification("New Input Received", {
+                    body: combinedInput,
+                });
+
+                // Clear the local storage for the next input
+                localStorage.removeItem("combinedInput"); // Change to "combinedInput"
+            }
+        }
+
+        // Call the function periodically to check for new input
+        setInterval(readFromLocalStorage, 1000); // Adjust the interval as needed
+    </script>
+</body>
+
+</html>
