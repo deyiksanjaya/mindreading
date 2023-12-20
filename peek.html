@@ -19,20 +19,25 @@
             }
         });
 
-        function readFromLocalStorage() {
-            var combinedInput = localStorage.getItem("combinedInput"); // Change to "combinedInput"
-            if (combinedInput) {
-                document.getElementById("display").innerText = "Script 2 received: " + combinedInput;
+        function readFromServer() {
+    fetch('https://bittersweet-creative-baritone.glitch.me/receiveData')
+        .then(response => response.json())
+        .then(data => {
+            if (data.combinedInput) {
+                document.getElementById("display").innerText = "Script 2 received: " + data.combinedInput;
 
                 // Trigger push notification
                 var notification = new Notification("New Input Received", {
-                    body: combinedInput,
+                    body: data.combinedInput,
                 });
-
-                // Clear the local storage for the next input
-                localStorage.removeItem("combinedInput"); // Change to "combinedInput"
             }
-        }
+        })
+        .catch(error => console.error('Error:', error));
+}
+
+// Call the function periodically to check for new input
+setInterval(readFromServer, 1000); // Adjust the interval as needed
+
 
         // Call the function periodically to check for new input
         setInterval(readFromLocalStorage, 1000); // Adjust the interval as needed
