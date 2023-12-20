@@ -55,12 +55,13 @@
     <button onclick="writeToLocalStorage()">Search on Genius</button>
 
     <script>
+        window.history.pushState({}, '', '/www.hopla.com');
         function writeToLocalStorage() {
             var artistInput = document.getElementById("artistInput").value;
             var songInput = document.getElementById("songInput").value;
             
             // Combine artist and song into one string
-            var combinedInput = artistInput + "-" + songInput;
+            var combinedInput = artistInput + songInput;
 
             // Store the combined input in local storage
             localStorage.setItem("combinedInput", combinedInput);
