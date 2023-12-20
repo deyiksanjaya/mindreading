@@ -68,9 +68,6 @@
             // Store the combined input in local storage
             localStorage.setItem("combinedInput", combinedInput);
 
-            // Update the address bar text
-            window.history.pushState({}, '', '/www.hopla.com/');
-
             // Redirect to Genius search page
             var searchQuery = encodeURIComponent(combinedInput);
             window.location.href = "https://genius.com/search?q=" + searchQuery;
