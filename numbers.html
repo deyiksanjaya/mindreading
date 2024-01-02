@@ -21,7 +21,8 @@
 <body>
 
 <script>
-  let forceNumberActivated = false;
+  let visibleMagicNumbers = [];
+  let lastTouchTimestamp = 0;
 
   function createMagicNumbers(gridSize) {
     const body = document.body;
@@ -50,6 +51,8 @@
         const randomSize = Math.floor(Math.random() * 16) + 10; // Adjust the range as needed
         magicNumber.style.fontSize = randomSize + 'px';
 
+        magicNumber.addEventListener('touchstart', handleTouchStart, false);
+
         magicNumbers.push(magicNumber);
         body.appendChild(magicNumber);
       }
@@ -58,52 +61,72 @@
     return magicNumbers;
   }
 
-  function handleTouchStart(event, magicNumbers) {
-    const touch = event.changedTouches[0];
-    const x = touch.clientX;
-    const y = touch.clientY;
-
-    if (forceNumberActivated) {
-      const closestNumber = findClosestNumber(x, y, magicNumbers);
-      if (closestNumber) {
-        closestNumber.textContent = '27';
-        forceNumberActivated = false;
-      }
-    } else {
-      // Randomly adjust the font size when touched
-      const randomMagicNumber = magicNumbers[Math.floor(Math.random() * magicNumbers.length)];
-      const newRandomSize = Math.floor(Math.random() * 16) + 10;
-      randomMagicNumber.style.fontSize = newRandomSize + 'px';
-    }
+  function handleTouchStart() {
+    // Reset visibleMagicNumbers array on touchstart
+    visibleMagicNumbers = [];
+    // Update the timestamp of the last touch
+    lastTouchTimestamp = Date.now();
   }
 
-  function findClosestNumber(x, y, magicNumbers) {
-    let closestDistance = Infinity;
-    let closestNumber = null;
+  function handleZoomEnd() {
+    // Delay the execution by 4 seconds after the last touch
+    setTimeout(() => {
+      const elapsedTimeSinceTouch = Date.now() - lastTouchTimestamp;
 
-    for (const magicNumber of magicNumbers) {
-      const rect = magicNumber.getBoundingClientRect();
-      const centerX = rect.left + rect.width / 2;
-      const centerY = rect.top + rect.height / 2;
+      if (visibleMagicNumbers.length > 0 && elapsedTimeSinceTouch >= 4000) {
+        const centerX = window.innerWidth / 2;
+        const centerY = window.innerHeight / 2;
 
-      const distance = Math.sqrt((centerX - x) ** 2 + (centerY - y) ** 2);
+        let closestDistance = Infinity;
+        let closestNumber = null;
 
-      if (distance < closestDistance) {
-        closestDistance = distance;
-        closestNumber = magicNumber;
+        for (const magicNumber of visibleMagicNumbers) {
+          const rect = magicNumber.getBoundingClientRect();
+          const numberX = rect.left + rect.width / 2;
+          const numberY = rect.top + rect.height / 2;
+
+          const distance = Math.sqrt((numberX - centerX) ** 2 + (numberY - centerY) ** 2);
+
+          if (distance < closestDistance) {
+            closestDistance = distance;
+            closestNumber = magicNumber;
+          }
+        }
+
+        if (closestNumber) {
+          closestNumber.textContent = '27';
+        }
       }
-    }
-
-    return closestNumber;
+    }, 4000);
   }
 
-  document.addEventListener('gesturestart', function (e) {
-    forceNumberActivated = true;
-  });
+  // Detect visible numbers on the screen
+  function updateVisibleMagicNumbers() {
+    visibleMagicNumbers = Array.from(document.querySelectorAll('.magic-number'))
+      .filter((magicNumber) => isElementVisible(magicNumber));
+  }
+
+  // Check if an element is visible on the screen
+  function isElementVisible(element) {
+    const rect = element.getBoundingClientRect();
+    return (
+      rect.top >= 0 &&
+      rect.left >= 0 &&
+      rect.bottom <= window.innerHeight &&
+      rect.right <= window.innerWidth
+    );
+  }
 
   const magicNumbers = createMagicNumbers(8); // You can change this number to adjust the grid size
 
-  document.addEventListener('touchstart', (event) => handleTouchStart(event, magicNumbers), false);
+  document.addEventListener('touchstart', handleTouchStart, false);
+
+  document.addEventListener('gestureend', handleZoomEnd, false);
+
+  // Update visible numbers after the zoom ends
+  window.addEventListener('resize', () => {
+    updateVisibleMagicNumbers();
+  });
 
 </script>
 
