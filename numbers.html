@@ -100,11 +100,9 @@
   }
 
   function handleTouchStart() {
-    clearTimeout(touchTimeout);
-    touchTimeout = setTimeout(() => {
-      // If no touch detected for 3 seconds, check the position of the force number and jump to it
-      checkForceNumberPosition();
-    }, 3000);
+    // If touch is detected after zooming, reset the last touch time
+    lastTouchTime = Date.now();
+    isZooming = false;
   }
 
   function checkForceNumberPosition() {
@@ -138,14 +136,12 @@
     return false; // Not overlapping
   }
 
-  let touchTimeout;
+  let lastTouchTime = Date.now();
+  let isZooming = false;
   const magicNumbers = createMagicNumbers(8); // You can change this number to adjust the grid size
   const forceNumber = createForceNumber();
 
   // Add event listener for zoom and swipe detection
-  let lastTouchTime = Date.now();
-  let isZooming = false;
-
   document.addEventListener('touchstart', () => {
     lastTouchTime = Date.now();
     isZooming = false;
