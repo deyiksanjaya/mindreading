@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Magic Numbers</title>
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+    }
+
+    .magic-number {
+      position: absolute;
+      font-size: 16px;
+      color: #000;
+      user-select: none;
+    }
+  </style>
+</head>
+<body>
+
+<script>
+  let forceNumberActivated = false;
+
+  function createMagicNumbers(gridSize) {
+    const body = document.body;
+    const screenWidth = window.innerWidth;
+    const screenHeight = window.innerHeight;
+
+    const cellWidth = screenWidth / gridSize;
+    const cellHeight = screenHeight / gridSize;
+
+    const magicNumbers = [];
+
+    for (let i = 0; i < gridSize; i++) {
+      for (let j = 0; j < gridSize; j++) {
+        const magicNumber = document.createElement('div');
+        magicNumber.className = 'magic-number';
+        const randomNumber = Math.floor(Math.random() * 90 + 10); // Generating two-digit numbers
+        magicNumber.textContent = randomNumber;
+
+        const positionX = i * cellWidth + Math.random() * (cellWidth - 20);
+        const positionY = j * cellHeight + Math.random() * (cellHeight - 20);
+
+        magicNumber.style.left = positionX + 'px';
+        magicNumber.style.top = positionY + 'px';
+
+        // Randomly adjust the font size
+        const randomSize = Math.floor(Math.random() * 16) + 10; // Adjust the range as needed
+        magicNumber.style.fontSize = randomSize + 'px';
+
+        magicNumbers.push(magicNumber);
+        body.appendChild(magicNumber);
+      }
+    }
+
+    return magicNumbers;
+  }
+
+  function handleTouchStart(event, magicNumbers) {
+    const touch = event.changedTouches[0];
+    const x = touch.clientX;
+    const y = touch.clientY;
+
+    if (forceNumberActivated) {
+      const closestNumber = findClosestNumber(x, y, magicNumbers);
+      if (closestNumber) {
+        closestNumber.textContent = '27';
+        forceNumberActivated = false;
+      }
+    } else {
+      // Randomly adjust the font size when touched
+      const randomMagicNumber = magicNumbers[Math.floor(Math.random() * magicNumbers.length)];
+      const newRandomSize = Math.floor(Math.random() * 16) + 10;
+      randomMagicNumber.style.fontSize = newRandomSize + 'px';
+    }
+  }
+
+  function findClosestNumber(x, y, magicNumbers) {
+    let closestDistance = Infinity;
+    let closestNumber = null;
+
+    for (const magicNumber of magicNumbers) {
+      const rect = magicNumber.getBoundingClientRect();
+      const centerX = rect.left + rect.width / 2;
+      const centerY = rect.top + rect.height / 2;
+
+      const distance = Math.sqrt((centerX - x) ** 2 + (centerY - y) ** 2);
+
+      if (distance < closestDistance) {
+        closestDistance = distance;
+        closestNumber = magicNumber;
+      }
+    }
+
+    return closestNumber;
+  }
+
+  document.addEventListener('gesturestart', function (e) {
+    forceNumberActivated = true;
+  });
+
+  const magicNumbers = createMagicNumbers(8); // You can change this number to adjust the grid size
+
+  document.addEventListener('touchstart', (event) => handleTouchStart(event, magicNumbers), false);
+
+</script>
+
+</body>
+</html>
