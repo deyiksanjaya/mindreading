@@ -16,14 +16,18 @@
       color: #000;
       user-select: none;
     }
+
+    #force-number {
+      position: absolute;
+      font-size: 20px;
+      color: #f00; /* Red color for the force number */
+      user-select: none;
+    }
   </style>
 </head>
 <body>
 
 <script>
-  let visibleMagicNumbers = [];
-  let touchDetected = false;
-
   function createMagicNumbers(gridSize) {
     const body = document.body;
     const screenWidth = window.innerWidth;
@@ -31,8 +35,6 @@
 
     const cellWidth = screenWidth / gridSize;
     const cellHeight = screenHeight / gridSize;
-
-    const magicNumbers = [];
 
     for (let i = 0; i < gridSize; i++) {
       for (let j = 0; j < gridSize; j++) {
@@ -53,75 +55,40 @@
 
         magicNumber.addEventListener('touchstart', handleTouchStart, false);
 
-        magicNumbers.push(magicNumber);
         body.appendChild(magicNumber);
       }
     }
 
-    return magicNumbers;
+    // Create the force number
+    const forceNumber = document.createElement('div');
+    forceNumber.id = 'force-number';
+    forceNumber.textContent = 'Force';
+    const forceX = Math.random() * (screenWidth - 20);
+    const forceY = Math.random() * (screenHeight - 20);
+    forceNumber.style.left = forceX + 'px';
+    forceNumber.style.top = forceY + 'px';
+    body.appendChild(forceNumber);
+
+    return forceNumber;
   }
 
   function handleTouchStart() {
-    touchDetected = true;
-    setTimeout(() => {
-      touchDetected = false;
-    }, 4000);
+    clearTimeout(touchTimeout);
+    touchTimeout = setTimeout(() => {
+      // If no touch detected for 3 seconds, jump to the force number position
+      jumpToForceNumber();
+    }, 3000);
   }
 
-  function handleZoomEnd() {
-    if (!touchDetected && visibleMagicNumbers.length > 0) {
-      const centerX = window.innerWidth / 2;
-      const centerY = window.innerHeight / 2;
-
-      let closestDistance = Infinity;
-      let closestNumber = null;
-
-      for (const magicNumber of visibleMagicNumbers) {
-        const rect = magicNumber.getBoundingClientRect();
-        const numberX = rect.left + rect.width / 2;
-        const numberY = rect.top + rect.height / 2;
-
-        const distance = Math.sqrt((numberX - centerX) ** 2 + (numberY - centerY) ** 2);
-
-        if (distance < closestDistance) {
-          closestDistance = distance;
-          closestNumber = magicNumber;
-        }
-      }
-
-      if (closestNumber) {
-        closestNumber.textContent = '27';
-      }
+  function jumpToForceNumber() {
+    const forceNumber = document.getElementById('force-number');
+    if (forceNumber) {
+      window.scrollTo(forceNumber.offsetLeft, forceNumber.offsetTop);
     }
   }
 
-  // Detect visible numbers on the screen
-  function updateVisibleMagicNumbers() {
-    visibleMagicNumbers = Array.from(document.querySelectorAll('.magic-number'))
-      .filter((magicNumber) => isElementVisible(magicNumber));
-  }
-
-  // Check if an element is visible on the screen
-  function isElementVisible(element) {
-    const rect = element.getBoundingClientRect();
-    return (
-      rect.top >= 0 &&
-      rect.left >= 0 &&
-      rect.bottom <= window.innerHeight &&
-      rect.right <= window.innerWidth
-    );
-  }
-
-  const magicNumbers = createMagicNumbers(8); // You can change this number to adjust the grid size
-
-  document.addEventListener('touchstart', handleTouchStart, false);
-
-  document.addEventListener('gestureend', handleZoomEnd, false);
-
-  // Update visible numbers after the zoom ends
-  window.addEventListener('resize', () => {
-    updateVisibleMagicNumbers();
-  });
+  let touchTimeout;
+  createMagicNumbers(8); // You can change this number to adjust the grid size
 
 </script>
 
