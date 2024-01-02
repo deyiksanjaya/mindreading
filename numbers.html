@@ -27,6 +27,8 @@
 <body>
 
 <script>
+  let forceNumberPosition = {};
+
   function createMagicNumbers(gridSize) {
     const body = document.body;
     const screenWidth = window.innerWidth;
@@ -96,6 +98,9 @@
     forceNumber.style.top = forceY + 'px';
     body.appendChild(forceNumber);
 
+    // Store the initial position of the force number
+    forceNumberPosition = { x: forceX, y: forceY };
+
     return forceNumber;
   }
 
@@ -111,29 +116,16 @@
       const forceX = forceNumber.offsetLeft;
       const forceY = forceNumber.offsetTop;
 
-      // Jump to the exact position of the force number
+      // Manually adjust scroll position for Safari
+      const scrollX = forceX - window.innerWidth / 2 + 30;
+      const scrollY = forceY - window.innerHeight / 2 + 30;
+
       window.scrollTo({
-        top: forceY,
-        left: forceX,
-        behavior: 'smooth' // Add smooth scrolling effect
+        top: scrollY,
+        left: scrollX,
+        behavior: 'smooth'
       });
     }
-  }
-
-  // Function to check if a point overlaps with other elements
-  function isOverlapping(x, y, elements) {
-    for (const element of elements) {
-      const rect = element.getBoundingClientRect();
-      if (
-        x < rect.right &&
-        x + 60 > rect.left &&
-        y < rect.bottom &&
-        y + 60 > rect.top
-      ) {
-        return true; // Overlapping
-      }
-    }
-    return false; // Not overlapping
   }
 
   let lastTouchTime = Date.now();
@@ -152,8 +144,8 @@
   });
 
   document.addEventListener('touchend', () => {
-    if (isZooming && Date.now() - lastTouchTime > 500) {
-      // If zooming and last touch was more than 500ms ago, jump to force number
+    if (isZooming && Date.now() - lastTouchTime > 4000) {
+      // If zooming and last touch was more than 4 seconds ago, jump to force number
       checkForceNumberPosition();
     }
   });
