@@ -27,7 +27,7 @@
 <body>
 
 <script>
-  let forceNumberPosition = {};
+  let touchTimeout; // Declare touchTimeout
 
   function createMagicNumbers(gridSize) {
     const body = document.body;
@@ -39,24 +39,18 @@
 
     const magicNumbers = [];
 
-    // Generate an array with unique two-digit numbers
-    const uniqueNumbers = Array.from({ length: gridSize * gridSize }, (_, i) => i + 10).sort(() => Math.random() - 0.5);
-
-    let numberIndex = 0;
-
     for (let i = 0; i < gridSize; i++) {
       for (let j = 0; j < gridSize; j++) {
         const magicNumber = document.createElement('div');
         magicNumber.className = 'magic-number';
+        const randomNumber = Math.floor(Math.random() * 90 + 10); // Generating two-digit numbers
+        magicNumber.textContent = randomNumber;
 
         const positionX = i * cellWidth + Math.random() * (cellWidth - 20);
         const positionY = j * cellHeight + Math.random() * (cellHeight - 20);
 
         magicNumber.style.left = positionX + 'px';
         magicNumber.style.top = positionY + 'px';
-
-        // Set the unique two-digit number
-        magicNumber.textContent = uniqueNumbers[numberIndex];
 
         // Randomly adjust the font size
         const randomSize = Math.floor(Math.random() * 16) + 10; // Adjust the range as needed
@@ -66,8 +60,6 @@
 
         magicNumbers.push(magicNumber);
         body.appendChild(magicNumber);
-
-        numberIndex++;
       }
     }
 
@@ -79,35 +71,31 @@
     const screenWidth = window.innerWidth;
     const screenHeight = window.innerHeight;
 
-    // Remove any existing force numbers
-    const existingForceNumbers = document.querySelectorAll('#force-number');
-    existingForceNumbers.forEach((number) => {
-      number.remove();
-    });
-
     // Create the force number
     const forceNumber = document.createElement('div');
     forceNumber.id = 'force-number';
     forceNumber.textContent = '27';
 
-    // Place the force number at a random position on the screen
-    const forceX = Math.random() * (screenWidth - 60);
-    const forceY = Math.random() * (screenHeight - 60);
+    // Ensure the force number is not on the very edge or in the center
+    let forceX, forceY;
+    do {
+      forceX = Math.random() * (screenWidth - 60) + 30; // Avoiding the very edge
+      forceY = Math.random() * (screenHeight - 60) + 30; // Avoiding the very edge
+    } while (isOverlapping(forceX, forceY, magicNumbers));
 
     forceNumber.style.left = forceX + 'px';
     forceNumber.style.top = forceY + 'px';
     body.appendChild(forceNumber);
 
-    // Store the initial position of the force number
-    forceNumberPosition = { x: forceX, y: forceY };
-
     return forceNumber;
   }
 
-  function handleTouchStart() {
-    // If touch is detected after zooming, reset the last touch time
-    lastTouchTime = Date.now();
-    isZooming = false;
+  function handleTouchStart(e) {
+    clearTimeout(touchTimeout);
+    touchTimeout = setTimeout(() => {
+      // If no touch detected for 3 seconds, check the position of the force number and jump to it
+      checkForceNumberPosition();
+    }, 3000);
   }
 
   function checkForceNumberPosition() {
@@ -116,29 +104,58 @@
       const forceX = forceNumber.offsetLeft;
       const forceY = forceNumber.offsetTop;
 
-      // Jump to the exact position of the force number
+      // Jump to the force number position
       window.scrollTo(forceX, forceY);
     }
   }
 
-  let lastTouchTime = Date.now();
-  let isZooming = false;
+  // Function to check if a point overlaps with other elements
+  function isOverlapping(x, y, elements) {
+    for (const element of elements) {
+      const rect = element.getBoundingClientRect();
+      if (
+        x < rect.right &&
+        x + 60 > rect.left &&
+        y < rect.bottom &&
+        y + 60 > rect.top
+      ) {
+        return true; // Overlapping
+      }
+    }
+    return false; // Not overlapping
+  }
+
   const magicNumbers = createMagicNumbers(8); // You can change this number to adjust the grid size
   const forceNumber = createForceNumber();
 
   // Add event listener for zoom and swipe detection
-  document.addEventListener('touchstart', () => {
+  let lastTouchTime = Date.now();
+  let isZooming = false;
+
+  document.addEventListener('touchstart', (e) => {
     lastTouchTime = Date.now();
     isZooming = false;
+    startX = e.touches[0].clientX;
+    startY = e.touches[0].clientY;
   });
 
-  document.addEventListener('touchmove', () => {
+  document.addEventListener('touchmove', (e) => {
     isZooming = true;
+    const currentX = e.touches[0].clientX;
+    const currentY = e.touches[0].clientY;
+    const diffX = startX - currentX;
+    const diffY = startY - currentY;
+
+    // Detect if the swipe is diagonal
+    if (Math.abs(diffX) > 30 || Math.abs(diffY) > 30) {
+      // If diagonal, trigger checkForceNumberPosition
+      checkForceNumberPosition();
+    }
   });
 
   document.addEventListener('touchend', () => {
-    if (isZooming && Date.now() - lastTouchTime > 4000) {
-      // If zooming and last touch was more than 4 seconds ago, jump to force number
+    if (isZooming && Date.now() - lastTouchTime > 500) {
+      // If zooming and last touch was more than 500ms ago, jump to force number
       checkForceNumberPosition();
     }
   });
