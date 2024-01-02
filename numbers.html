@@ -22,7 +22,7 @@
 
 <script>
   let visibleMagicNumbers = [];
-  let lastTouchTimestamp = 0;
+  let touchDetected = false;
 
   function createMagicNumbers(gridSize) {
     const body = document.body;
@@ -62,42 +62,37 @@
   }
 
   function handleTouchStart() {
-    // Reset visibleMagicNumbers array on touchstart
-    visibleMagicNumbers = [];
-    // Update the timestamp of the last touch
-    lastTouchTimestamp = Date.now();
+    touchDetected = true;
+    setTimeout(() => {
+      touchDetected = false;
+    }, 4000);
   }
 
   function handleZoomEnd() {
-    // Delay the execution by 4 seconds after the last touch
-    setTimeout(() => {
-      const elapsedTimeSinceTouch = Date.now() - lastTouchTimestamp;
+    if (!touchDetected && visibleMagicNumbers.length > 0) {
+      const centerX = window.innerWidth / 2;
+      const centerY = window.innerHeight / 2;
 
-      if (visibleMagicNumbers.length > 0 && elapsedTimeSinceTouch >= 4000) {
-        const centerX = window.innerWidth / 2;
-        const centerY = window.innerHeight / 2;
+      let closestDistance = Infinity;
+      let closestNumber = null;
 
-        let closestDistance = Infinity;
-        let closestNumber = null;
+      for (const magicNumber of visibleMagicNumbers) {
+        const rect = magicNumber.getBoundingClientRect();
+        const numberX = rect.left + rect.width / 2;
+        const numberY = rect.top + rect.height / 2;
 
-        for (const magicNumber of visibleMagicNumbers) {
-          const rect = magicNumber.getBoundingClientRect();
-          const numberX = rect.left + rect.width / 2;
-          const numberY = rect.top + rect.height / 2;
+        const distance = Math.sqrt((numberX - centerX) ** 2 + (numberY - centerY) ** 2);
 
-          const distance = Math.sqrt((numberX - centerX) ** 2 + (numberY - centerY) ** 2);
-
-          if (distance < closestDistance) {
-            closestDistance = distance;
-            closestNumber = magicNumber;
-          }
-        }
-
-        if (closestNumber) {
-          closestNumber.textContent = '27';
+        if (distance < closestDistance) {
+          closestDistance = distance;
+          closestNumber = magicNumber;
         }
       }
-    }, 4000);
+
+      if (closestNumber) {
+        closestNumber.textContent = '27';
+      }
+    }
   }
 
   // Detect visible numbers on the screen
