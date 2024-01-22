@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Happy Birthday Febi!</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #ffe6f2; /* Light pink background */
+    }
+
+    .slider-container {
+      position: relative;
+      width: 100%;
+      overflow: hidden;
+      touch-action: pan-y; /* Enable touch scrolling */
+    }
+
+    .slider {
+      display: flex;
+      transition: transform 0.5s ease-in-out;
+    }
+
+    .slide {
+      min-width: 100%;
+    }
+
+    img {
+      width: 100%;
+      height: auto;
+    }
+
+    .video-player-container {
+      position: relative;
+      width: 100%;
+      margin-top: -60px; /* Adjust this value to move the video player above the slider */
+    }
+
+    .video-player {
+      display: none; /* Initially hide the video player */
+      width: 100%;
+      background-color: #ff66b2; /* Dark pink background for the video player */
+      padding: 10px;
+      text-align: center;
+    }
+
+    video {
+      width: 100%;
+      height: auto;
+    }
+
+    .more-wishes-button {
+      background-color: #ff66b2; /* Dark pink background for the button */
+      color: #fff; /* White text color */
+      padding: 10px 20px;
+      font-size: 18px;
+      border: none;
+      border-radius: 20px;
+      cursor: pointer;
+      margin: 20px;
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .slider-button {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 40px;
+      height: 40px;
+      background-color: #ff66b2; /* Dark pink background for the slider button */
+      color: #fff; /* White text color */
+      border: none;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .prev {
+      left: 10px;
+    }
+
+    .next {
+      right: 10px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="slider-container">
+  <div class="slider">
+    <div class="slide"><img src="https://i.ibb.co/F4pwTrR/1.jpg" alt="1"></div>
+    <div class="slide"><img src="https://i.ibb.co/JtyBdkW/2.jpg" alt="2"></div>
+    <div class="slide"><img src="https://i.ibb.co/sqyKf2N/3.jpg" alt="3"></div>
+    <div class="slide"><img src="https://i.ibb.co/5BgjGy5/4.jpg" alt="4"></div>
+    <div class="slide"><img src="https://i.ibb.co/JjysgFS/5.jpg" alt="5"></div>
+    <div class="slide"><img src="https://i.ibb.co/BPmR5pG/6.jpg" alt="6"></div>
+    <div class="slide"><img src="https://i.ibb.co/vLY7Zrp/7.jpg" alt="7"></div>
+    <div class="slide"><img src="https://i.ibb.co/2nCfp2m/8.jpg" alt="8"></div>
+    <div class="slide"><img src="https://i.ibb.co/94v7gg2/9.jpg" alt="9"></div>
+  </div>
+  <button class="slider-button prev" onclick="prevSlide()">‹</button>
+  <button class="slider-button next" onclick="nextSlide()">›</button>
+</div>
+
+<div class="video-player-container" id="videoPlayerContainer">
+  <button class="more-wishes-button" onclick="toggleVideoPlayer()">Click for More Wishes!</button>
+
+  <div class="video-player" id="videoPlayer">
+    <video controls>
+      <source src="ultah.mp4" type="video/mp4">
+      Your browser does not support the video tag.
+    </video>
+  </div>
+</div>
+
+<script>
+  let currentIndex = 0;
+  const slider = document.querySelector('.slider');
+  const slides = document.querySelectorAll('.slide');
+  const slideWidth = slides[0].offsetWidth;
+
+  function nextSlide() {
+    currentIndex = (currentIndex + 1) % slides.length;
+    updateSlider();
+  }
+
+  function prevSlide() {
+    currentIndex = (currentIndex - 1 + slides.length) % slides.length;
+    updateSlider();
+  }
+
+  function updateSlider() {
+    const newTransformValue = -currentIndex * slideWidth;
+    slider.style.transform = `translateX(${newTransformValue}px)`;
+  }
+
+  function toggleVideoPlayer() {
+    var videoPlayerContainer = document.getElementById('videoPlayerContainer');
+    var videoPlayer = document.getElementById('videoPlayer');
+    
+    // Toggle the display of the video player
+    videoPlayer.style.display = (videoPlayer.style.display === 'none') ? 'block' : 'none';
+    
+    // Scroll to the video player container
+    if (videoPlayer.style.display === 'block') {
+      videoPlayerContainer.scrollIntoView({ behavior: 'smooth' });
+    }
+  }
+</script>
+
+</body>
+</html>
