@@ -63,6 +63,8 @@
       display: block;
       margin-left: auto;
       margin-right: auto;
+      opacity: 0; /* Initially set opacity to 0 */
+      transition: opacity 0.5s ease-in-out; /* Add a transition effect for opacity */
     }
 
     .slider-button {
@@ -84,6 +86,7 @@
 
     .prev {
       left: 10px;
+      display: none; /* Initially hide the left button */
     }
 
     .next {
@@ -110,10 +113,10 @@
 </div>
 
 <div class="video-player-container" id="videoPlayerContainer">
-  <button class="more-wishes-button" onclick="toggleVideoPlayer()">Click for More Wishes!</button>
+  <button class="more-wishes-button" onclick="toggleVideoPlayer()" id="moreWishesButton">Click for More Wishes!</button>
 
   <div class="video-player" id="videoPlayer">
-    <video controls>
+    <video id="myVideo" controls>
       <source src="ultah.mp4" type="video/mp4">
       Your browser does not support the video tag.
     </video>
@@ -125,15 +128,20 @@
   const slider = document.querySelector('.slider');
   const slides = document.querySelectorAll('.slide');
   const slideWidth = slides[0].offsetWidth;
+  const prevButton = document.querySelector('.prev');
+  const moreWishesButton = document.getElementById('moreWishesButton');
+  const videoPlayer = document.getElementById('videoPlayer');
 
   function nextSlide() {
     currentIndex = (currentIndex + 1) % slides.length;
     updateSlider();
+    updateSliderButtons();
   }
 
   function prevSlide() {
     currentIndex = (currentIndex - 1 + slides.length) % slides.length;
     updateSlider();
+    updateSliderButtons();
   }
 
   function updateSlider() {
@@ -141,16 +149,22 @@
     slider.style.transform = `translateX(${newTransformValue}px)`;
   }
 
+  function updateSliderButtons() {
+    // Hide the left button if on the first slide, else show it
+    prevButton.style.display = (currentIndex === 0) ? 'none' : 'block';
+
+    // Enable pointer events for the "More Wishes" button on the last slide
+    moreWishesButton.style.pointerEvents = (currentIndex === slides.length - 1) ? 'auto' : 'none';
+
+    // Show the "More Wishes" button only on the last slide, else hide it
+    moreWishesButton.style.opacity = (currentIndex === slides.length - 1) ? '1' : '0';
+  }
+
   function toggleVideoPlayer() {
-    var videoPlayerContainer = document.getElementById('videoPlayerContainer');
-    var videoPlayer = document.getElementById('videoPlayer');
-    
-    // Toggle the display of the video player
-    videoPlayer.style.display = (videoPlayer.style.display === 'none') ? 'block' : 'none';
-    
-    // Scroll to the video player container
+    const displayStyle = videoPlayer.style.display;
+    videoPlayer.style.display = (displayStyle === 'none' || displayStyle === '') ? 'block' : 'none';
     if (videoPlayer.style.display === 'block') {
-      videoPlayerContainer.scrollIntoView({ behavior: 'smooth' });
+      videoPlayer.scrollIntoView({ behavior: 'smooth' });
     }
   }
 </script>
