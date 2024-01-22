@@ -116,10 +116,7 @@
   <button class="more-wishes-button" onclick="toggleVideoPlayer()" id="moreWishesButton">Click for More Wishes!</button>
 
   <div class="video-player" id="videoPlayer">
-    <video id="myVideo" controls>
-      <source src="ultah.mp4" type="video/mp4">
-      Your browser does not support the video tag.
-    </video>
+    <video id="myVideo" controls></video>
   </div>
 </div>
 
@@ -130,18 +127,20 @@
   const slideWidth = slides[0].offsetWidth;
   const prevButton = document.querySelector('.prev');
   const moreWishesButton = document.getElementById('moreWishesButton');
-  const videoPlayer = document.getElementById('videoPlayer');
+  const videoPlayer = document.getElementById('myVideo');
 
   function nextSlide() {
     currentIndex = (currentIndex + 1) % slides.length;
     updateSlider();
     updateSliderButtons();
+    setVideoThumbnail(currentIndex);
   }
 
   function prevSlide() {
     currentIndex = (currentIndex - 1 + slides.length) % slides.length;
     updateSlider();
     updateSliderButtons();
+    setVideoThumbnail(currentIndex);
   }
 
   function updateSlider() {
@@ -166,6 +165,26 @@
     if (videoPlayer.style.display === 'block') {
       videoPlayer.scrollIntoView({ behavior: 'smooth' });
     }
+  }
+
+  function setVideoThumbnail(index) {
+    const videoSrc = `video${index + 1}.mp4`; // Replace with the actual video source
+    const thumbnailCanvas = document.createElement('canvas');
+    const thumbnailContext = thumbnailCanvas.getContext('2d');
+    const thumbnailImg = new Image();
+
+    thumbnailImg.crossOrigin = 'anonymous';
+
+    thumbnailImg.onload = function () {
+      thumbnailCanvas.width = thumbnailImg.width;
+      thumbnailCanvas.height = thumbnailImg.height;
+      thumbnailContext.drawImage(thumbnailImg, 0, 0, thumbnailCanvas.width, thumbnailCanvas.height);
+
+      // Convert the canvas content to a data URL and set it as the video poster
+      videoPlayer.poster = thumbnailCanvas.toDataURL();
+    };
+
+    thumbnailImg.src = videoSrc + '#t=1'; // Fetch the first frame of the video
   }
 </script>
 
