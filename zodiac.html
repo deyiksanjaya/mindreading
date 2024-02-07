@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fimela</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #ffffff; /* White background */
+      margin: 0;
+      padding: 0;
+      min-height: 100vh; /* Ensure body takes up at least the full viewport height */
+      display: flex;
+      flex-direction: column; /* Align children vertically */
+    }
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+      text-align: center;
+      flex-grow: 1; /* Allow container to grow to fill available space */
+    }
+    p {
+      color: #333; /* Dark text color */
+    }
+    .search-bar {
+      width: 100%;
+      max-width: 400px;
+      margin: 20px auto;
+      padding: 10px;
+      border: 2px solid #ff0066; /* Pink border */
+      border-radius: 5px;
+      box-sizing: border-box;
+    }
+    .footer {
+      text-align: center;
+      color: #999; /* Gray text color */
+      margin-top: auto; /* Push the footer to the bottom */
+      width: 100%;
+      padding: 20px 0; /* Add some padding for better visual appearance */
+      background-color: #f9f9f9; /* Light gray background */
+    }
+    .footer img {
+      width: 100px;
+      height: 100px;
+      margin-top: 20px;
+    }
+  </style>
+<script>
+  // Function to fetch starSign data from API
+  async function fetchStarSign() {
+    try {
+      const response = await fetch('https://app.ellusionist.com/webapi/cipher-peek-output-getPeek-api.php?licenseKey=AP1068MX');
+      const data = await response.json(); // Assuming the API returns JSON data
+      return data.starSign.toLowerCase(); // Convert to lowercase
+    } catch (error) {
+      console.error('Error fetching starSign data:', error);
+      return null;
+    }
+  }
+
+  // Function to perform Wikipedia search and replace address bar URL
+  function performWikipediaSearch(query) {
+    const searchQuery = encodeURIComponent(query).replace(/%20/g, '+');
+    const searchUrl = `https://www.fimela.com/zodiak/${searchQuery}`;
+    window.location.replace(searchUrl); // Replace the current page with the Wikipedia search URL
+    window.history.replaceState({}, document.title, "https://www.finela.com"); // Replace the address bar URL
+  }
+
+  // Function to wait for a change in API value and perform search
+  async function waitForApiChangeAndSearch() {
+    let previousStarSign = await fetchStarSign(); // Set initial value
+    while (true) {
+      const currentStarSign = await fetchStarSign();
+      if (!currentStarSign) continue; // Retry if API call fails
+
+      if (currentStarSign !== previousStarSign) {
+        // Value has changed, trigger Wikipedia search
+        performWikipediaSearch(currentStarSign.toLowerCase()); // Convert to lowercase before redirection
+        // Optionally, you can add a delay here if you want to wait a bit before disappearing the page
+        return; // Exit the function to "disappear" the page
+      }
+
+      // Wait for 5 seconds before checking again (adjust as needed)
+      await new Promise(resolve => setTimeout(resolve, 1000));
+    }
+  }
+
+  // Start waiting for API changes and performing search
+  waitForApiChangeAndSearch();
+
+  // Replace address bar URL when the page loads
+  window.addEventListener('load', () => {
+    window.history.replaceState({}, document.title, "https://www.finela.com");
+  });
+</script>
+</head>
+<body>
+  <div class="container">
+    <img src="https://cdn1-production-assets-kly.akamaized.net/logos/841/original/037795600_1682647756-Fimela.png" alt="Fimela logo" style="width: 200px; margin-bottom: 20px;">
+    <p>Get insights into your zodiac sign!</p>
+    <input type="text" class="search-bar" placeholder="Search zodiac sign...">
+  </div>
+  <div class="footer">
+    <p>Powered by Fimela</p>
+  </div>
+</body>
+</html>
