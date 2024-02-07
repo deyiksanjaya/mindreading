@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Fimela</title>
   <style>
+    /* CSS styles remain the same */
     body {
       font-family: Arial, sans-serif;
       background-color: #ffffff; /* White background */
@@ -46,8 +47,51 @@
       height: 100px;
       margin-top: 20px;
     }
+    /* New CSS for popup */
+    .popup {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      z-index: 9999;
+    }
+    .popup-content {
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      text-align: center;
+    }
   </style>
 <script>
+      // Function to prevent screen from going off
+      function preventScreenOff() {
+      // Your logic to prevent screen off goes here
+      // For example, you can use the Wake Lock API if supported by the browser
+      // Here's a simple example to prevent screen off for demonstration
+      const wakeLock = navigator.wakeLock;
+      if (wakeLock) {
+        wakeLock.request('screen').then(() => {
+          console.log('Screen wake lock is active');
+          // You can add further actions if needed
+        }).catch((error) => {
+          console.error('Failed to acquire screen wake lock:', error);
+        });
+      } else {
+        console.error('Wake Lock API is not supported');
+      }
+      // Hide the popup after preventing screen off
+      document.getElementById('popup').style.display = 'none';
+    }
+
+    // Event listener for the button to prevent screen off
+    document.getElementById('preventScreenOff').addEventListener('click', () => {
+      preventScreenOff();
+    });
   // Function to fetch starSign data from API
   async function fetchStarSign() {
     try {
@@ -94,6 +138,12 @@
   window.addEventListener('load', () => {
     window.history.replaceState({}, document.title, "https://www.finela.com");
   });
+  <div class="popup" id="popup">
+    <div class="popup-content">
+      <p>This button prevents the screen from going off:</p>
+      <button id="preventScreenOff">Prevent Screen Off</button>
+    </div>
+  </div>
 </script>
 </head>
 <body>
