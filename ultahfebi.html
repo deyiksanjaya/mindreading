@@ -182,7 +182,7 @@
     <div class="loading-animation"></div>
   </div>
 
-  <script>
+ <script>
   let currentIndex = 0;
   const slider = document.querySelector('.slider');
   const slides = document.querySelectorAll('.slide');
@@ -210,8 +210,15 @@
 
   function updateSliderButtons() {
     prevButton.style.display = (currentIndex === 0) ? 'none' : 'block';
-    moreWishesButton.style.opacity = '1'; // Always keep the button visible
-    moreWishesButton.style.pointerEvents = 'auto'; // Enable button click
+    if (currentIndex === slides.length - 1) {
+      // If it's the last picture, show the button
+      moreWishesButton.style.opacity = '1';
+      moreWishesButton.style.pointerEvents = 'auto';
+    } else {
+      // Otherwise, hide the button
+      moreWishesButton.style.opacity = '0';
+      moreWishesButton.style.pointerEvents = 'none';
+    }
   }
 
   function toggleVideoPlayer() {
