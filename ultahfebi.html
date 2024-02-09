@@ -208,10 +208,10 @@
     slider.style.transform = `translateX(${newTransformValue}px)`;
   }
 
-  function updateSliderButtons() {
+   function updateSliderButtons() {
     prevButton.style.display = (currentIndex === 0) ? 'none' : 'block';
-    if (currentIndex === slides.length - 1) {
-      // If it's the last picture, show the button
+    if (currentIndex === slides.length - 1 || currentIndex === slides.length) {
+      // If it's the last picture or after the last picture, show the button
       moreWishesButton.style.opacity = '1';
       moreWishesButton.style.pointerEvents = 'auto';
     } else {
