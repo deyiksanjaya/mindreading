@@ -183,74 +183,72 @@
   </div>
 
   <script>
-    let currentIndex = 0;
-    const slider = document.querySelector('.slider');
-    const slides = document.querySelectorAll('.slide');
-    const slideWidth = slides[0].offsetWidth;
-    const prevButton = document.querySelector('.prev');
-    const moreWishesButton = document.getElementById('moreWishesButton');
-    const loadingContainer = document.getElementById('loadingContainer');
+  let currentIndex = 0;
+  const slider = document.querySelector('.slider');
+  const slides = document.querySelectorAll('.slide');
+  const slideWidth = slides[0].offsetWidth;
+  const prevButton = document.querySelector('.prev');
+  const moreWishesButton = document.getElementById('moreWishesButton');
+  const loadingContainer = document.getElementById('loadingContainer');
 
-    function nextSlide() {
-      currentIndex = (currentIndex + 1) % slides.length;
-      updateSlider();
-      updateSliderButtons();
+  function nextSlide() {
+    currentIndex = (currentIndex + 1) % slides.length;
+    updateSlider();
+    updateSliderButtons();
+  }
+
+  function prevSlide() {
+    currentIndex = (currentIndex - 1 + slides.length) % slides.length;
+    updateSlider();
+    updateSliderButtons();
+  }
+
+  function updateSlider() {
+    const newTransformValue = -currentIndex * slideWidth;
+    slider.style.transform = `translateX(${newTransformValue}px)`;
+  }
+
+  function updateSliderButtons() {
+    prevButton.style.display = (currentIndex === 0) ? 'none' : 'block';
+    moreWishesButton.style.opacity = '1'; // Always keep the button visible
+    moreWishesButton.style.pointerEvents = 'auto'; // Enable button click
+  }
+
+  function toggleVideoPlayer() {
+    const youtubeVideoContainer = document.getElementById('youtubeVideoContainer');
+    if (youtubeVideoContainer.style.display === 'none') {
+      // Show the YouTube video container
+      youtubeVideoContainer.style.display = 'block';
+      // Set the YouTube embed code when showing the container
+      document.getElementById('youtubeVideoEmbed').innerHTML = '<iframe width="560" height="315" src="https://www.youtube.com/embed/08Co9OvoYI0?si=0XpK1ebPQ_5PkKP_" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>';
+    } else {
+      // Hide the YouTube video container if already visible
+      youtubeVideoContainer.style.display = 'none';
+      // Remove the YouTube embed code when hiding the container
+      document.getElementById('youtubeVideoEmbed').innerHTML = '';
     }
+  }
 
-    function prevSlide() {
-      currentIndex = (currentIndex - 1 + slides.length) % slides.length;
-      updateSlider();
-      updateSliderButtons();
-    }
+  document.addEventListener("DOMContentLoaded", function () {
+    const popup = document.getElementById("popup");
+    popup.style.display = "flex";
+  });
 
-    function updateSlider() {
-      const newTransformValue = -currentIndex * slideWidth;
-      slider.style.transform = `translateX(${newTransformValue}px)`;
-    }
+  function startMusic() {
+    const audio = document.querySelector('audio');
+    const playButton = document.querySelector('.rounded-button');
 
-    function updateSliderButtons() {
-      prevButton.style.display = (currentIndex === 0) ? 'none' : 'block';
-      moreWishesButton.style.pointerEvents = (currentIndex === slides.length - 1) ? 'auto' : 'none';
-      moreWishesButton.style.opacity = (currentIndex === slides.length - 1 || currentIndex === slides.length) ? '1' : '0';
-    }
+    loadingContainer.style.display = "block"; // Show loading animation
+    audio.muted = false;
+    audio.play();
 
-    function toggleVideoPlayer() {
-      const youtubeVideoContainer = document.getElementById('youtubeVideoContainer');
-      if (youtubeVideoContainer.style.display === 'none') {
-        // Show the YouTube video container
-        youtubeVideoContainer.style.display = 'block';
-        // Set the YouTube embed code when showing the container
-        document.getElementById('youtubeVideoEmbed').innerHTML = '<iframe width="560" height="315" src="https://www.youtube.com/embed/08Co9OvoYI0?si=0XpK1ebPQ_5PkKP_" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>';
-      } else {
-        // Hide the YouTube video container if already visible
-        youtubeVideoContainer.style.display = 'none';
-        // Remove the YouTube embed code when hiding the container
-        document.getElementById('youtubeVideoEmbed').innerHTML = '';
-      }
-    }
+    playButton.style.display = "none"; // Hide the play button
 
-    document.addEventListener("DOMContentLoaded", function () {
-      const popup = document.getElementById("popup");
-      popup.style.display = "flex";
-    });
+    setTimeout(function () {
+      loadingContainer.style.display = "none"; // Hide loading animation
+      playButton.style.display = "block"; // Show play button again
+    }, 2000); // Wait for 2 seconds while the music is playing
 
-    function startMusic() {
-      const audio = document.querySelector('audio');
-      const playButton = document.querySelector('.rounded-button');
-
-      loadingContainer.style.display = "block"; // Show loading animation
-      audio.muted = false;
-      audio.play();
-
-      playButton.style.display = "none"; // Hide the play button
-
-      setTimeout(function () {
-        loadingContainer.style.display = "none"; // Hide loading animation
-        playButton.style.display = "block"; // Show play button again
-      }, 2000); // Wait for 2 seconds while the music is playing
-
-      popup.style.display = "none"; // Hide the popup
-    }
-  </script>
-</body>
-</html>
+    popup.style.display = "none"; // Hide the popup
+  }
+</script>
