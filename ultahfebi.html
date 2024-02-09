@@ -172,15 +172,10 @@
     <button class="slider-button next" onclick="nextSlide()">›</button>
   </div>
 
-  <div class="video-player-container" id="videoPlayerContainer">
-    <button class="more-wishes-button" onclick="toggleVideoPlayer()" id="moreWishesButton">Click for More Wishes!</button>
+  <button class="more-wishes-button" onclick="toggleVideoPlayer()" id="moreWishesButton">Click for More Wishes!</button>
 
-    <div class="video-player" id="videoPlayer">
-      <video id="myVideo" controls>
-        <source src="https://drive.usercontent.google.com/download?id=17GEbhDK3n6jwLHDfMXikFSkbYNEXQHtw&export=download&authuser=0&confirm=t&uuid=57bac0ea-6952-42dd-8784-b6bf42084341&at=APZUnTWVSo3vexNCC6bR4g4xVqv5%3A1707478492699" type="video/mp4">
-        Your browser does not support the video tag.
-      </video>
-    </div>
+  <div class="video-player-container" id="youtubeVideoContainer" style="display: none;">
+    <div id="youtubeVideoEmbed"></div>
   </div>
 
   <div class="loading-container" id="loadingContainer">
@@ -194,7 +189,6 @@
     const slideWidth = slides[0].offsetWidth;
     const prevButton = document.querySelector('.prev');
     const moreWishesButton = document.getElementById('moreWishesButton');
-    const videoPlayer = document.getElementById('videoPlayer');
     const loadingContainer = document.getElementById('loadingContainer');
 
     function nextSlide() {
@@ -221,10 +215,17 @@
     }
 
     function toggleVideoPlayer() {
-      const displayStyle = videoPlayer.style.display;
-      videoPlayer.style.display = (displayStyle === 'none' || displayStyle === '') ? 'block' : 'none';
-      if (videoPlayer.style.display === 'block') {
-        videoPlayer.scrollIntoView({ behavior: 'smooth' });
+      const youtubeVideoContainer = document.getElementById('youtubeVideoContainer');
+      if (youtubeVideoContainer.style.display === 'none') {
+        // Show the YouTube video container
+        youtubeVideoContainer.style.display = 'block';
+        // Set the YouTube embed code when showing the container
+        document.getElementById('youtubeVideoEmbed').innerHTML = '<iframe width="560" height="315" src="https://www.youtube.com/embed/08Co9OvoYI0?si=0XpK1ebPQ_5PkKP_" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>';
+      } else {
+        // Hide the YouTube video container if already visible
+        youtubeVideoContainer.style.display = 'none';
+        // Remove the YouTube embed code when hiding the container
+        document.getElementById('youtubeVideoEmbed').innerHTML = '';
       }
     }
 
@@ -250,8 +251,6 @@
 
       popup.style.display = "none"; // Hide the popup
     }
-
-    window.startMusic = startMusic;
   </script>
 </body>
 </html>
