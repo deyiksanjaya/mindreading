@@ -211,7 +211,7 @@
     function updateSliderButtons() {
       prevButton.style.display = (currentIndex === 0) ? 'none' : 'block';
       moreWishesButton.style.pointerEvents = (currentIndex === slides.length - 1) ? 'auto' : 'none';
-      moreWishesButton.style.opacity = (currentIndex === slides.length - 1) ? '1' : '0';
+      moreWishesButton.style.opacity = (currentIndex === slides.length - 1 || currentIndex === slides.length) ? '1' : '0';
     }
 
     function toggleVideoPlayer() {
