@@ -38,19 +38,6 @@
       margin-top: -60px; /* Adjust this value to move the video player above the slider */
     }
 
-    .video-player {
-      display: none; /* Initially hide the video player */
-      width: 100%;
-      background-color: #ff66b2; /* Dark pink background for the video player */
-      padding: 10px;
-      text-align: center;
-    }
-
-    video {
-      width: 100%;
-      height: auto;
-    }
-
     .more-wishes-button {
       background-color: #ff66b2; /* Dark pink background for the button */
       color: #fff; /* White text color */
@@ -172,17 +159,6 @@
     <button class="slider-button next" onclick="nextSlide()">›</button>
   </div>
 
-  <div class="video-player-container" id="videoPlayerContainer">
-    <button class="more-wishes-button" onclick="toggleVideoPlayer()" id="moreWishesButton">Click for More Wishes!</button>
-
-    <div class="video-player" id="videoPlayer">
-      <video id="myVideo" controls>
-        <source src="https://drive.usercontent.google.com/download?id=17GEbhDK3n6jwLHDfMXikFSkbYNEXQHtw&export=download&authuser=0&confirm=t&uuid=57bac0ea-6952-42dd-8784-b6bf42084341&at=APZUnTWVSo3vexNCC6bR4g4xVqv5%3A1707478492699" type="video/mp4">
-        Your browser does not support the video tag.
-      </video>
-    </div>
-  </div>
-
   <div class="loading-container" id="loadingContainer">
     <div class="loading-animation"></div>
   </div>
@@ -220,18 +196,9 @@
       moreWishesButton.style.opacity = (currentIndex === slides.length - 1) ? '1' : '0';
     }
 
-    function toggleVideoPlayer() {
-      const displayStyle = videoPlayer.style.display;
-      videoPlayer.style.display = (displayStyle === 'none' || displayStyle === '') ? 'block' : 'none';
-      if (videoPlayer.style.display === 'block') {
-        videoPlayer.scrollIntoView({ behavior: 'smooth' });
-      }
+    function redirectToYouTube() {
+      window.location.href = 'https://youtu.be/08Co9OvoYI0';
     }
-
-    document.addEventListener("DOMContentLoaded", function () {
-      const popup = document.getElementById("popup");
-      popup.style.display = "flex";
-    });
 
     function startMusic() {
       const audio = document.querySelector('audio');
