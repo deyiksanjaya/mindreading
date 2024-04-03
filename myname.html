@@ -5,95 +5,96 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Name Guesser</title>
 <style>
-    body {
-        font-family: Arial, sans-serif;
-        text-align: center;
-        background-color: #f4f4f4;
-        margin: 0;
-        padding: 0;
-    }
-    .container {
-        max-width: 600px;
-        margin: 20px auto;
-        background-color: #fff;
-        border-radius: 10px;
-        padding: 20px;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-    }
-    h2 {
-        margin-top: 0;
-    }
-    input[type="text"],
-    button {
-        padding: 10px 20px;
-        border: none;
-        border-radius: 5px;
-        background-color: #007bff;
-        color: #fff;
-        cursor: pointer;
-        font-family: inherit;
-        font-size: 16px;
-        margin-bottom: 10px;
-        transition: background-color 0.3s ease;
-        width: auto;
-        box-sizing: border-box;
-    }
-    input[type="text"]:focus {
-        outline: none;
-    }
-    input[type="text"]::placeholder {
-        color: #aaa;
-    }
-    input[type="text"]:hover,
-    button:hover {
-        background-color: #0056b3;
-    }
-    input[type="text"] {
-        background-color: #fff;
-        padding: 10px;
-        border: 2px solid #ccc;
-        border-radius: 5px;
-        font-size: 16px;
-        text-align: center;
-        color: black;
-    }
-    table {
-        border-collapse: separate;
-        border-spacing: 5px;
-        margin: 20px auto;
-        border-radius: 10px;
-        overflow: hidden;
-    }
-    th, td {
-        padding: 10px;
-        border: 2px solid black;
-        border-radius: 10px;
-    }
-    th {
-        font-weight: bold;
-    }
-    #errorMessage {
-        color: red;
-        font-weight: bold;
-    }
+  body {
+    font-family: sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: #f4f4f4;
+  }
+
+  .container {
+    background-color: #fff;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+  }
+
+  h2 {
+    margin-top: 0;
+    margin-bottom: 10px;
+    background-color: #007bff;
+    color: #fff;
+    padding: 10px;
+    border-radius: 10px;
+  }
+
+  input[type="text"],
+  button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    background-color: #007bff;
+    color: #fff;
+    cursor: pointer;
+    font-size: 16px;
+    margin-bottom: 10px;
+    transition: background-color 0.3s ease;
+  }
+
+  input[type="text"]::placeholder {
+    color: #aaa;
+  }
+
+  input[type="text"]:hover,
+  button:hover {
+    background-color: #0056b3;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px auto;
+  }
+
+  th, td {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+  }
+
+  #questionMessage,
+  #errorMessage {
+    font-weight: bold;
+  }
+
+  #errorMessage {
+    color: red;
+  }
+
+  .nickname {
+    font-size: 24px;
+    margin-top: 20px;
+  }
 </style>
 </head>
 <body>
 
 <div class="container">
-    <h2>Name Guesser</h2>
+  <h2>Name Guesser</h2>
 
-    <p>Enter the number of letters in your nickname:</p>
-    <input type="text" id="columnInput" placeholder="Enter a number" min="2" max="10">
-    <button onclick="generateTable()">Start Guessing</button>
-    <p id="questionMessage" style="color: blue; font-weight: bold;"></p>
-    <p id="errorMessage"></p>
+  <p>Enter the number of letters in your nickname:</p>
+  <input type="text" id="columnInput" placeholder="Enter a number" min="2" max="10">
+  <button onclick="generateTable()">Start Guessing</button>
+  <p id="questionMessage" style="color: blue;"></p>
+  <p id="errorMessage"></p>
 
-    <div id="tableContainer"></div>
-</div>
+  <div id="tableContainer"></div>
+  <div id="nicknameDisplay"></div> </div>
 
 <script>
 var nameLength;
@@ -105,28 +106,29 @@ var collectedLetters = []; // Array to store collected letters
 
 // Function to convert numbers to ordinal form
 function ordinalSuffix(num) {
-    if (num === 1) return num + "st";
-    if (num === 2) return num + "nd";
-    if (num === 3) return num + "rd";
-    return num + "th";
+  if (num === 1) return num + "st";
+  if (num === 2) return num + "nd";
+  if (num === 3) return num + "rd";
+  return num + "th";
 }
 
 function generateTable() {
-    console.log("Generating table...");
-    nameLength = parseInt(document.getElementById("columnInput").value);
-    console.log("Name length:", nameLength);
-    if (isNaN(nameLength) || nameLength < 2 || nameLength > 10) {
-        document.getElementById("errorMessage").textContent = "Please insert numbers between 2 and 10";
-        console.log("Invalid input");
-        return;
-    } else {
-        document.getElementById("errorMessage").textContent = "";
-    }
-    columnLetters = [];
-    nicknameColumns = {};
-    currentLetterIndex = 0;
-    maxRows = nameLength; // Set the maximum number of rows equal to the inputted number of letters
-    collectedLetters = []; // Reset collected letters array
+  console.log("Generating table...");
+  nameLength = parseInt(document.getElementById("columnInput").value);
+  console.log("Name length:", nameLength);
+  if (isNaN(nameLength) || nameLength < 2 || nameLength > 10) {
+    document.getElementById("errorMessage").textContent = "Please insert numbers between 2 and 10";
+    console.log("Invalid input");
+    return;
+  } else {
+    document.getElementById("errorMessage").textContent = "";
+  }
+  columnLetters = [];
+  nicknameColumns = {};
+  currentLetterIndex = 0;
+  maxRows = nameLength; // Set the maximum number of rows equal to the inputted number of letters
+  collectedLetters = []; // Reset collected letters
+
 
     var table = "<table id='nameTable'>";
     table += "<thead><tr>";
@@ -162,7 +164,7 @@ function generateTable() {
 
     document.getElementById("tableContainer").innerHTML = table;
 
-    document.getElementById("questionMessage").textContent = "Which COLUMN contains your first letter?";
+    document.getElementById("questionMessage").textContent = "Which column contains your first letter?";
 }
 
 function columnClicked(columnIndex) {
@@ -181,7 +183,14 @@ function columnClicked(columnIndex) {
 
 function generateNicknameTable() {
     console.log("Generating nickname table...");
-    document.getElementById("questionMessage").textContent = "Which row contains your first letter?";
+    var questionMessage = "Which row contains your ";
+    if (collectedLetters.length === 0) {
+        questionMessage += "first";
+    } else {
+        questionMessage += ordinalSuffix(collectedLetters.length + 1);
+    }
+    questionMessage += " letter?";
+    document.getElementById("questionMessage").textContent = questionMessage;
     
     var nicknameTable = "<table>";
     nicknameTable += "<tbody>";
@@ -205,6 +214,7 @@ function generateNicknameTable() {
     nicknameTable += "</table>";
 
     document.getElementById("tableContainer").innerHTML = nicknameTable;
+    
 }
 
 function rowClicked(row) {
@@ -223,13 +233,12 @@ function rowClicked(row) {
             clearScreen();
             printNickname(word);
         } else {
-            document.getElementById("questionMessage").textContent = "Which ROW contains your " + ordinalSuffix(collectedLetters.length + 1) + " letter?";
+            document.getElementById("questionMessage").textContent = "Which row contains your " + ordinalSuffix(collectedLetters.length + 1) + " letter?";
         }
     } else {
         console.error("No data-row-letters attribute found.");
     }
 }
-
 
 function clearScreen() {
     console.log("Clearing screen...");
@@ -239,10 +248,46 @@ function clearScreen() {
 
 function printNickname(word) {
     console.log("Printing nickname:", word);
-    var nicknameDiv = document.createElement("div");
-    nicknameDiv.textContent = "Your nickname is " + word;
-    nicknameDiv.style.fontSize = "24px";
-    document.body.appendChild(nicknameDiv);
+    
+    // Hide input box and start guessing button
+    document.getElementById("columnInput").style.display = "none";
+    document.querySelector("button").style.display = "none";
+    
+    // Display "Your nickname is.." message
+    var nicknameMessage = document.createElement("p");
+    nicknameMessage.textContent = "Your nickname is..";
+    nicknameMessage.style.fontSize = "24px";
+    document.getElementById("tableContainer").appendChild(nicknameMessage);
+    
+    // Display loading bar with percentage
+    var loadingBar = document.createElement("div");
+    loadingBar.id = "loadingBar";
+    loadingBar.style.width = "0%";
+    loadingBar.style.backgroundColor = "#007bff"; // Blue color
+    loadingBar.style.height = "20px";
+    loadingBar.style.position = "relative"; // Set position to relative
+    loadingBar.style.overflow = "hidden"; // Hide overflowing content
+    loadingBar.innerHTML = "<div id='progressText' style='position: absolute; top: 0; left: 0; width: 100%; text-align: center; color: white;'>0%</div>";
+    document.getElementById("tableContainer").appendChild(loadingBar);
+    
+    // Simulate loading progress
+    var progress = 0;
+    var interval = setInterval(function() {
+        progress += 1;
+        if (progress <= 100) {
+            loadingBar.style.width = progress + "%";
+            document.getElementById("progressText").textContent = progress + "%";
+        } else {
+            clearInterval(interval);
+            // Remove the loading bar
+            document.getElementById("tableContainer").removeChild(loadingBar);
+            // Display the nickname after the loading is complete
+            var nicknameDiv = document.createElement("div");
+            nicknameDiv.textContent = word;
+            nicknameDiv.style.fontSize = "24px";
+            document.getElementById("tableContainer").appendChild(nicknameDiv);
+        }
+    }, 30); // Adjust interval duration for smoother progress animation
 }
 
 </script>
