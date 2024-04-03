@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Name Guesser</title>
+<title>Nick Name Guesser</title>
 <style>
   body {
     font-family: sans-serif;
@@ -181,7 +181,7 @@ function generateTable() {
 
     document.getElementById("tableContainer").innerHTML = table;
 
-    document.getElementById("questionMessage").textContent = "Which column contains your first letter?";
+    document.getElementById("questionMessage").textContent = "Which COLUMN contains your first letter?";
 }
 
 function columnClicked(columnIndex) {
@@ -191,7 +191,7 @@ function columnClicked(columnIndex) {
         console.log("Nickname columns:", nicknameColumns);
         currentLetterIndex++;
         if (currentLetterIndex < nameLength) {
-            document.getElementById("questionMessage").textContent = "Which column contains your " + ordinalSuffix(currentLetterIndex + 1) + " letter?";
+            document.getElementById("questionMessage").textContent = "Which COLUMN contains your " + ordinalSuffix(currentLetterIndex + 1) + " letter?";
         } else {
             generateNicknameTable();
         }
@@ -200,7 +200,7 @@ function columnClicked(columnIndex) {
 
 function generateNicknameTable() {
     console.log("Generating nickname table...");
-    var questionMessage = "Which row contains your ";
+    var questionMessage = "Which ROW contains your ";
     if (collectedLetters.length === 0) {
         questionMessage += "first";
     } else {
@@ -250,7 +250,7 @@ function rowClicked(row) {
             clearScreen();
             printNickname(word);
         } else {
-            document.getElementById("questionMessage").textContent = "Which row contains your " + ordinalSuffix(collectedLetters.length + 1) + " letter?";
+            document.getElementById("questionMessage").textContent = "Which ROW contains your " + ordinalSuffix(collectedLetters.length + 1) + " letter?";
         }
     } else {
         console.error("No data-row-letters attribute found.");
