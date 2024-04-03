@@ -227,6 +227,9 @@ function combineLetters() {
     var word = collectedLetters.join("");
     var lettersDiv = document.getElementById("collectedLetters");
     lettersDiv.textContent = "Collected letters: " + word;
+    
+    // Display collected letters in a pop-up message
+    alert("Collected letters: " + word);
 }
 
 function ordinalSuffix(number) {
