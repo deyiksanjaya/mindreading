@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Nick Name Guesser</title>
+<title>Name Guesser</title>
 <style>
   body {
     font-family: sans-serif;
@@ -22,17 +22,11 @@
     padding: 20px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     text-align: center;
-    max-width: 600px;
-    width: 100%;
   }
 
   h2 {
     margin-top: 0;
     margin-bottom: 10px;
-    background-color: #007bff;
-    color: #fff;
-    padding: 10px;
-    border-radius: 10px;
   }
 
   input[type="text"],
@@ -61,13 +55,13 @@
     width: 100%;
     border-collapse: collapse;
     margin: 20px auto;
-    max-width: 100%;
   }
 
   th, td {
     padding: 10px;
     border: 1px solid #ddd;
     border-radius: 5px;
+    white-space: nowrap; /* Prevent text wrapping */
   }
 
   #questionMessage,
@@ -83,16 +77,6 @@
     font-size: 24px;
     margin-top: 20px;
   }
-
-  #retryButton {
-    background-color: green;
-    color: white;
-    display: none;
-  }
-
-  button:active {
-    transform: translateY(1px);
-  }
 </style>
 </head>
 <body>
@@ -101,17 +85,13 @@
   <h2>Name Guesser</h2>
 
   <p>Enter the number of letters in your nickname:</p>
-  <div id="inputContainer">
-    <input type="text" id="columnInput" placeholder="Enter a number" min="2" max="10">
-    <button onclick="generateTable()">Start Guessing</button>
-  </div>
+  <input type="text" id="columnInput" placeholder="Enter a number" min="2" max="10">
+  <button onclick="generateTable()">Start Guessing</button>
   <p id="questionMessage" style="color: blue;"></p>
   <p id="errorMessage"></p>
 
   <div id="tableContainer"></div>
-  <div id="nicknameDisplay"></div>
-  <button id="retryButton" style="display: none;" onclick="retry()">Retry</button>
-</div>
+  <div id="nicknameDisplay"></div> </div>
 
 <script>
 var nameLength;
@@ -181,7 +161,7 @@ function generateTable() {
 
     document.getElementById("tableContainer").innerHTML = table;
 
-    document.getElementById("questionMessage").textContent = "Which COLUMN contains your first letter?";
+    document.getElementById("questionMessage").textContent = "Which column contains your first letter?";
 }
 
 function columnClicked(columnIndex) {
@@ -191,7 +171,7 @@ function columnClicked(columnIndex) {
         console.log("Nickname columns:", nicknameColumns);
         currentLetterIndex++;
         if (currentLetterIndex < nameLength) {
-            document.getElementById("questionMessage").textContent = "Which COLUMN contains your " + ordinalSuffix(currentLetterIndex + 1) + " letter?";
+            document.getElementById("questionMessage").textContent = "Which column contains your " + ordinalSuffix(currentLetterIndex + 1) + " letter?";
         } else {
             generateNicknameTable();
         }
@@ -200,7 +180,7 @@ function columnClicked(columnIndex) {
 
 function generateNicknameTable() {
     console.log("Generating nickname table...");
-    var questionMessage = "Which ROW contains your ";
+    var questionMessage = "Which row contains your ";
     if (collectedLetters.length === 0) {
         questionMessage += "first";
     } else {
@@ -250,7 +230,7 @@ function rowClicked(row) {
             clearScreen();
             printNickname(word);
         } else {
-            document.getElementById("questionMessage").textContent = "Which ROW contains your " + ordinalSuffix(collectedLetters.length + 1) + " letter?";
+            document.getElementById("questionMessage").textContent = "Which row contains your " + ordinalSuffix(collectedLetters.length + 1) + " letter?";
         }
     } else {
         console.error("No data-row-letters attribute found.");
@@ -267,7 +247,8 @@ function printNickname(word) {
     console.log("Printing nickname:", word);
     
     // Hide input box and start guessing button
-    document.getElementById("inputContainer").style.display = "none";
+    document.getElementById("columnInput").style.display = "none";
+    document.querySelector("button").style.display = "none";
     
     // Display "Your nickname is.." message
     var nicknameMessage = document.createElement("p");
@@ -302,32 +283,18 @@ function printNickname(word) {
             nicknameDiv.textContent = word;
             nicknameDiv.style.fontSize = "24px";
             document.getElementById("tableContainer").appendChild(nicknameDiv);
+            
             // Display retry button
-            document.getElementById("retryButton").style.display = "block";
+            var retryButton = document.createElement("button");
+            retryButton.textContent = "Retry";
+            retryButton.onclick = function() {
+                document.getElementById("columnInput").style.display = "block";
+                document.querySelector("button").style.display = "block";
+                clearScreen();
+            };
+            document.getElementById("tableContainer").appendChild(retryButton);
         }
     }, 30); // Adjust interval duration for smoother progress animation
-}
-
-function retry() {
-    // Show input box and start guessing button
-    document.getElementById("inputContainer").style.display = "block";
-    // Hide retry button
-    document.getElementById("retryButton").style.display = "none";
-    // Clear previous data
-    clearScreen();
-    // Reset variables
-    nameLength = 0;
-    columnLetters = [];
-    nicknameColumns = {};
-    currentLetterIndex = 0;
-    maxRows = 0;
-    collectedLetters = [];
-    // Clear input field
-    document.getElementById("columnInput").value = "";
-    // Reset error message
-    document.getElementById("errorMessage").textContent = "";
-    // Reset question message
-    document.getElementById("questionMessage").textContent = "";
 }
 
 </script>
