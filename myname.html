@@ -87,7 +87,7 @@
     <h2>Name Guesser</h2>
 
     <p>Enter the number of letters in your nickname:</p>
-    <input type="text" id="columnInput" placeholder="Enter a number" min="1" max="10">
+    <input type="text" id="columnInput" placeholder="Enter a number" min="2" max="10">
     <button onclick="generateTable()">Start Guessing</button>
     <p id="questionMessage" style="color: blue; font-weight: bold;"></p>
     <p id="errorMessage"></p>
@@ -103,10 +103,21 @@ var currentLetterIndex = 0;
 var maxRows = 0; // Variable to store the maximum number of rows
 var collectedLetters = []; // Array to store collected letters
 
+// Function to convert numbers to ordinal form
+function ordinalSuffix(num) {
+    if (num === 1) return num + "st";
+    if (num === 2) return num + "nd";
+    if (num === 3) return num + "rd";
+    return num + "th";
+}
+
 function generateTable() {
+    console.log("Generating table...");
     nameLength = parseInt(document.getElementById("columnInput").value);
+    console.log("Name length:", nameLength);
     if (isNaN(nameLength) || nameLength < 2 || nameLength > 10) {
         document.getElementById("errorMessage").textContent = "Please insert numbers between 2 and 10";
+        console.log("Invalid input");
         return;
     } else {
         document.getElementById("errorMessage").textContent = "";
@@ -151,12 +162,14 @@ function generateTable() {
 
     document.getElementById("tableContainer").innerHTML = table;
 
-    document.getElementById("questionMessage").textContent = "Which column contains your first letter?";
+    document.getElementById("questionMessage").textContent = "Which COLUMN contains your first letter?";
 }
 
 function columnClicked(columnIndex) {
+    console.log("Column clicked:", columnIndex);
     if (currentLetterIndex < nameLength) {
         nicknameColumns[currentLetterIndex] = columnLetters[columnIndex - 1];
+        console.log("Nickname columns:", nicknameColumns);
         currentLetterIndex++;
         if (currentLetterIndex < nameLength) {
             document.getElementById("questionMessage").textContent = "Which column contains your " + ordinalSuffix(currentLetterIndex + 1) + " letter?";
@@ -167,25 +180,26 @@ function columnClicked(columnIndex) {
 }
 
 function generateNicknameTable() {
+    console.log("Generating nickname table...");
     document.getElementById("questionMessage").textContent = "Which row contains your first letter?";
     
     var nicknameTable = "<table>";
     nicknameTable += "<tbody>";
     for (var i = 0; i < Math.max(...Object.values(nicknameColumns).map(column => column.length)); i++) {
         var rowNumber = i + 1; // Calculate the row number
-        nicknameTable += "<tr data-row='" + rowNumber + "' onclick='rowClicked(this)'>"; // Add onclick attribute to each row
-        nicknameTable += "<td>Row " + rowNumber + "</td>"; // Add "Row" in front of the row number
         var rowLetters = [];
+        nicknameTable += "<tr data-row='" + rowNumber + "' data-row-letters='"; // Add onclick attribute to each row
         for (var j = 0; j < nameLength; j++) {
             var letter = nicknameColumns[j][i] || "";
-            nicknameTable += "<td>" + letter + "</td>";
-            if (letter !== "") {
-                rowLetters.push(letter);
-            }
+            nicknameTable += letter;
+            rowLetters.push(letter);
+        }
+        nicknameTable += "' onclick='rowClicked(this)'>";
+        nicknameTable += "<td>Row " + rowNumber + "</td>"; // Add "Row" in front of the row number
+        for (var j = 0; j < nameLength; j++) {
+            nicknameTable += "<td>" + (nicknameColumns[j][i] || "") + "</td>";
         }
         nicknameTable += "</tr>";
-        // Store row letters in a data attribute
-        nicknameTable += "<tr data-row-letters='" + rowLetters.join(",") + "' style='display:none;'></tr>";
     }
     nicknameTable += "</tbody>";
     nicknameTable += "</table>";
@@ -193,62 +207,45 @@ function generateNicknameTable() {
     document.getElementById("tableContainer").innerHTML = nicknameTable;
 }
 
-function addLettersToTable(rowLetters) {
-    var existingTable = document.getElementById("selectedLettersTable");
-    if (existingTable.rows.length < maxRows) { // Check if the maximum number of rows has been reached
-        var newRow = existingTable.insertRow();
-        rowLetters.forEach(function(letter) {
-            var newCell = newRow.insertCell();
-            newCell.textContent = letter;
-        });
-    }
-}
-
 function rowClicked(row) {
-    var rowLetters = row.nextElementSibling.getAttribute("data-row-letters").split(",");
-    addLettersToTable(rowLetters);
-    // Check if it's the last row and collect letters
-    if (row.parentElement.querySelectorAll("tr").length === maxRows * 2) {
-        collectLetters();
-    }
-}
-
-function collectLetters() {
-    collectedLetters = [];
-    for (var i = 0; i < maxRows; i++) {
-        var rowLetters = document.querySelector("tr[data-row='" + (i + 1) + "']").getAttribute("data-row-letters").split(",");
-        var letter = rowLetters[i] || "";
-        collectedLetters.push(letter);
-    }
-    combineLetters();
-}
-
-function combineLetters() {
-    var word = collectedLetters.join("");
-    var lettersDiv = document.getElementById("collectedLetters");
-    lettersDiv.textContent = "Collected letters: " + word;
-    
-    // Display collected letters in a pop-up message
-    alert("Collected letters: " + word);
-	console.log("combineLetters() function called. Collected letters: " + word);
-}
-
-function ordinalSuffix(number) {
-    if (number === 1) {
-        return "1st";
-    } else if (number === 2) {
-        return "2nd";
-    } else if (number === 3) {
-        return "3rd";
+    console.log("Row clicked:", row);
+    var rowLetters = row.getAttribute("data-row-letters");
+    if (rowLetters) {
+        rowLetters = rowLetters.split("");
+        collectedLetters.push(rowLetters); // Store the selected row letters
+        if (collectedLetters.length === nameLength) {
+            var word = "";
+            for (var i = 0; i < nameLength; i++) {
+                word += collectedLetters[i][i]; // Retrieve specified letters from each row
+            }
+            console.log("Selected letters:", word);
+            console.log("Nickname:", word);
+            clearScreen();
+            printNickname(word);
+        } else {
+            document.getElementById("questionMessage").textContent = "Which ROW contains your " + ordinalSuffix(collectedLetters.length + 1) + " letter?";
+        }
     } else {
-        return number + "th";
+        console.error("No data-row-letters attribute found.");
     }
 }
+
+
+function clearScreen() {
+    console.log("Clearing screen...");
+    document.getElementById("tableContainer").innerHTML = "";
+    document.getElementById("questionMessage").textContent = "";
+}
+
+function printNickname(word) {
+    console.log("Printing nickname:", word);
+    var nicknameDiv = document.createElement("div");
+    nicknameDiv.textContent = "Your nickname is " + word;
+    nicknameDiv.style.fontSize = "24px";
+    document.body.appendChild(nicknameDiv);
+}
+
 </script>
-
-
-<table id="selectedLettersTable"></table>
-<div id="collectedLetters"></div>
 
 </body>
 </html>
