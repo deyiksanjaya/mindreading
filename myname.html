@@ -88,11 +88,10 @@
         }
 
         table {
-            border-collapse: collapse;
-            width: 100%;
-            margin: 0 auto; /* Center the table horizontally */
-            max-width: 600px; /* Limit the maximum width of the table */
-        }
+    border-collapse: collapse;
+    width: auto; /* Allow the table to shrink if it exceeds the container width */
+    margin: 0 auto; /* Center the table horizontally */
+}
 
         th, td {
             padding: 10px;
@@ -139,6 +138,15 @@
             text-align: center; /* Align instructions to the left */
             font-family: "Cinzel", serif; /* Use Cinzel font for instructions */
         }
+        #tableContainer {
+    max-width: 600px; /* Adjust the maximum width as needed */
+    overflow-x: auto; /* Enable horizontal scrolling if the table exceeds the container width */
+    #retryButton {
+    display: block; /* Ensure the button takes up the full width */
+    margin: 0 auto; /* Center the button horizontally */
+    text-align: center; /* Center the button's text */
+}
+}
 
     </style>
 </head>
@@ -179,7 +187,7 @@
         <li>Once all letters are selected, your nickname will be revealed!</li>
       </ol>
     </div>
-    
+    <p><a href="namasaya.html" style="font-family: 'Cinzel', serif; color: white;">I Speak Indonesian 🇮🇩</a></p>
     </body>
     
 </div>
@@ -191,6 +199,7 @@ var nicknameColumns = {};
 var currentLetterIndex = 0;
 var maxRows = 0; // Variable to store the maximum number of rows
 var collectedLetters = []; // Array to store collected letters
+
 
 // Function to convert numbers to ordinal form
 function ordinalSuffix(num) {
@@ -253,6 +262,9 @@ function generateTable() {
     document.getElementById("tableContainer").innerHTML = table;
 
     document.getElementById("questionMessage").textContent = "Which COLUMN contains your first letter?";
+    // Hide the "How Many Letters Are in Your Nickname?..." message
+    document.querySelector(".psychic-message").style.display = "none";
+    document.getElementById("inputContainer").style.display = "none";
 }
 
 function columnClicked(columnIndex) {
@@ -337,14 +349,19 @@ function clearScreen() {
 function printNickname(word) {
     console.log("Printing nickname:", word);
     
+    // Replace any undefined letter with a question mark
+    word = word.split("").map(letter => letter || "?").join("");
+
     // Hide input box and start guessing button
     document.getElementById("inputContainer").style.display = "none";
     
     // Display "Your nickname is.." message
     var nicknameMessage = document.createElement("p");
-    nicknameMessage.textContent = "Your nickname is..";
-    nicknameMessage.style.fontSize = "24px";
-    document.getElementById("tableContainer").appendChild(nicknameMessage);
+nicknameMessage.textContent = "Your nickname is..";
+nicknameMessage.style.fontSize = "24px";
+nicknameMessage.style.fontFamily = "Cinzel, serif"; // Add this line to set the font family
+document.getElementById("tableContainer").appendChild(nicknameMessage);
+
     
     // Display loading bar with percentage
     var loadingBar = document.createElement("div");
@@ -371,7 +388,9 @@ function printNickname(word) {
             // Display the nickname after the loading is complete
             var nicknameDiv = document.createElement("div");
             nicknameDiv.textContent = word;
-            nicknameDiv.style.fontSize = "24px";
+            nicknameDiv.style.fontSize = "80px";
+            nicknameDiv.style.fontFamily = "Cinzel, serif"; // Adjust the font family here
+            nicknameDiv.style.textShadow = "0 0 10px #00ff00"
             document.getElementById("tableContainer").appendChild(nicknameDiv);
             // Display retry button
             document.getElementById("retryButton").style.display = "block";
