@@ -22,11 +22,12 @@
   .btn-container {
     display: flex;
     flex-direction: column;
+    margin-top: 40%;
   }
   .btn {
     background-color: #ffffff;
     color: #000000;
-    border: none;
+    border: 2px solid #cccccc; /* Add border */
     padding: 10px 20px;
     font-size: 20px;
     cursor: pointer;
@@ -34,11 +35,18 @@
     transition: all 0.3s ease;
     margin-bottom: 10px;
     border-radius: 10px;
-  }
-  .btn:hover {
-    background-color: #000000;
-    color: #ffffff;
-  }
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Add slight shadow */
+}
+
+.btn:hover {
+    background-color: #f2f2f2; /* Lighten the background color */
+    border-color: #aaaaaa; /* Change border color on hover */
+}
+
+.btn:active {
+    transform: translateY(2px); /* Add slight downward movement on click for pressed effect */
+}
+  
 </style>
 </head>
 <body>
