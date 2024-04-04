@@ -9,7 +9,7 @@
             background-color: rgba(255, 255, 255, 0.9); /* Slightly transparent white */
             border-radius: 10px; /* Rounded corners */
             padding: 20px;
-            margin: 0 auto;
+            margin: 10px;
             max-width: 95%;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.2); /* Shadow effect */
         }
@@ -150,13 +150,33 @@
 #questionMessage {
   white-space: pre-wrap;
 }
+.nickname-container {
+    background-color: rgba(255, 255, 255, 0.9); /* Slightly transparent white */
+            border-radius: 10px; /* Rounded corners */
+            padding: 20px;
+            margin: 10px;
+            max-width: 95%;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2); /* Shadow effect */
+            
+}
+
+.nickname-container h1 {
+    margin: 0;
+    font-family: 'Cinzel', serif;
+}
+
+.content {
+    background-color: white;
+    padding: 95%;
+}
     </style>
 </head>
 <body>
-
+    <div class="nickname-container">
+        <h1>Nickname Guesser</h1>
+    </div>
+    
 <div class="container">
-  <h2 class="title">Nickname Guesser</h2>
-
   <p class="psychic-message">How Many Letters Are in Your Nickname?...</p>
   <div id="inputContainer">
     <input type="text" id="columnInput" placeholder="Enter a number" min="2" max="10">
