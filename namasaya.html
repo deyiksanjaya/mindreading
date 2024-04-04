@@ -1,6 +1,485 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link rel="icon" type="image/png" href="https://i.ibb.co/YRQhKxV/iknowyou.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400..900&display=swap" rel="stylesheet">
+    <style>
+        .container {
+            background-color: rgba(255, 255, 255, 0.9); /* Slightly transparent white */
+            border-radius: 10px; /* Rounded corners */
+            padding: 20px;
+            margin: 10px;
+            max-width: 95%;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2); /* Shadow effect */
+        }
+
+        body {
+  font-family: 'Arial', sans-serif;
+  text-align: center;
+  background-color: #000000; /* Solid black background */
+  margin: 0;
+  padding: 20px;
+}
+
+
+        h2 {
+            margin-top: 0;
+            font-weight: normal;
+            color: #333;
+            font-family: 'Lobster', cursive; /* Use Lobster font for the header */
+        }
+
+        td {
+            font-family: "Cinzel", serif;
+            font-size: 24px; /* Adjust font size as needed */
+        }
+
+        .instructions {
+            text-align: left; /* Align instructions to the left */
+            font-family: "Cinzel", serif; /* Use Cinzel font for instructions */
+        }
+
+        .cinzel-mystical {
+            font-family: "Cinzel", serif;
+            font-optical-sizing: auto;
+            font-weight: 600;
+            font-style: normal;
+        }
+
+        input[type="text"],
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            background-color: #000000; /* Purple color */
+            color: #ffffff; /* White text */
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 16px;
+            margin-bottom: 10px;
+            transition: background-color 0.3s ease;
+            width: auto;
+            box-sizing: border-box;
+        }
+
+        input[type="text"]:focus {
+            outline: none;
+            background-color: #302f31; /* Darker purple on focus */
+        }
+
+        input[type="text"]::placeholder {
+            color: #aaa;
+        }
+
+        input[type="text"]:hover,
+        button:hover {
+            background-color: hwb(300 18% 81%); /* Darkest purple on hover */
+        }
+
+        input[type="text"] {
+            background-color: #fff; /* White input field */
+            padding: 10px;
+            border: 2px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+            text-align: center;
+            color: black;
+        }
+
+        table {
+    border-collapse: collapse;
+    width: auto; /* Allow the table to shrink if it exceeds the container width */
+    margin: 0 auto; /* Center the table horizontally */
+}
+
+        th, td {
+            padding: 10px;
+            border: 1px solid #ddd; /* Lighter border color */
+            border-radius: 20px;
+            background-color: #eee; /* Light gray background for cells */
+        }
+
+        th {
+            font-weight: bold;
+            color: #666; /* Text color with a hint of gray */
+        }
+
+        #errorMessage {
+            color: red;
+            font-weight: bold;
+        }
+
+        #loadingBarContainer {
+            width: 100%;
+            margin: 20px auto; /* Add margin to the loading bar container */
+            max-width: 600px; /* Limit the maximum width of the loading bar container */
+        }
+
+        .psychic-message { /* New class for psychic messages */
+            font-style: italic;
+            color: #333; /* Darker text color */
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+
+        .cinzel-mystical {
+            font-family: "Cinzel", serif;
+            font-optical-sizing: auto;
+            font-weight: 600;
+            font-style: normal;
+        }
+
+        .instructions {
+            text-align: left; /* Align instructions to the left */
+            font-family: "Cinzel", serif; /* Use Cinzel font for instructions */
+        }
+        .title {
+            text-align: center; /* Align instructions to the left */
+            font-family: "Cinzel", serif; /* Use Cinzel font for instructions */
+        }
+        #tableContainer {
+    max-width: 95%; /* Adjust the maximum width as needed */
+    overflow-x: auto; /* Enable horizontal scrolling if the table exceeds the container width */
+    #retryButton {
+    display: block; /* Ensure the button takes up the full width */
+    margin: 0 auto; /* Center the button horizontally */
+    text-align: center; /* Center the button's text */
+}
+}
+#questionMessage {
+  white-space: pre-wrap;
+}
+.nickname-container {
+    background-color: rgba(255, 255, 255, 0.9); /* Slightly transparent white */
+            border-radius: 10px; /* Rounded corners */
+            padding: 20px;
+            margin: 10px;
+            max-width: 95%;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2); /* Shadow effect */
+            
+}
+
+.nickname-container h1 {
+    margin: 0;
+    font-family: 'Cinzel', serif;
+}
+
+.content {
+    background-color: white;
+    padding: 95%;
+}
+.clicked-column {
+    background-color: #00ff26; /* Change to any color you prefer */
+    color: #fff; /* White text color */
+}
+
+.clicked-row {
+    background-color: #00ff26; /* Change to any color you prefer */
+    color: #fff; /* White text color */
+}
+
+    </style>
+</head>
+<body>
+    <div class="nickname-container">
+        <h1>Nickname Guesser</h1>
+    </div>
+    
+<div class="container">
+  <p class="psychic-message">Ada Berapa Huruf Di Nama Panggilanmu?...</p>
+  <div id="inputContainer">
+    <input type="text" id="columnInput" placeholder="Enter a number" min="2" max="10">
+    <button onclick="generateTable()" class="title">MULAI</button>
+  </div>
+  <p id="errorMessage"></p>
+  <p id="questionMessage" style="color: rgb(0, 0, 0); font-size: 20px; font-family: 'Cinzel', serif;"></p>
+
+  <p id="errorMessage"></p>
+  <div id="tableContainer"></div>
+  <div id="nicknameDisplay"></div>
+  <button id="retryButton" style="display: none;" onclick="retry()" class="title">ULANG</button>
+</div>
+
+  <div id="tableContainer"></div>
+  <div id="nicknameDisplay"></div>
+  <button id="retryButton" style="display: none;" onclick="retry()" class="title">ULANG</button>
+  <body>
+
+    <div>
+
+    <div class="instructions container">
+      <ol>
+        <h3 class="instructions text-center">Petunjuk</h3>
+        <li>Masukan jumlah huruf dari nama panggilanmu</li>
+        <li>Klik tombol "MULAI" untuk memulai</li>
+        <li>Untuk setiap huruf, klik masing masing kolom yang terdapat huruf dari nama panggilanmu</li>
+        <li>Setelah itu, beberapa baris huruf acak akan ditampilkan</li>
+        <li>Klik baris yang terdapat masing-masing dasri huruf di nama panggilan kalian</li>
+        <li>Setelah semua proses selesai, namamu akan bisa saya tebak!</li>
+      </ol>
+    </div>
+    <p><a href="myname.html" style="font-family: 'Cinzel', serif; color: white;">I Speak English 🇬🇧</a></p>
+    </body>
+    
+</div>
+
+<script>
+var nameLength;
+var columnLetters = [];
+var nicknameColumns = {};
+var currentLetterIndex = 0;
+var maxRows = 0; // Variable to store the maximum number of rows
+var collectedLetters = []; // Array to store collected letters
+
+
+// Function to convert numbers to ordinal form
+function ordinalSuffix(num) {
+  if (num === 1) return num + "st";
+  if (num === 2) return num + "nd";
+  if (num === 3) return num + "rd";
+  return num + "th";
+}
+
+function generateTable() {
+  console.log("Generating table...");
+  nameLength = parseInt(document.getElementById("columnInput").value);
+  console.log("Name length:", nameLength);
+  if (isNaN(nameLength) || nameLength < 2 || nameLength > 10) {
+    document.getElementById("errorMessage").textContent = "Minimal 2, Maksimal 10";
+    console.log("Invalid input");
+    return;
+  } else {
+    document.getElementById("errorMessage").textContent = "";
+  }
+  columnLetters = [];
+  nicknameColumns = {};
+  currentLetterIndex = 0;
+  maxRows = nameLength; // Set the maximum number of rows equal to the inputted number of letters
+  collectedLetters = []; // Reset collected letters
+
+
+    var table = "<table id='nameTable'>";
+    table += "<thead><tr>";
+    for (var i = 0; i < nameLength; i++) {
+        table += "<th data-column='" + (i + 1) + "' onclick='columnClicked(" + (i + 1) + ")'>";
+        table += "Column " + (i + 1);
+        table += "</th>";
+        columnLetters.push([]);
+    }
+    table += "</tr></thead>";
+
+    var numRows = Math.ceil(26 / nameLength);
+
+    table += "<tbody>";
+    for (var i = 0; i < numRows; i++) {
+        table += "<tr>";
+        for (var j = 0; j < nameLength; j++) {
+            var alphabetIndex = i * nameLength + j;
+            if (alphabetIndex < 26) {
+                table += "<td>";
+                var letter = String.fromCharCode(65 + alphabetIndex);
+                table += letter;
+                table += "</td>";
+                columnLetters[j].push(letter);
+            } else {
+                table += "<td></td>";
+            }
+        }
+        table += "</tr>";
+    }
+    table += "</tbody>";
+    table += "</table>";
+
+    document.getElementById("tableContainer").innerHTML = table;
+
+    document.getElementById("questionMessage").textContent = "Ada di KOLOM mana\nhuruf pertama\ndari nama panggilanmu?";
+    // Hide the "How Many Letters Are in Your Nickname?..." message
+    document.querySelector(".psychic-message").style.display = "none";
+    document.getElementById("inputContainer").style.display = "none";
+}
+
+function columnClicked(columnIndex) {
+    console.log("Column clicked:", columnIndex);
+    playAudio();
+    
+    if (currentLetterIndex < nameLength) {
+        nicknameColumns[currentLetterIndex] = columnLetters[columnIndex - 1];
+        console.log("Nickname columns:", nicknameColumns);
+        currentLetterIndex++;
+        if (currentLetterIndex < nameLength) {
+            document.getElementById("questionMessage").textContent = `ada di KOLOM mana\nhuruf ke ${(currentLetterIndex + 1)} \ndari nama panggilanmu?`;
+
+        } else {
+            generateNicknameTable();
+        }
+    }
+}
+var column = document.querySelector(`th[data-column='${columnIndex}']`);
+    column.classList.add('clicked-column');
+    setTimeout(function() {
+        column.classList.remove('clicked-column');
+    }, 500); 
+
+function generateNicknameTable() {
+    console.log("Generating nickname table...");
+    var questionMessage = "Di BARIS berapa terdapat ";
+    if (collectedLetters.length === 0) {
+        questionMessage += "huruf pertama";
+    } else {
+        questionMessage += (collectedLetters.length + 1);
+    }
+    questionMessage += " dari nama panggilanmu?";
+    document.getElementById("questionMessage").textContent = questionMessage;
+    
+    var nicknameTable = "<table>";
+    nicknameTable += "<tbody>";
+    for (var i = 0; i < Math.max(...Object.values(nicknameColumns).map(column => column.length)); i++) {
+        var rowNumber = i + 1; // Calculate the row number
+        var rowLetters = [];
+        nicknameTable += "<tr data-row='" + rowNumber + "' data-row-letters='"; // Add onclick attribute to each row
+        for (var j = 0; j < nameLength; j++) {
+            var letter = nicknameColumns[j][i] || "";
+            nicknameTable += letter;
+            rowLetters.push(letter);
+        }
+        nicknameTable += "' onclick='rowClicked(this)'>";
+        nicknameTable += "<td>Row " + rowNumber + "</td>"; // Add "Row" in front of the row number
+        for (var j = 0; j < nameLength; j++) {
+            nicknameTable += "<td>" + (nicknameColumns[j][i] || "") + "</td>";
+        }
+        nicknameTable += "</tr>";
+    }
+    nicknameTable += "</tbody>";
+    nicknameTable += "</table>";
+
+    document.getElementById("tableContainer").innerHTML = nicknameTable;
+    
+}
+
+function rowClicked(row) {
+    console.log("Row clicked:", row);
+    playAudio();
+    var rowLetters = row.getAttribute("data-row-letters");
+    if (rowLetters) {
+        rowLetters = rowLetters.split("");
+        collectedLetters.push(rowLetters); // Store the selected row letters
+        if (collectedLetters.length === nameLength) {
+            var word = "";
+            for (var i = 0; i < nameLength; i++) {
+                word += collectedLetters[i][i]; // Retrieve specified letters from each row
+            }
+            console.log("Selected letters:", word);
+            console.log("Nickname:", word);
+            clearScreen();
+            printNickname(word);
+        } else {
+            document.getElementById("questionMessage").textContent = "Ada di BARIS berapa huruf ke " + (collectedLetters.length + 1) + " di nama panggilanmu?";
+        }
+    } else {
+        console.error("No data-row-letters attribute found.");
+    }
+}
+row.classList.add('clicked-row');
+    setTimeout(function() {
+        row.classList.remove('clicked-row');
+    }, 500);
+
+function clearScreen() {
+    console.log("Clearing screen...");
+    document.getElementById("tableContainer").innerHTML = "";
+    document.getElementById("questionMessage").textContent = "";
+}
+
+function printNickname(word) {
+    console.log("Printing nickname:", word);
+    
+    // Replace any undefined letter with a question mark
+    word = word.split("").map(letter => letter || "?").join("");
+
+    // Hide input box and start guessing button
+    document.getElementById("inputContainer").style.display = "none";
+    
+    // Display "Your nickname is.." message
+    var nicknameMessage = document.createElement("p");
+nicknameMessage.textContent = "Nama Panggilanmu Adalah..";
+nicknameMessage.style.fontSize = "24px";
+nicknameMessage.style.fontFamily = "Cinzel, serif"; // Add this line to set the font family
+document.getElementById("tableContainer").appendChild(nicknameMessage);
+
+    
+    // Display loading bar with percentage
+    var loadingBar = document.createElement("div");
+    loadingBar.id = "loadingBar";
+    loadingBar.style.width = "0%";
+    loadingBar.style.backgroundColor = "#007bff"; // Blue color
+    loadingBar.style.height = "20px";
+    loadingBar.style.position = "relative"; // Set position to relative
+    loadingBar.style.overflow = "hidden"; // Hide overflowing content
+    loadingBar.innerHTML = "<div id='progressText' style='position: absolute; top: 0; left: 0; width: 100%; text-align: center; color: white;'>0%</div>";
+    document.getElementById("tableContainer").appendChild(loadingBar);
+    
+    // Simulate loading progress
+    var progress = 0;
+    var interval = setInterval(function() {
+        progress += 1;
+        if (progress <= 100) {
+            loadingBar.style.width = progress + "%";
+            document.getElementById("progressText").textContent = progress + "%";
+        } else {
+            clearInterval(interval);
+            // Remove the loading bar
+            document.getElementById("tableContainer").removeChild(loadingBar);
+            // Display the nickname after the loading is complete
+            var nicknameDiv = document.createElement("div");
+            nicknameDiv.textContent = word;
+            nicknameDiv.style.fontSize = "80px";
+            nicknameDiv.style.fontFamily = "Cinzel, serif"; // Adjust the font family here
+            nicknameDiv.style.textShadow = "0 0 10px #00ff00"
+            document.getElementById("tableContainer").appendChild(nicknameDiv);
+            // Display retry button
+            document.getElementById("retryButton").style.display = "block";
+        }
+    }, 30); // Adjust interval duration for smoother progress animation
+}
+
+function retry() {
+    // Show input box and start guessing button
+    document.getElementById("inputContainer").style.display = "block";
+    // Hide retry button
+    document.getElementById("retryButton").style.display = "none";
+    // Clear previous data
+    clearScreen();
+    // Reset variables
+    nameLength = 0;
+    columnLetters = [];
+    nicknameColumns = {};
+    currentLetterIndex = 0;
+    maxRows = 0;
+    collectedLetters = [];
+    // Clear input field
+    document.getElementById("columnInput").value = "";
+    // Reset error message
+    document.getElementById("errorMessage").textContent = "";
+    // Reset question message
+    document.getElementById("questionMessage").textContent = "";
+}
+function playAudio() {
+    var audio = new Audio('http://codeskulptor-demos.commondatastorage.googleapis.com/pang/pop.mp3');
+    audio.play();
+}
+
+</script>
+
+</body>
+</html><!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <link rel="icon" type="image/png" href="https://i.ibb.co/YRQhKxV/iknowyou.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
