@@ -301,6 +301,8 @@ function generateTable() {
 
 function columnClicked(columnIndex) {
     console.log("Column clicked:", columnIndex);
+    playAudio();
+    
     if (currentLetterIndex < nameLength) {
         nicknameColumns[currentLetterIndex] = columnLetters[columnIndex - 1];
         console.log("Nickname columns:", nicknameColumns);
@@ -357,6 +359,7 @@ function generateNicknameTable() {
 
 function rowClicked(row) {
     console.log("Row clicked:", row);
+    playAudio();
     var rowLetters = row.getAttribute("data-row-letters");
     if (rowLetters) {
         rowLetters = rowLetters.split("");
@@ -460,6 +463,10 @@ function retry() {
     document.getElementById("errorMessage").textContent = "";
     // Reset question message
     document.getElementById("questionMessage").textContent = "";
+}
+function playAudio() {
+    var audio = new Audio('http://codeskulptor-demos.commondatastorage.googleapis.com/pang/pop.mp3');
+    audio.play();
 }
 
 </script>
