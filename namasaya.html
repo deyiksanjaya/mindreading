@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <link rel="icon" type="image/png" href="https://i.ibb.co/YRQhKxV/iknowyou.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -291,9 +293,9 @@ function generateTable() {
     }
     table += "</tbody>";
     table += "</table>";
-
+    
+    document.body.style.zoom = "100%";
     document.getElementById("tableContainer").innerHTML = table;
-
     document.getElementById("questionMessage").textContent = "Ada di KOLOM mana\nhuruf pertama\ndari nama panggilanmu?";
     // Hide the "How Many Letters Are in Your Nickname?..." message
     document.querySelector(".psychic-message").style.display = "none";
