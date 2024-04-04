@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Your Website Title</title>
+<style>
+  body {
+    margin: 0;
+    padding: 0;
+    background-image: url('https://i.ibb.co/CWGhw0B/Picsart-24-04-04-13-05-11-336.jpg');
+    background-size: cover;
+    background-position: center;
+    font-family: 'Bebas Neue', sans-serif;
+  }
+  .container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+  .btn-container {
+    display: flex;
+    flex-direction: column;
+  }
+  .btn {
+    background-color: #ffffff;
+    color: #000000;
+    border: none;
+    padding: 10px 20px;
+    font-size: 20px;
+    cursor: pointer;
+    outline: none;
+    transition: all 0.3s ease;
+    margin-bottom: 10px;
+    border-radius: 10px;
+  }
+  .btn:hover {
+    background-color: #000000;
+    color: #ffffff;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="btn-container">
+    <button class="btn" onclick="splitButtons()">BEGIN</button>
+  </div>
+</div>
+
+<script>
+    document.querySelector('.btn').addEventListener('click', function() {
+      var beginBtn = document.querySelector('.btn');
+      beginBtn.style.display = 'none';
+      
+      var englishBtn = document.createElement('button');
+      englishBtn.textContent = 'ENGLISH';
+      englishBtn.className = 'btn';
+      englishBtn.style.marginBottom = '10px';
+      englishBtn.onclick = function() {
+        window.location.href = 'myname.html';
+      };
+      
+      var indonesiaBtn = document.createElement('button');
+      indonesiaBtn.textContent = 'INDONESIA';
+      indonesiaBtn.className = 'btn';
+      indonesiaBtn.style.marginBottom = '10px';
+      indonesiaBtn.onclick = function() {
+        window.location.href = 'namasaya.html';
+      };
+      
+      var aboutBtn = document.createElement('button');
+      aboutBtn.textContent = 'ABOUT IGHS';
+      aboutBtn.className = 'btn';
+      aboutBtn.onclick = function() {
+        window.location.href = 'index.html';
+      };
+      
+      var btnContainer = document.querySelector('.btn-container');
+      btnContainer.appendChild(englishBtn);
+      btnContainer.appendChild(indonesiaBtn);
+      btnContainer.appendChild(aboutBtn);
+    });
+  </script>
+  
+</body>
+</html>
