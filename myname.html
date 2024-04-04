@@ -6,14 +6,13 @@
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400..900&display=swap" rel="stylesheet">
     <style>
         .container {
-    background-color: rgba(255, 255, 255, 0.9); /* Slightly transparent white */
-    border-radius: 10px; /* Rounded corners */
-    padding: 20px;
-    margin: 0 auto;
-    max-width: calc(100% - 40px); /* Use calc() function to subtract the total padding (20px on each side) from 100% */
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2); /* Shadow effect */
-}
-
+            background-color: rgba(255, 255, 255, 0.9); /* Slightly transparent white */
+            border-radius: 10px; /* Rounded corners */
+            padding: 20px;
+            margin: 0 auto;
+            max-width: 95%;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2); /* Shadow effect */
+        }
 
         body {
   font-family: 'Arial', sans-serif;
@@ -140,7 +139,7 @@
             font-family: "Cinzel", serif; /* Use Cinzel font for instructions */
         }
         #tableContainer {
-    max-width: 600px; /* Adjust the maximum width as needed */
+    max-width: 95%; /* Adjust the maximum width as needed */
     overflow-x: auto; /* Enable horizontal scrolling if the table exceeds the container width */
     #retryButton {
     display: block; /* Ensure the button takes up the full width */
@@ -148,7 +147,9 @@
     text-align: center; /* Center the button's text */
 }
 }
-
+#questionMessage {
+  white-space: pre-wrap;
+}
     </style>
 </head>
 <body>
@@ -162,7 +163,7 @@
     <button onclick="generateTable()" class="title">Begin</button>
   </div>
   <p id="errorMessage"></p>
-  <p id="questionMessage" class="instructions text-center" style="color: rgb(0, 0, 0); font-size: 20px;"></p>
+  <p id="questionMessage" style="color: rgb(0, 0, 0); font-size: 20px; font-family: 'Cinzel', serif;"></p>
 
   <p id="errorMessage"></p>
   <div id="tableContainer"></div>
@@ -262,7 +263,7 @@ function generateTable() {
 
     document.getElementById("tableContainer").innerHTML = table;
 
-    document.getElementById("questionMessage").textContent = "Which COLUMN contains your first letter?";
+    document.getElementById("questionMessage").textContent = "Which COLUMN contains\nthe first letter\nof your name?";
     // Hide the "How Many Letters Are in Your Nickname?..." message
     document.querySelector(".psychic-message").style.display = "none";
     document.getElementById("inputContainer").style.display = "none";
@@ -275,7 +276,8 @@ function columnClicked(columnIndex) {
         console.log("Nickname columns:", nicknameColumns);
         currentLetterIndex++;
         if (currentLetterIndex < nameLength) {
-            document.getElementById("questionMessage").textContent = "Which COLUMN contains your " + ordinalSuffix(currentLetterIndex + 1) + " letter?";
+            document.getElementById("questionMessage").textContent = `Which COLUMN contains\nThe ${ordinalSuffix(currentLetterIndex + 1)} letter\nof your name?`;
+
         } else {
             generateNicknameTable();
         }
