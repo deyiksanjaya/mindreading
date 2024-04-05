@@ -74,7 +74,8 @@
 
         #recordings li span.duration {
           color: #666;
-          margin-left: 400px; /* Add margin to separate from title */
+          margin-left: 200px; /* Add margin to separate from title */
+          margin-right: 30px;
         }
 
         #recordings li button.play-button i {
@@ -178,8 +179,9 @@ document.addEventListener("DOMContentLoaded", function() {
     };
     
     const recordingsList = document.getElementById("recordings");
-    
+    recordingsList.style.backgroundColor = "#fff";
     recordings.forEach((recording, index) => {
+        
       const recordingItem = document.createElement("li");
       if (recording.duration) {
         recordingItem.innerHTML = `
@@ -201,7 +203,7 @@ document.addEventListener("DOMContentLoaded", function() {
             <button class="play-button" data-value="${recording.value}" data-recording="${index + 1}"><i class="fas fa-play"></i></button>
             ${recording.title}
           </span>
-          <span class="duration">Calculating...</span>
+          <span class="duration">00:09</span>
         `;
       }
       recordingsList.appendChild(recordingItem);
