@@ -107,24 +107,23 @@
           color: #ff5252; /* Hover color for pause icon */
         }
 
-        .record-button {
-  position: fixed;
-  bottom: 20px;
+.record-button {
+  position: absolute;
+  top: calc(100% + 50px);
   left: 50%;
   transform: translateX(-50%);
-  width: 60px; /* Decreased button width */
-  height: 60px; /* Decreased button height */
+  width: 60px;
+  height: 60px;
   background-color: #ff5252;
   border: none;
   border-radius: 50%;
   cursor: pointer;
-  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16); /* Lighter shadow for smaller button */
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16);
 }
 
 .record-button:hover {
-  background-color: #ff6e6e; /* Lighter color on hover */
+  background-color: #ff6e6e;
 }
-
 
         @keyframes spin {
           from { transform: rotate(0deg); }
