@@ -21,11 +21,13 @@
     }
     .container {
       position: fixed;
-      bottom: 10%;
+      bottom: 20%;
       width: 100%;
       display: flex;
       justify-content: center;
       background-color: transparent;
+      flex-direction: column; /* Align items vertically */
+      align-items: center; /* Center items horizontally */
     }
     .clear-button {
       width: 50px;
@@ -34,12 +36,20 @@
       background-size: cover;
       cursor: pointer;
     }
+    .secret-button {
+      width: 50px;
+      height: 50px;
+      background-color: rgb(255, 255, 255); /* Make the button visible */
+      cursor: pointer;
+      margin-top: 10px; /* Add some margin to separate from the clear button */
+    }
   </style>
 </head>
 <body>
   <canvas id="canvas"></canvas>
   <div class="container">
     <div class="clear-button" ontouchstart="restoreCanvas()" ontouchend="clearCanvas()" onmousedown="restoreCanvas()" onmouseup="clearCanvas()"></div>
+    <div class="secret-button" ontouchstart="handlePrankMode()" onmousedown="handlePrankMode()"></div>
   </div>
   <script>
     const canvas = document.getElementById('canvas');
@@ -62,6 +72,21 @@
     // Variable to store the cleared drawing
     let clearedImageData;
 
+    // Variable to store the original drawing before prank mode
+    let originalClearedImageData;
+
+    // Variable to track prank mode
+    let prankMode = false;
+
+    // Variable to track last touch time
+    let lastTouchTime = 0;
+
+    // Variable to track drawing activity during prank mode
+    let drawingActivity = false;
+
+    // Variable to store the timer ID
+    let timerId;
+
     function draw(e) {
       if (!isDrawing) return;
       const x = e.clientX || e.touches[0].clientX;
@@ -76,6 +101,11 @@
       ctx.stroke();
       lastX = x;
       lastY = y;
+      // Update last touch time
+      lastTouchTime = Date.now();
+      drawingActivity = true;
+      // Reset the timer whenever the user starts drawing
+      resetTimer();
     }
 
     canvas.addEventListener('mousedown', (e) => {
@@ -84,6 +114,11 @@
       lastY = e.clientY;
       // Reset clearedImageData when the user starts drawing again
       clearedImageData = null;
+      // Update last touch time
+      lastTouchTime = Date.now();
+      drawingActivity = true;
+      // Start the timer
+      startTimer();
     });
 
     canvas.addEventListener('touchstart', (e) => {
@@ -92,17 +127,33 @@
       lastY = e.touches[0].clientY;
       // Reset clearedImageData when the user starts drawing again
       clearedImageData = null;
+      // Update last touch time
+      lastTouchTime = Date.now();
+      drawingActivity = true;
+      // Start the timer
+      startTimer();
     });
 
     canvas.addEventListener('mousemove', draw);
     canvas.addEventListener('touchmove', draw);
 
-    canvas.addEventListener('mouseup', () => isDrawing = false);
-    canvas.addEventListener('touchend', () => isDrawing = false);
+    canvas.addEventListener('mouseup', () => {
+      isDrawing = false;
+      // Update last touch time
+      lastTouchTime = Date.now();
+      drawingActivity = false;
+    });
+    canvas.addEventListener('touchend', () => {
+      isDrawing = false;
+      // Update last touch time
+      lastTouchTime = Date.now();
+      drawingActivity = false;
+    });
 
     function clearCanvas() {
       // Store the current drawing before clearing
       clearedImageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+      console.log("Drawing stored");
       ctx.clearRect(0, 0, canvas.width, canvas.height);
     }
 
@@ -111,6 +162,55 @@
       if (clearedImageData) {
         ctx.putImageData(clearedImageData, 0, 0);
       }
+    }
+
+    function handlePrankMode() {
+      if (!prankMode) {
+        console.log("Prank mode activated");
+        prankMode = true;
+        // Store the original drawing before entering prank mode
+        originalClearedImageData = clearedImageData;
+        // Place a small grey dot on the top left corner to indicate prank mode
+        ctx.fillStyle = '#888';
+        ctx.beginPath();
+        ctx.arc(10, 10, 5, 0, 2 * Math.PI);
+        ctx.fill();
+      } else {
+        console.log("Prank mode deactivated");
+        prankMode = false;
+        // Clear the grey dot indicating prank mode
+        ctx.clearRect(0, 0, 20, 20);
+        // Reset drawing activity flag
+        drawingActivity = false;
+      }
+    }
+
+    function startTimer() {
+      // Start the timer only if prank mode is active
+      if (prankMode) {
+        // Clear any existing timer
+        clearTimeout(timerId);
+        // Start a new timer
+        timerId = setTimeout(() => {
+          if (!drawingActivity) {
+            // Display the previously stored drawing
+            if (originalClearedImageData) {
+              ctx.putImageData(originalClearedImageData, 0, 0);
+              console.log("Image changed");
+            }
+          } else {
+            console.log("Timer reset");
+            // Restart the timer if there's drawing activity
+            startTimer();
+          }
+        }, 6000);
+      }
+    }
+
+    function resetTimer() {
+      // Reset the timer whenever there's drawing activity
+      clearTimeout(timerId);
+      startTimer();
     }
   </script>
 </body>
