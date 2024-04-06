@@ -153,7 +153,9 @@
 
     function clearCanvas() {
       // Store the current drawing before clearing
-      clearedImageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+      clearedImageData = 
+      setTimeout(() => {
+      ctx.getImageData(0, 0, canvas.width, canvas.height);
       console.log("Drawing stored");
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       }, 30);
