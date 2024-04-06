@@ -265,10 +265,8 @@ document.addEventListener("DOMContentLoaded", function() {
           const monthAudioFile = monthAudioMapping[total];
           if (monthAudioFile) {
             console.log("Month audio file to play:", monthAudioFile);
-            // Here you can play the month audio file
-            // For example:
-            // audio.src = monthAudioFile;
-            // audio.play();
+            audio.src = monthAudioFile;
+            audio.play();
           } else {
             console.error("No audio file found for total:", total);
           }
@@ -288,12 +286,12 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     function updateTimestamp() {
-  const durationSpan = document.querySelector(".playing + .duration");
-  if (durationSpan && audio.duration) {
-    const timeLeft = audio.duration - audio.currentTime;
-    durationSpan.textContent = formatDuration(timeLeft);
-  }
-}
+      const durationSpan = document.querySelector(".playing + .duration");
+      if (durationSpan && audio.duration) {
+        const timeLeft = audio.duration - audio.currentTime;
+        durationSpan.textContent = formatDuration(timeLeft);
+      }
+    }
 
 });
 
