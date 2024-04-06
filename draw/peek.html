@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Full Screen Canvas</title>
+  <style>
+    body, html {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+    }
+    canvas {
+      display: block;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1; /* Send canvas to the background */
+    }
+    .container {
+      position: fixed;
+      bottom: 10%;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      background-color: transparent;
+    }
+    .clear-button {
+      width: 50px;
+      height: 50px;
+      background-image: url('https://i.ibb.co/PCPTP4n/delete-button-svgrepo-com.png');
+      background-size: cover;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="canvas"></canvas>
+  <div class="container">
+    <div class="clear-button" ontouchstart="restoreCanvas()" ontouchend="clearCanvas()" onmousedown="restoreCanvas()" onmouseup="clearCanvas()"></div>
+  </div>
+  <script>
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+
+    // Function to set canvas size based on screen size
+    function setCanvasSize() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+
+    // Set canvas size on page load and when the window is resized
+    setCanvasSize();
+    window.addEventListener('resize', setCanvasSize);
+
+    let isDrawing = false;
+    let lastX = 0;
+    let lastY = 0;
+
+    // Variable to store the cleared drawing
+    let clearedImageData;
+
+    function draw(e) {
+      if (!isDrawing) return;
+      const x = e.clientX || e.touches[0].clientX;
+      const y = e.clientY || e.touches[0].clientY;
+      ctx.strokeStyle = '#000'; // Set stroke color
+      ctx.lineWidth = 5; // Set line width
+      ctx.lineJoin = 'round';
+      ctx.lineCap = 'round';
+      ctx.beginPath();
+      ctx.moveTo(lastX, lastY);
+      ctx.lineTo(x, y);
+      ctx.stroke();
+      lastX = x;
+      lastY = y;
+    }
+
+    canvas.addEventListener('mousedown', (e) => {
+      isDrawing = true;
+      lastX = e.clientX;
+      lastY = e.clientY;
+      // Reset clearedImageData when the user starts drawing again
+      clearedImageData = null;
+    });
+
+    canvas.addEventListener('touchstart', (e) => {
+      isDrawing = true;
+      lastX = e.touches[0].clientX;
+      lastY = e.touches[0].clientY;
+      // Reset clearedImageData when the user starts drawing again
+      clearedImageData = null;
+    });
+
+    canvas.addEventListener('mousemove', draw);
+    canvas.addEventListener('touchmove', draw);
+
+    canvas.addEventListener('mouseup', () => isDrawing = false);
+    canvas.addEventListener('touchend', () => isDrawing = false);
+
+    function clearCanvas() {
+      // Store the current drawing before clearing
+      clearedImageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
+
+    function restoreCanvas() {
+      // Restore the cleared drawing if it exists
+      if (clearedImageData) {
+        ctx.putImageData(clearedImageData, 0, 0);
+      }
+    }
+  </script>
+</body>
+</html>
