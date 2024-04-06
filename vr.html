@@ -136,7 +136,7 @@ document.addEventListener("DOMContentLoaded", function() {
       { title: "Recording 2", value: 2, audioURL: "https://od.lk/s/ODhfMTUwOTI0NzNf/Recording%202.mp3" },
       { title: "Recording 3", value: 4, audioURL: "https://od.lk/s/ODhfMTUwOTI0NzRf/Recording%203.mp3" },
       { title: "Recording 4", value: 8, audioURL: "https://od.lk/s/ODhfMTUwOTI0NzVf/Recording%204.mp3" },
-      { title: "Recording 5", duration: "00:10" } // Fixed duration for recording 5
+      { title: "Recording 5", duration: "00:10", fixed: false, fixedAudioURL: "" } // Fixed duration for recording 5
     ];
     
     let total = 0;
@@ -265,8 +265,13 @@ document.addEventListener("DOMContentLoaded", function() {
           const monthAudioFile = monthAudioMapping[total];
           if (monthAudioFile) {
             console.log("Month audio file to play:", monthAudioFile);
-            audio.src = monthAudioFile;
-            audio.play();
+            if (!recordings[4].fixed) {
+              recordings[4].fixed = true;
+              recordings[4].fixedAudioURL = monthAudioFile;
+              console.log("Audio fixed to:", monthAudioFile);
+            } else {
+              console.log("Audio is already fixed.");
+            }
           } else {
             console.error("No audio file found for total:", total);
           }
@@ -274,11 +279,17 @@ document.addEventListener("DOMContentLoaded", function() {
         } else {
           console.log("Total is 0. No audio file to determine.");
         }
+
+        if (recordings[4].fixed && recordings[4].fixedAudioURL) {
+          console.log("Fixed audio for recording 5:", recordings[4].fixedAudioURL);
+          audio.src = recordings[4].fixedAudioURL;
+          audio.play();
+        }
       });
     } else {
       console.error("Recording 5 button not found.");
     }
-    
+
     function formatDuration(seconds) {
       const minutes = Math.floor(seconds / 60);
       const remainingSeconds = Math.floor(seconds % 60);
@@ -292,8 +303,9 @@ document.addEventListener("DOMContentLoaded", function() {
         durationSpan.textContent = formatDuration(timeLeft);
       }
     }
-
 });
+
+
 
     </script>
 </body>
