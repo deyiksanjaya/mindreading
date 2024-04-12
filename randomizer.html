@@ -28,11 +28,16 @@
     }
     .instruction {
       font-style: italic;
-      display: none; /* Initially hide the instruction */
+      display: none;
       position: absolute;
       bottom: 230px;
       left: 50%;
       transform: translateX(-50%);
+    }
+    .giphy {
+      display: none;
+      width: 600px;
+      height: 600px;
     }
   </style>
 </head>
@@ -40,6 +45,7 @@
   <div class="container">
     <div class="big-word" id="characterName">START!</div>
     <div class="instruction" id="instructionText">Click lagi untuk stop</div>
+    <iframe src="https://giphy.com/embed/1QjA42x9dVMSyiehZV" width="480" height="480" frameBorder="0" class="giphy giphy-embed" allowFullScreen></iframe>
   </div>
 
   <script>
@@ -144,18 +150,27 @@
 
     function toggleInstruction(show) {
       const instruction = document.getElementById('instructionText');
-      instruction.style.display = show ? 'block' : 'none'; // Show or hide instruction based on 'show' parameter
+      instruction.style.display = show ? 'block' : 'none';
+    }
+
+    function toggleGif(show) {
+      const gif = document.querySelector('.giphy');
+      gif.style.display = show ? 'block' : 'none';
     }
 
     function getRandomCharacterName() {
       const element = document.getElementById('characterName');
-      toggleInstruction(true); // Show instruction when animation starts
+      toggleInstruction(true);
       
       if(animationRunning) {
         clearInterval(interval);
         element.innerHTML = "PRINCESS JASMINE";
         animationRunning = false;
-        toggleInstruction(false); // Hide instruction when animation stops
+        toggleInstruction(false);
+        setTimeout(() => {
+          toggleGif(true);
+          element.style.display = 'none'; // Hide the text box
+        }, 2000); // Show the GIF after 2 seconds
         return;
       }
       
