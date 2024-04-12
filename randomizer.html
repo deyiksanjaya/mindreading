@@ -14,6 +14,7 @@
       display: flex;
       justify-content: center;
       align-items: center;
+      flex-direction: column;
       height: 100vh;
       position: relative;
     }
@@ -34,18 +35,12 @@
       left: 50%;
       transform: translateX(-50%);
     }
-    .giphy {
-      display: none;
-      width: 600px;
-      height: 600px;
-    }
   </style>
 </head>
 <body>
   <div class="container">
     <div class="big-word" id="characterName">START!</div>
     <div class="instruction" id="instructionText">Click lagi untuk stop</div>
-    <iframe src="https://giphy.com/embed/1QjA42x9dVMSyiehZV" width="480" height="480" frameBorder="0" class="giphy giphy-embed" allowFullScreen></iframe>
   </div>
 
   <script>
@@ -146,16 +141,12 @@
     ];
 
     let animationRunning = false;
+    let stops = 0;
     let interval;
 
     function toggleInstruction(show) {
       const instruction = document.getElementById('instructionText');
       instruction.style.display = show ? 'block' : 'none';
-    }
-
-    function toggleGif(show) {
-      const gif = document.querySelector('.giphy');
-      gif.style.display = show ? 'block' : 'none';
     }
 
     function getRandomCharacterName() {
@@ -164,13 +155,15 @@
       
       if(animationRunning) {
         clearInterval(interval);
-        element.innerHTML = "PRINCESS JASMINE";
+        stops++;
+        if (stops === 3) {
+          element.innerHTML = "PRINCESS JASMINE";
+        } else {
+          const randomIndex = Math.floor(Math.random() * characterNames.length);
+          element.innerHTML = characterNames[randomIndex];
+        }
         animationRunning = false;
         toggleInstruction(false);
-        setTimeout(() => {
-          toggleGif(true);
-          element.style.display = 'none'; // Hide the text box
-        }, 2000); // Show the GIF after 2 seconds
         return;
       }
       
