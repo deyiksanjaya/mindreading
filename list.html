@@ -18,14 +18,16 @@
         }
 
         .container {
-            max-width: 400px;
-            margin: 0;
-            padding: 30px;
-            background-color: #fff;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-            text-align: center;
-        }
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 30px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    height: 400px; /* Fixed height */
+    overflow: hidden; /* Hide overflowing content */
+}
 
         #inputList {
             width: 100%;
@@ -38,27 +40,12 @@
         }
 
         @media only screen and (max-width: 600px) {
-    /* Adjust input box size */
-    #inputList {
-        font-size: 14px;
-        height: 80px;
+    .container {
+        height: auto; /* Allow container to grow vertically */
     }
 
-    /* Adjust button padding */
-    button {
-        padding: 10px 20px;
-        font-size: 16px;
-    }
-
-    /* Adjust output box padding */
     #output {
-        padding: 10px;
-        font-size: 16px;
-    }
-
-    /* Adjust footer font size */
-    #footer {
-        font-size: 14px;
+        height: auto; /* Allow output div to grow vertically */
     }
 }
 
