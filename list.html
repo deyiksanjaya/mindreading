@@ -109,32 +109,20 @@
 <body>
   <div class="container">
     <textarea id="inputList" placeholder="Enter your list here" rows="4"></textarea>
-    <button id="randomizeButton" onclick="toggleAnimation()" ontouchstart="startTouchHold()" ontouchend="endTouchHold()">Start</button>
+    <button id="randomizeButton" onclick="toggleAnimation()">Start</button>
     <div id="output" onclick="searchResult()"></div>
     <div id="buttons">
-        <button class="button" onclick="loadList('Playing Cards')" ontouchstart="loadList('Playing Cards')">Playing Cards</button>
-        <button class="button" onclick="loadList('Movie Characters')" ontouchstart="loadList('Movie Characters')">Movie Characters</button>
-        <button class="button" onclick="loadList('Famous Individuals')" ontouchstart="loadList('Famous Individuals')">Famous Individuals</button>
+        <button class="button" onclick="loadList('Playing Cards')">Playing Cards</button>
+        <button class="button" onclick="loadList('Movie Characters')">Movie Characters</button>
+        <button class="button" onclick="loadList('Famous Individuals')">Famous Individuals</button>
     </div>
     <footer id="footer" style="text-align: center; margin-top: 20px;">
       <p>&copy; Arthur James</p>
-  </footer>
+    </footer>
   </div>
 
   <script>
     var footerText = document.getElementById("footer").textContent; // Store original footer text
-
-    function startTouchHold() {
-        var inputList = document.getElementById("inputList").value.trim();
-        if (inputList === "") {
-            return;
-        }
-        document.getElementById("footer").textContent = inputList; // Change footer text to input list
-    }
-
-    function endTouchHold() {
-        document.getElementById("footer").textContent = footerText; // Revert footer text to original
-    }
 
     function searchResult() {
         var resultText = document.getElementById("output").textContent.trim();
