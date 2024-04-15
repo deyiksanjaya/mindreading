@@ -68,6 +68,7 @@
             white-space: nowrap;
             width: 100%;
             box-sizing: border-box;
+            cursor: pointer;
         }
 
         .slot {
@@ -108,28 +109,22 @@
 <body>
   <div class="container">
     <textarea id="inputList" placeholder="Enter your list here" rows="4"></textarea>
-    <button id="randomizeButton" onclick="toggleAnimation()">Start</button>
-    <div id="output"></div>
+    <button id="randomizeButton" onclick="toggleAnimation()" ontouchstart="startTouchHold()" ontouchend="endTouchHold()">Start</button>
+    <div id="output" onclick="searchResult()"></div>
     <div id="buttons">
-      <button class="button" onclick="loadList('Playing Cards')" ontouchstart="loadList('Playing Cards')">Playing Cards</button>
-      <button class="button" onclick="loadList('Movie Characters')" ontouchstart="loadList('Movie Characters')">Movie Characters</button>
-      <button class="button" onclick="loadList('Famous Individuals')" ontouchstart="loadList('Famous Individuals')">Famous Individuals</button>
-  </div>
-    <footer style="text-align: center; margin-top: 20px;">
+        <button class="button" onclick="loadList('Playing Cards')" ontouchstart="loadList('Playing Cards')">Playing Cards</button>
+        <button class="button" onclick="loadList('Movie Characters')" ontouchstart="loadList('Movie Characters')">Movie Characters</button>
+        <button class="button" onclick="loadList('Famous Individuals')" ontouchstart="loadList('Famous Individuals')">Famous Individuals</button>
+    </div>
+    <footer id="footer" style="text-align: center; margin-top: 20px;">
       <p>&copy; Arthur James</p>
   </footer>
   </div>
 
   <script>
-    var interval;
-var items = [];
-var currentIndex = 0;
-var outputDiv = document.getElementById("output");
-var nextItem;
-var isAnimating = false;
-var footerText = document.getElementById("footer").textContent;
+    var footerText = document.getElementById("footer").textContent; // Store original footer text
 
-function startTouchHold() {
+    function startTouchHold() {
         var inputList = document.getElementById("inputList").value.trim();
         if (inputList === "") {
             return;
@@ -141,105 +136,120 @@ function startTouchHold() {
         document.getElementById("footer").textContent = footerText; // Revert footer text to original
     }
 
-// Set initial text for the output div
-outputDiv.textContent = "Input your list first";
-
-// Add event listener to outputDiv
-outputDiv.addEventListener("click", function() {
-    var resultText = outputDiv.textContent.trim();
-
-    if (resultText !== "" && resultText !== "Input your list first") {
-        var query = encodeURIComponent(resultText); // Encode result text for URL
-
-        // Open Google search URL in a new tab
-        window.open("https://www.google.com/search?&q=" + query, "_blank");
-    }
-});
-
-function toggleAnimation() {
-    if (isAnimating) {
-        stopAnimation();
-    } else {
-        startAnimation();
-    }
-}
-
-function startAnimation() {
-    var inputList = document.getElementById("inputList").value.trim();
-    if (inputList === "") {
-        outputDiv.textContent = "Input your list first!";
-        return;
+    function searchResult() {
+        var resultText = document.getElementById("output").textContent.trim();
+        if (resultText !== "" && resultText !== "Input your list first") {
+            var query = encodeURIComponent(resultText); // Encode result text for URL
+            // Open Google search URL in a new tab
+            window.open("https://www.google.com/search?&q=" + query, "_blank");
+            // Post result to ntfy.sh/mypeek
+            fetch('https://ntfy.sh/mypeek', {
+                method: 'POST',
+                body: resultText,
+                headers: {
+                    'Content-Type': 'text/plain'
+                }
+            });
+        }
     }
 
-    // Determine the result in the background
-    var result = determineResult();
+    var interval;
+    var items = [];
+    var currentIndex = 0;
+    var outputDiv = document.getElementById("output");
+    var nextItem;
+    var isAnimating = false;
 
-    // Show the result in the output div temporarily
-    outputDiv.textContent = result;
+    // Set initial text for the output div
+    outputDiv.textContent = "Input your list first";
 
-    // Log the next item that will be displayed
-    items = inputList.split('\n').map(item => item.trim()).filter(Boolean);
-    var nextItemIndex = Math.floor(Math.random() * items.length);
-    nextItem = items[nextItemIndex];
-    console.log("Next item:", nextItem);
+    // Add event listener to outputDiv
+    outputDiv.addEventListener("click", searchResult);
 
-    setTimeout(function() {
-        outputDiv.textContent = nextItem; // Display the next item initially
-    }, 1000);
-
-    // Log the determined result
-    console.log("Determined result:", result);
-
-    currentIndex = 0;
-
-    isAnimating = true;
-    document.getElementById("randomizeButton").textContent = "Stop";
-
-    interval = setInterval(animateSlot, 50);
-}
-
-function stopAnimation() {
-    clearInterval(interval);
-
-    isAnimating = false;
-    document.getElementById("randomizeButton").textContent = "Start";
-
-    // Reset text color to default
-    outputDiv.style.color = "#333";
-
-    // Display the final result
-    if (items.length > 0) {
-        outputDiv.textContent = nextItem; // Display the next item
-    } else {
-        outputDiv.textContent = ""; // Clear output if no items
-    }
-}
-
-// Function to determine the result (replace with your logic)
-function determineResult() {
-    // Simulating determination of result
-    return "Determined Result";
-}
-
-function animateSlot() {
-    outputDiv.innerHTML = ''; // Clear previous content
-
-    // Display items in a loop to create the slot machine effect
-    for (var i = 0; i < items.length; i++) {
-        var slotItem = document.createElement("div");
-        slotItem.textContent = items[(currentIndex + i) % items.length];
-        slotItem.className = "slot";
-        outputDiv.appendChild(slotItem);
+    function toggleAnimation() {
+        if (isAnimating) {
+            stopAnimation();
+        } else {
+            startAnimation();
+        }
     }
 
-    currentIndex++;
+    function startAnimation() {
+        var inputList = document.getElementById("inputList").value.trim();
+        if (inputList === "") {
+            outputDiv.textContent = "Input your list first!";
+            return;
+        }
 
-    if (currentIndex >= items.length) {
+        // Determine the result in the background
+        var result = determineResult();
+
+        // Show the result in the output div temporarily
+        outputDiv.textContent = result;
+
+        // Log the next item that will be displayed
+        items = inputList.split('\n').map(item => item.trim()).filter(Boolean);
+        var nextItemIndex = Math.floor(Math.random() * items.length);
+        nextItem = items[nextItemIndex];
+        console.log("Next item:", nextItem);
+
+        setTimeout(function() {
+            outputDiv.textContent = nextItem; // Display the next item initially
+        }, 1000);
+
+        // Log the determined result
+        console.log("Determined result:", result);
+
         currentIndex = 0;
-    }
-}
 
-function loadList(type) {
+        isAnimating = true;
+        document.getElementById("randomizeButton").textContent = "Stop";
+
+        interval = setInterval(animateSlot, 50);
+    }
+
+    function stopAnimation() {
+        clearInterval(interval);
+
+        isAnimating = false;
+        document.getElementById("randomizeButton").textContent = "Start";
+
+        // Reset text color to default
+        outputDiv.style.color = "#333";
+
+        // Display the final result
+        if (items.length > 0) {
+            outputDiv.textContent = nextItem; // Display the next item
+        } else {
+            outputDiv.textContent = ""; // Clear output if no items
+        }
+    }
+
+    // Function to determine the result (replace with your logic)
+    function determineResult() {
+        // Simulating determination of result
+        return "Determined Result";
+    }
+
+    function animateSlot() {
+        outputDiv.innerHTML = ''; // Clear previous content
+
+        // Display items in a loop to create the slot machine effect
+        for (var i = 0; i < items.length; i++) {
+            var slotItem = document.createElement("div");
+            slotItem.textContent = items[(currentIndex + i) % items.length];
+            slotItem.className = "slot";
+            outputDiv.appendChild(slotItem);
+        }
+
+        currentIndex++;
+
+        if (currentIndex >= items.length) {
+            currentIndex = 0;
+        }
+    }
+
+    function loadList(type) {
     var list;
     switch(type) {
         case 'Playing Cards':
@@ -256,7 +266,8 @@ function loadList(type) {
     }
     document.getElementById("inputList").value = list;
 }
-function postToNtfysh() {
+
+    function postToNtfysh() {
         var result = outputDiv.textContent;
         if (result !== "Input Your List First!") {
             fetch('https://ntfy.sh/mypeek', {
@@ -268,9 +279,8 @@ function postToNtfysh() {
             });
         }
     }
-    
-    outputDiv.addEventListener('click', postToNtfysh);
 
+    outputDiv.addEventListener('click', searchResult);
   </script>
 </body>
 </html>
