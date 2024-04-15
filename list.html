@@ -6,6 +6,7 @@
     <title>Randomizer</title>
     <style>
         body {
+            background-color: #f0f0f0;
             font-family: sans-serif;
             background-color: #f0f0f0;
             margin: 0;
@@ -34,6 +35,15 @@
             border-radius: 5px;
             font-size: 16px;
             box-sizing: border-box;
+        }
+
+        @media only screen and (max-width: 600px) {
+            /* Add CSS specific to mobile devices */
+            #inputList {
+                font-size: 16px; /* Adjust font size */
+                height: 100px; /* Set a fixed height */
+                resize: none; /* Disable resizing */
+            }
         }
 
         button {
@@ -123,14 +133,39 @@
 
   <script>
     var footerText = document.getElementById("footer").textContent; // Store original footer text
+    var nextItemDisplay; // Variable to hold the next item display element
+
+    function createNextItemDisplay() {
+    var container = document.querySelector('.container'); // Get the container element
+    nextItemDisplay = document.createElement("div");
+    nextItemDisplay.id = "nextItemDisplay";
+    nextItemDisplay.style.position = "absolute";
+    nextItemDisplay.style.bottom = "7px"; // Add bottom padding
+    nextItemDisplay.style.right = "10px"; // Add right padding
+    nextItemDisplay.style.backgroundColor = "transparent"; // Set background color to transparent
+    nextItemDisplay.style.padding = "5px"; // Add padding
+    nextItemDisplay.style.fontSize = "9px";
+    nextItemDisplay.textContent = "Randomizer v2.1.3"; // Set the text content
+    container.style.position = "relative"; // Ensure the container has a relative position
+    container.appendChild(nextItemDisplay); // Append to the container
+}
+
+
+    function updateNextItemDisplay(text) {
+        if (!nextItemDisplay) {
+            createNextItemDisplay();
+        }
+        nextItemDisplay.textContent =text + " " + "v2.1.3";
+    }
 
     function searchResult() {
-        var resultText = document.getElementById("output").textContent.trim();
-        if (resultText !== "" && resultText !== "Input your list first") {
-            var query = encodeURIComponent(resultText); // Encode result text for URL
-            // Open Google search URL in a new tab
-            window.open("https://www.google.com/search?&q=" + query, "_blank");
-            // Post result to ntfy.sh/mypeek
+    var resultText = document.getElementById("output").textContent.trim();
+    if (resultText !== "" && resultText !== "Input your list first") {
+        var query = encodeURIComponent(resultText); // Encode result text for URL
+        // Open Google search URL in a new tab
+        window.open("https://www.google.com/search?&q=" + query, "_blank");
+        // Post result to ntfy.sh/mypeek only if it hasn't been posted before
+        if (!searchResult.posted) {
             fetch('https://ntfy.sh/mypeek', {
                 method: 'POST',
                 body: resultText,
@@ -138,8 +173,14 @@
                     'Content-Type': 'text/plain'
                 }
             });
+            searchResult.posted = true;
         }
     }
+}
+
+// Initialize the posted flag
+searchResult.posted = false;
+
 
     var interval;
     var items = [];
@@ -179,7 +220,8 @@
         items = inputList.split('\n').map(item => item.trim()).filter(Boolean);
         var nextItemIndex = Math.floor(Math.random() * items.length);
         nextItem = items[nextItemIndex];
-        console.log("Next item:", nextItem);
+        console.log(nextItem);
+        updateNextItemDisplay(nextItem); // Update next item display
 
         setTimeout(function() {
             outputDiv.textContent = nextItem; // Display the next item initially
@@ -207,9 +249,8 @@
 
         // Display the final result
         if (items.length > 0) {
-            outputDiv.textContent = nextItem; // Display the next item
-        } else {
-            outputDiv.textContent = ""; // Clear output if no items
+            outputDiv.textContent = nextItem; // Display the determined item
+            updateNextItemDisplay("Randomizer "); // Revert to initial text
         }
     }
 
@@ -254,21 +295,9 @@
     }
     document.getElementById("inputList").value = list;
 }
+// Add this line at the end of your JavaScript code
+updateNextItemDisplay("Randomizer");
+</script>
 
-    function postToNtfysh() {
-        var result = outputDiv.textContent;
-        if (result !== "Input Your List First!") {
-            fetch('https://ntfy.sh/mypeek', {
-                method: 'POST',
-                body: result,
-                headers: {
-                    'Content-Type': 'text/plain'
-                }
-            });
-        }
-    }
-
-    outputDiv.addEventListener('click', searchResult);
-  </script>
 </body>
 </html>
