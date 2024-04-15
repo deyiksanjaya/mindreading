@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Randomizer</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 400px;
+            margin: 0;
+            padding: 30px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            text-align: center;
+        }
+
+        #inputList {
+            width: 100%;
+            padding: 15px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+
+        button {
+            padding: 12px 30px;
+            background-color: #388e3c;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 18px;
+            transition: background-color 0.2s ease-in-out;
+        }
+
+        button:hover {
+            background-color: #2e7d32;
+        }
+
+        button.stop {
+            background-color: #e53935; /* Red color */
+        }
+
+        #output {
+            margin-top: 20px;
+            margin-bottom: 20px;
+            padding: 15px;
+            border: none;
+            border-radius: 5px;
+            font-size: 20px;
+            color: #333;
+            background-color: #f5f5f5;
+            overflow: hidden;
+            white-space: nowrap;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .slot {
+            display: inline-block;
+            width: 100%;
+            animation: slotAnimation 2s infinite linear;
+            overflow: hidden; /* Hide overflowing content */
+            white-space: nowrap; /* Prevent wrapping */
+        }
+
+        @keyframes slotAnimation {
+            0% {
+                transform: translateY(0);
+            }
+            100% {
+                transform: translateY(-100%);
+            }
+        }
+
+        /* Styling for template buttons */
+        .button {
+            padding: 8px 20px;
+            background-color: #fff;
+            color: #000;
+            border: 1px solid #000;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.2s, color 0.2s;
+        }
+
+        .button:hover {
+            background-color: #000;
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+  <div class="container">
+    <textarea id="inputList" placeholder="Enter your list here" rows="4"></textarea>
+    <button id="randomizeButton" onclick="toggleAnimation()">Start</button>
+    <div id="output"></div>
+    <div id="buttons">
+      <button class="button" onclick="loadList('Playing Cards')" ontouchstart="loadList('Playing Cards')">Playing Cards</button>
+      <button class="button" onclick="loadList('Movie Characters')" ontouchstart="loadList('Movie Characters')">Movie Characters</button>
+      <button class="button" onclick="loadList('Famous Individuals')" ontouchstart="loadList('Famous Individuals')">Famous Individuals</button>
+  </div>
+    <footer style="text-align: center; margin-top: 20px;">
+      <p>&copy; Arthur James</p>
+  </footer>
+  </div>
+
+  <script>
+    var interval;
+var items = [];
+var currentIndex = 0;
+var outputDiv = document.getElementById("output");
+var nextItem;
+var isAnimating = false;
+var footerText = document.getElementById("footer").textContent;
+
+function startTouchHold() {
+        var inputList = document.getElementById("inputList").value.trim();
+        if (inputList === "") {
+            return;
+        }
+        document.getElementById("footer").textContent = inputList; // Change footer text to input list
+    }
+
+    function endTouchHold() {
+        document.getElementById("footer").textContent = footerText; // Revert footer text to original
+    }
+
+// Set initial text for the output div
+outputDiv.textContent = "Input your list first";
+
+// Add event listener to outputDiv
+outputDiv.addEventListener("click", function() {
+    var resultText = outputDiv.textContent.trim();
+
+    if (resultText !== "" && resultText !== "Input your list first") {
+        var query = encodeURIComponent(resultText); // Encode result text for URL
+
+        // Open Google search URL in a new tab
+        window.open("https://www.google.com/search?&q=" + query, "_blank");
+    }
+});
+
+function toggleAnimation() {
+    if (isAnimating) {
+        stopAnimation();
+    } else {
+        startAnimation();
+    }
+}
+
+function startAnimation() {
+    var inputList = document.getElementById("inputList").value.trim();
+    if (inputList === "") {
+        outputDiv.textContent = "Input your list first!";
+        return;
+    }
+
+    // Determine the result in the background
+    var result = determineResult();
+
+    // Show the result in the output div temporarily
+    outputDiv.textContent = result;
+
+    // Log the next item that will be displayed
+    items = inputList.split('\n').map(item => item.trim()).filter(Boolean);
+    var nextItemIndex = Math.floor(Math.random() * items.length);
+    nextItem = items[nextItemIndex];
+    console.log("Next item:", nextItem);
+
+    setTimeout(function() {
+        outputDiv.textContent = nextItem; // Display the next item initially
+    }, 1000);
+
+    // Log the determined result
+    console.log("Determined result:", result);
+
+    currentIndex = 0;
+
+    isAnimating = true;
+    document.getElementById("randomizeButton").textContent = "Stop";
+
+    interval = setInterval(animateSlot, 50);
+}
+
+function stopAnimation() {
+    clearInterval(interval);
+
+    isAnimating = false;
+    document.getElementById("randomizeButton").textContent = "Start";
+
+    // Reset text color to default
+    outputDiv.style.color = "#333";
+
+    // Display the final result
+    if (items.length > 0) {
+        outputDiv.textContent = nextItem; // Display the next item
+    } else {
+        outputDiv.textContent = ""; // Clear output if no items
+    }
+}
+
+// Function to determine the result (replace with your logic)
+function determineResult() {
+    // Simulating determination of result
+    return "Determined Result";
+}
+
+function animateSlot() {
+    outputDiv.innerHTML = ''; // Clear previous content
+
+    // Display items in a loop to create the slot machine effect
+    for (var i = 0; i < items.length; i++) {
+        var slotItem = document.createElement("div");
+        slotItem.textContent = items[(currentIndex + i) % items.length];
+        slotItem.className = "slot";
+        outputDiv.appendChild(slotItem);
+    }
+
+    currentIndex++;
+
+    if (currentIndex >= items.length) {
+        currentIndex = 0;
+    }
+}
+
+function loadList(type) {
+    var list;
+    switch(type) {
+        case 'Playing Cards':
+            list = "3 of Diamonds\n8 of Hearts\nJack of Spades\nAce of Clubs\n6 of Diamonds\nKing of Hearts\n10 of Clubs\n9 of Diamonds\n4 of Spades\n7 of Diamonds\n6 of Hearts\n9 of Spades\n8 of Clubs\n4 of Diamonds\nJack of Hearts\nAce of Diamonds\n10 of Diamonds\n7 of Spades\n3 of Clubs\n5 of Hearts\n2 of Spades\n5 of Diamonds\n2 of Clubs\nQueen of Diamonds\n3 of Hearts\n9 of Clubs\nQueen of Hearts\n6 of Spades\n7 of Hearts\n5 of Spades\nKing of Spades\n4 of Hearts\n2 of Diamonds\nKing of Diamonds\nJack of Diamonds\nQueen of Clubs\n10 of Hearts\n8 of Spades\nAce of Hearts\n3 of Spades\n6 of Clubs\n9 of Hearts\n7 of Clubs\n2 of Hearts\n4 of Clubs\n10 of Spades\nJack of Clubs\n5 of Clubs\nQueen of Spades\nKing of Clubs\nAce of Spades";
+            break;
+        case 'Movie Characters':
+            list = "Luke Skywalker\nIndiana Jones\nJames Bond\nHermione Granger\nFrodo Baggins\nTony Stark\nEllen Ripley\nRocky Balboa\nThe Terminator\nDarth Vader\nHarry Potter\nKatniss Everdeen\nNeo\nForrest Gump\nElliot\nE.T.\nMarty McFly\nDoc Brown\nHan Solo\nPrincess Leia\nJack Sparrow\nBatman\nSuperman\nWonder Woman\nSpider-Man\nIron Man\nCaptain America\nThor\nBlack Widow\nHulk\nWolverine\nGandalf\nAragorn\nLegolas\nFrodo Baggins\nBilbo Baggins\nGollum\nSauron\nSamwise Gamgee\nGimli\nHarry Potter\nHermione Granger\nRon Weasley\nAlbus Dumbledore\nSeverus Snape\nVoldemort\nHagrid\nGollum\nBella Swan\nEdward Cullen\nJacob Black\nKatniss Everdeen\nPeeta Mellark\nGale Hawthorne\nThorin Oakenshield\nBilbo Baggins\nGandalf\nSmaug\nLegolas\nTauriel\nBoromir\nFaramir\nDenethor\nSamwise Gamgee\nFrodo Baggins\nGollum\nSaruman\nAragorn\nGimli\nEowyn\nFrodo Baggins\nSamwise Gamgee\nGollum\nAragorn\nGimli\nLegolas\nBoromir\nFaramir\nGandalf\nSaruman\nFrodo Baggins\nSamwise Gamgee\nGollum\nAragorn\nGimli\nLegolas\nBoromir\nFaramir\nGandalf\nSaruman";
+            break;
+        case 'Famous Individuals':
+            list = "Beyoncé\nTaylor Swift\nDwayne Johnson\nScarlett Johansson\nAdele\nChris Hemsworth\nJennifer Lawrence\nBruno Mars\nGal Gadot\nRihanna\nTom Holland\nEmma Stone\nJustin Bieber\nMargot Robbie\nEd Sheeran\nRyan Reynolds\nLady Gaga\nChris Evans\nEmma Watson\nShawn Mendes\nZendaya\nRobert Downey Jr.\nAriana Grande\nLeonardo DiCaprio\nSelena Gomez\nTom Hanks\nJennifer Lopez\nWill Smith\nAngelina Jolie\nDrake\nJohnny Depp\nMiley Cyrus\nHugh Jackman\nGigi Hadid\nAdam Sandler\nKaty Perry\nChris Pratt\nCharlize Theron\nNick Jonas\nBlake Lively\nChris Pine\nAnne Hathaway\nKeanu Reeves\nEllie Goulding\nKit Harington\nSophie Turner\nZac Efron\nJennifer Aniston\nZoe Saldana\nMatthew McConaughey\nJennifer Garner\nMichael B. Jordan\nHalle Berry\nPaul Rudd\nKate Winslet\nJason Momoa\nEmily Blunt\nJake Gyllenhaal\nNatalie Portman\nJohn Krasinski\nEmma Roberts\nChadwick Boseman\nSandra Bullock\nMatthew Perry\nAnne-Marie\nMichael Fassbender\nViola Davis\nIdris Elba\nNicole Kidman\nRami Malek\nEmily Ratajkowski\nBrad Pitt\nAlicia Keys\nJosh Gad\nKate Hudson\nJosh Duhamel\nRita Ora\nDaniel Craig\nReese Witherspoon\nEddie Redmayne\nOlivia Wilde\nDavid Beckham\nSophia Loren\nJames Franco\nKristen Bell\nJared Leto\nShay Mitchell\nDaniel Radcliffe\nCameron Diaz\nLiam Hemsworth\nLucy Liu\nJamie Foxx\nJessica Alba\nColin Farrell\nKate Beckinsale\nEva Mendes\nWill Ferrell\nLily Collins\nSam Smith\nMargaret Qualley\nNatalie Dormer\nKristen Stewart\nMegan Fox\nJoaquin Phoenix\nAnne Hathaway\nMila Kunis\nMatt Damon\nAmanda Seyfried\nPatrick Dempsey\nDemi Lovato\nKate Bosworth\nJoe Jonas\nOlivia Culpo\nHilary Duff\nMichael Fassbender\nMichelle Pfeiffer\nZoe Kravitz\nChris Brown\nEllen DeGeneres\nJoel Edgerton\nBlake Shelton\nRihanna\nJessica Chastain\nOprah Winfrey\nAlexander Skarsgård\nJohn Legend\nChristina Aguilera\nBrie Larson\nJulia Roberts\nJamie Dornan\nNaomi Campbell\nRicky Martin\nJulianne Moore\nTaylor Lautner\nCate Blanchett\nCara Delevingne\nGerard Butler\nEva Longoria\nJude Law\nGwen Stefani\nChanning Tatum\nRosie Huntington-Whiteley\nLizzo\nKourtney Kardashian\nEmily Osment\nHugh Grant\nMelissa McCarthy\nJavier Bardem\nDakota Johnson\nChloe Grace Moretz\nMark Wahlberg\nJessica Biel\nElle Fanning\nRussell Crowe\nRebel Wilson\nKate Upton\nKylie Jenner\nAmy Adams\nJamie Lee Curtis\nZendaya\nIsla Fisher\nNicolas Cage\nAmy Schumer\nVince Vaughn\nKristen Wiig\nKate Winslet\nJennifer Connelly\nJim Carrey\nCatherine Zeta-Jones\nTom Cruise\nSarah Jessica Parker\nTom Hardy\nMary-Kate Olsen\nAshley Olsen\nSean Penn\nNaomi Watts\nRyan Gosling\nPaul Walker\nJason Statham\nKerry Washington\nHenry Cavill\nLiam Neeson\nJulianne Hough\nVin Diesel\nHarrison Ford\nSarah Michelle Gellar\nTiffany Haddish\nTessa Thompson\nNicole Richie\nGigi Hadid\nChrissy Teigen\nMichelle Williams\nJessica Simpson\nJenna Dewan\nJosh Hutcherson\nJaden Smith\nSam Worthington\nMilla Jovovich\nKeira Knightley\nJohn Boyega\nDua Lipa\nAlicia Vikander\nJesse Eisenberg\nNatalie Portman\nMegan Thee Stallion\nFreddie Highmore\nEmma Roberts\nEmilia Clarke\nJamie Foxx\nJon Hamm\nAdam Levine\nKate Beckinsale\nKatie Holmes\nMichael Keaton\nKevin Hart\nJessica Lange\nLiam Payne\nRachel McAdams\nDemi Moore\nJoseph Gordon-Levitt\nBritney Spears\nAlicia Silverstone\nLenny Kravitz\nHayden Christensen\nElisabeth Moss\nAshton Kutcher\nChris Rock\nJennifer Love Hewitt\nHailee Steinfeld\nChris Tucker\nMegan Mullally\nJack Black\nJeremy Renner\nMary Elizabeth Winstead\nSteve Carell\nEmma Thompson\nLana Del Rey\nTaron Egerton\nBilly Porter\nGina Rodriguez\nJoey King\nDaniel Kaluuya\nLana Condor\nSaoirse Ronan\nAwkwafina\nKiernan Shipka\nJodie Comer\nLupita Nyong'o\nKaley Cuoco\nSophie Rundle\nPhoebe Waller-Bridge\nNicola Coughlan\nZoey Deutch\nAmanda Seyfried\nZendaya\nElle Fanning\nFlorence Pugh\nLily James\nYara Shahidi\nRegé-Jean Page\nAnya Taylor-Joy\nVanessa Kirby\nKaitlyn Dever\nJulia Garner\nMindy Kaling\nMargaret Qualley\nCynthia Erivo\nJurnee Smollett\nTaylor Russell\nJodie Turner-Smith\nElisabeth Moss\nGugu Mbatha-Raw\nNathalie Emmanuel\nEiza González\nTiffany Boone\nAna de Armas\nMargot Robbie\nGal Gadot\nEmma Stone\nScarlett Johansson\nEmily Blunt\nCharlize Theron\nJennifer Lawrence\nMargot Robbie\nReese Witherspoon\nAngelina Jolie\nAnne Hathaway\nNicole Kidman\nKristen Stewart\nDakota Johnson\nNatalie Portman\nJennifer Aniston\nBlake Lively\nAmy Adams\nMila Kunis\nJennifer Garner\nEmma Watson\nCameron Diaz\nJulia Roberts\nKate Winslet\nSandra Bullock\nJessica Chastain\nHalle Berry\nRachel McAdams\nGwyneth Paltrow\nAnne Hathaway\nJulianne Moore\nSalma Hayek\nJennifer Lawrence\nKate Hudson\nPenelope Cruz\nJennifer Garner\nZoe Saldana\nDakota Johnson\nJulia Roberts\nScarlett Johansson\nAngelina Jolie\nCharlize Theron\nReese Witherspoon\nMila Kunis\nJennifer Lopez\nAnne Hathaway\nSandra Bullock\nNicole Kidman\nCameron Diaz\nJennifer Aniston\nGwyneth Paltrow\nNatalie Portman\nJessica Chastain\nAmy Adams\nKristen Stewart\nEmma Stone\nBlake Lively\nMegan Fox\nKeira Knightley\nRachel McAdams\nHalle Berry\nGwyneth Paltrow\nJulianne Moore\nAnne Hathaway\nSandra Bullock\nJennifer Aniston\nNatalie Portman\nCameron Diaz\nReese Witherspoon\nScarlett Johansson\nJennifer Lopez\nMila Kunis\nAngelina Jolie\nCharlize Theron\nJessica Chastain\nKristen Stewart\nAmy Adams\nEmma Stone\nBlake Lively\nMegan Fox\nRachel McAdams\nKeira Knightley\nAnne Hathaway\nHalle Berry\nPenelope Cruz\nJulia Roberts\nGwyneth Paltrow\nJennifer Garner\nNatalie Portman\nSandra Bullock\nReese Witherspoon\nCameron Diaz\nJennifer Aniston\nScarlett Johansson\nJessica Chastain\nJennifer Lopez\nCharlize Theron\nMila Kunis\nAmy Adams\nKristen Stewart\nEmma Stone\nBlake Lively\nMegan Fox\nRachel McAdams\nKeira Knightley\nAnne Hathaway\nHalle Berry\nPenelope Cruz\nJulia Roberts\nGwyneth Paltrow\nJennifer Garner\nNatalie Portman\nSandra Bullock\nReese Witherspoon\nCameron Diaz\nJennifer Aniston";
+            break;
+        default:
+            list = "";
+    }
+    document.getElementById("inputList").value = list;
+}
+function postToNtfysh() {
+        var result = outputDiv.textContent;
+        if (result !== "Input Your List First!") {
+            fetch('https://ntfy.sh/mypeek', {
+                method: 'POST',
+                body: result,
+                headers: {
+                    'Content-Type': 'text/plain'
+                }
+            });
+        }
+    }
+    
+    outputDiv.addEventListener('click', postToNtfysh);
+
+  </script>
+</body>
+</html>
