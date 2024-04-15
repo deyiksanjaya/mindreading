@@ -129,25 +129,11 @@
         if (inputList === "") {
             return;
         }
-        // Store the list items
-        items = inputList.split('\n').map(item => item.trim()).filter(Boolean);
-
-        // Determine and store one of the items randomly
-        var randomIndex = Math.floor(Math.random() * items.length);
-        var selectedItem = items[randomIndex];
-        console.log("Selected Item:", selectedItem); // Display the selected item in the console
-
-        // Display the selected item on the screen
-        document.getElementById("output").textContent = selectedItem;
-
-        // Toggle the button to stop function
-        document.getElementById("randomizeButton").textContent = "Stop";
-        document.getElementById("randomizeButton").setAttribute("onmousedown", "stopAnimation()");
+        document.getElementById("footer").textContent = inputList; // Change footer text to input list
     }
 
     function endTouchHold() {
-        // Clear the console log
-        console.clear();
+        document.getElementById("footer").textContent = footerText; // Revert footer text to original
     }
 
     function searchResult() {
