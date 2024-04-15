@@ -126,13 +126,9 @@
         <button class="button" onclick="loadList('Movie Characters')">Movie Characters</button>
         <button class="button" onclick="loadList('Famous Individuals')">Famous Individuals</button>
     </div>
-    <footer id="footer" style="text-align: center; margin-top: 20px;">
-      <p>&copy; Arthur James</p>
-    </footer>
   </div>
 
   <script>
-    var footerText = document.getElementById("footer").textContent; // Store original footer text
     var nextItemDisplay; // Variable to hold the next item display element
 
     function createNextItemDisplay() {
@@ -160,7 +156,7 @@
 
     function searchResult() {
     var resultText = document.getElementById("output").textContent.trim();
-    if (resultText !== "" && resultText !== "Input your list first") {
+    if (resultText !== "" && resultText !== "") {
         var query = encodeURIComponent(resultText); // Encode result text for URL
         // Open Google search URL in a new tab
         window.open("https://www.google.com/search?&q=" + query, "_blank");
@@ -190,7 +186,6 @@ searchResult.posted = false;
     var isAnimating = false;
 
     // Set initial text for the output div
-    outputDiv.textContent = "Input your list first";
 
     // Add event listener to outputDiv
     outputDiv.addEventListener("click", searchResult);
