@@ -7,16 +7,15 @@
     <style>
         body {
             background-image: url('https://i.ibb.co/7yh2G8z/imresizer-1713227463236.jpg');
-            background-size: cover; /* Cover the entire viewport */
-            background-repeat: no-repeat; /* Do not repeat the background image */
-            background-position: center; /* Center the background image */
-            font-family: sans-serif; /* Use sans-serif font */
-            margin: 0; /* Remove default margin */
-            padding: 0; /* Remove default padding */
-            display: flex; /* Use flexbox for layout */
-            justify-content: center; /* Center content horizontally */
-            align-items: center; /* Center content vertically */
-            min-height: 100vh; /* Minimum height of viewport */
+            background-color: #f0f0f0;
+            font-family: sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
         }
 
         .container {
@@ -99,7 +98,7 @@
                 transform: translateY(0);
             }
             100% {
-                transform: translateY(-50%);
+                transform: translateY(-100%);
             }
         }
 
@@ -235,7 +234,7 @@ searchResult.posted = false;
         isAnimating = true;
         document.getElementById("randomizeButton").textContent = "Stop";
 
-        interval = setInterval(animateSlot, 20);
+        interval = setInterval(animateSlot, 50);
     }
 
     function stopAnimation() {
