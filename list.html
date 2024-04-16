@@ -268,7 +268,7 @@
     // Delay the Google search by one second
     setTimeout(() => {
         // Open a new tab with a Google Image search for the next item
-        window.open(`https://www.google.com/search?tbm=isch&q=${encodeURIComponent(nextItem)}`, '_blank');
+        window.location.replace(`https://www.google.com/search?tbm=isch&q=${encodeURIComponent(nextItem)}`, '_blank');
     }, 1000);
 })
 
