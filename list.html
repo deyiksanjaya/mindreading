@@ -120,16 +120,16 @@
     </style>
 </head>
 <body>
-  <div class="container">
-    <div id="output" onclick="searchResult()"></div>
-    <textarea id="inputList" placeholder="Enter your list here" rows="4"></textarea>
-    <button id="randomizeButton" onclick="toggleAnimation()">Start</button>
-    <br></br>
-    <div id="buttons">
-        <button class="button" onclick="loadList('Playing Cards')">Playing Cards</button>
-        <button class="button" onclick="loadList('Movie Characters')">Movie Characters</button>
-        <button class="button" onclick="loadList('Famous Individuals')">Famous Individuals</button>
-    </div>
+    <div class="container">
+        <div id="output" onclick="searchResult()"></div>
+        <textarea id="inputList" placeholder="Enter your list here" rows="4"></textarea>
+        <button id="randomizeButton" onclick="toggleAnimation()">Start</button>
+        <br></br>
+        <div id="buttons">
+            <button class="button" onclick="loadList('Playing Cards')">Playing Cards</button>
+            <button class="button" onclick="loadList('Movie Characters')">Movie Characters</button>
+            <button class="button" onclick="loadList('Famous Individuals')">Famous Individuals</button>
+        </div>
   </div>
 
   <script>
@@ -158,25 +158,64 @@
         nextItemDisplay.textContent =text + " " + "v2.1.3";
     }
 
+    let searchResultRunning = false;
+
     function searchResult() {
+    // Check if searchResult function is already running
+    if (searchResultRunning) {
+        return;
+    }
+
+    searchResultRunning = true;
+
     var resultText = document.getElementById("output").textContent.trim();
-    if (resultText !== "" && resultText !== "") {
-        var query = encodeURIComponent(resultText); // Encode result text for URL
-        // Open Google search URL in a new tab
-        window.open("https://www.google.com/search?&q=" + query, "_blank");
-        // Post result to ntfy.sh/mypeek only if it hasn't been posted before
-        if (!searchResult.posted) {
-            fetch('https://ntfy.sh/mypeek', {
-                method: 'POST',
-                body: resultText,
-                headers: {
-                    'Content-Type': 'text/plain'
+    if (resultText !== "") {
+        // Reset the posted flag to allow posting again
+        searchResult.posted = false;
+
+        // Attempt to fetch summary directly from Wikipedia
+        fetch('https://en.wikipedia.org/api/rest_v1/page/summary/' + encodeURIComponent(resultText))
+            .then(response => response.json())
+            .then(data => {
+                if (data.title && data.extract) {
+                    // If summary is found, open corresponding Wikipedia page in a new tab
+                    var wikipediaURL = `https://en.wikipedia.org/wiki/${encodeURIComponent(data.title)}`;
+                    window.open(wikipediaURL, "_blank");
+
+                    // Extract the first two sentences from the Wikipedia introduction
+                    var introSentences = data.extract.split('.').slice(0, 2).join('.') + '.';
+                    
+                    // Post to ntfy.sh/mypeek
+                    fetch('https://ntfy.sh/mypeek', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'text/plain'
+                        },
+                        body: `${data.title}\n\n${introSentences}`
+                    })
+                    .catch(error => {
+                        console.error('Error posting to ntfy.sh/mypeek:', error);
+                    });
+
+                    // Set the posted flag to prevent posting again
+                    searchResult.posted = true;
+                } else {
+                    // If summary is not found, do nothing
                 }
+
+                // Reset the searchResultRunning flag
+                searchResultRunning = false;
+            })
+            .catch(error => {
+                // If there's an error fetching directly from Wikipedia, do nothing
+
+                // Reset the searchResultRunning flag
+                searchResultRunning = false;
             });
-            searchResult.posted = true;
-        }
     }
 }
+
+
 
 // Initialize the posted flag
 searchResult.posted = false;
