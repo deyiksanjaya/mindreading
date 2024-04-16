@@ -19,6 +19,26 @@
             min-height: 100vh; /* Minimum height of viewport */
         }
 
+        .loading-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    backdrop-filter: blur(10px); /* Apply blur effect */
+    z-index: 9999; /* Ensure it's on top of other content */
+    display: flex; /* Use flexbox for layout */
+    justify-content: center; /* Center content horizontally */
+    align-items: center; /* Center content vertically */
+}
+
+.loading-content {
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5); /* Add shadow for better visibility */
+    text-align: center; /* Center text */
+}
+
         .container {
     max-width: 400px;
     margin: 20px;
@@ -160,7 +180,7 @@
 
     let searchResultRunning = false;
 
-function searchResult() {
+    function searchResult() {
     // Check if searchResult function is already running
     if (searchResultRunning) {
         return;
@@ -173,48 +193,72 @@ function searchResult() {
         // Reset the posted flag to allow posting again
         searchResult.posted = false;
 
+        // Create the loading container
+        var loadingContainer = document.createElement("div");
+        loadingContainer.classList.add("loading-container"); // Add loading-container class
+
+        // Create and append the "Opening Wikipedia" text
+        var openingWikipediaText = document.createElement("div");
+        openingWikipediaText.textContent = "Opening Wikipedia...";
+        openingWikipediaText.classList.add("loading-content"); // Add loading-content class
+
+        // Append the "Opening Wikipedia" text to the loading container
+        loadingContainer.appendChild(openingWikipediaText);
+
+        // Append the loading container to the document body
+        document.body.appendChild(loadingContainer);
+
         // Attempt to fetch summary directly from Wikipedia
         fetch('https://en.wikipedia.org/api/rest_v1/page/summary/' + encodeURIComponent(resultText))
             .then(response => response.json())
             .then(data => {
                 if (data.title && data.extract) {
-                    // If summary is found, open corresponding Wikipedia page in a new tab
-                    var wikipediaURL = `https://en.wikipedia.org/wiki/${encodeURIComponent(data.title)}`;
-                    window.open(wikipediaURL, "_blank");
-
                     // Post to ntfy.sh/mypeek
-                    fetch('https://ntfy.sh/mypeek', {
+                    return fetch('https://ntfy.sh/mypeek', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'text/plain'
                         },
                         body: `${data.title}\n\n${data.extract}`
-                    })
-                    .catch(error => {
-                        console.error('Error posting to ntfy.sh/mypeek:', error);
                     });
-
-                    // Set the posted flag to prevent posting again
-                    searchResult.posted = true;
                 } else {
-                    // If summary is not found, do nothing
+                    throw new Error('Summary not found');
                 }
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed to post data to Ntfy.sh');
+                }
+                console.log('Data posted to Ntfy.sh successfully');
+                searchResult.posted = true; // Set the posted flag to prevent posting again
 
-                // Reset the searchResultRunning flag
-                searchResultRunning = false;
+                // Remove the loading container
+                loadingContainer.remove();
+
+                // Open the Wikipedia page after the search result is posted
+                openWikipediaPage(resultText);
             })
             .catch(error => {
-                // If there's an error fetching directly from Wikipedia, do nothing
-
-                // Reset the searchResultRunning flag
-                searchResultRunning = false;
+                console.error('Error:', error);
+            })
+            .finally(() => {
+                searchResultRunning = false; // Reset the searchResultRunning flag
             });
     }
+}
+
+// Function to open Wikipedia page in the same tab
+function openWikipediaPage(title) {
+    var wikipediaURL = `https://en.wikipedia.org/wiki/${encodeURIComponent(title)}`;
+    window.location.replace(wikipediaURL);
 }
 
 
 // Initialize the posted flag
 searchResult.posted = false;
+
+
+;
 
 
     var interval;
