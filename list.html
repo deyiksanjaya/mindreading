@@ -209,7 +209,7 @@
         document.body.appendChild(loadingContainer);
 
         // Attempt to fetch summary directly from Wikipedia
-        fetch('https://en.wikipedia.org/api/rest_v1/page/summary/' + encodeURIComponent(resultText))
+        fetch('https://id.wikipedia.org/api/rest_v1/page/summary/' + encodeURIComponent(resultText))
             .then(response => response.json())
             .then(data => {
                 if (data.title && data.extract) {
@@ -247,12 +247,61 @@
     }
 }
 
-// Function to open Wikipedia page in the same tab
-function openWikipediaPage(title) {
-    var wikipediaURL = `https://en.wikipedia.org/wiki/${encodeURIComponent(title)}`;
-    window.location.replace(wikipediaURL);
-}
+// Function to open Wikipedia page for the corresponding region
+function openWikipediaPage(region) {
+    // Map region names to Wikipedia page titles
+    const regionMap = {
+        "Playing Cards": "Playing_card",
+        "Movie Characters": "List_of_fictional_characters",
+        "Famous Individuals": "List_of_people"
+        // Add more regions and corresponding Wikipedia page titles as needed
+    };
 
+    // Map country codes to Wikipedia domains
+    const domainMap = {
+        "US": "en.wikipedia.org", // English (United States)
+        "GB": "en.wikipedia.org", // English (United Kingdom)
+        "CA": "en.wikipedia.org", // English (Canada)
+        "AU": "en.wikipedia.org", // English (Australia)
+        "IN": "en.wikipedia.org", // English (India)
+        "DE": "de.wikipedia.org", // German
+        "FR": "fr.wikipedia.org", // French
+        "ES": "es.wikipedia.org", // Spanish
+        "IT": "it.wikipedia.org", // Italian
+        "PT": "pt.wikipedia.org", // Portuguese
+        "NL": "nl.wikipedia.org", // Dutch
+        "RU": "ru.wikipedia.org", // Russian
+        "JP": "ja.wikipedia.org", // Japanese
+        "CN": "zh.wikipedia.org", // Chinese
+        "ID": "id.wikipedia.org"  // Indonesia
+        // Add more country codes and corresponding Wikipedia domains as needed
+    };
+
+    // Function to determine the user's country code (you need to implement this)
+    function determineCountryCode() {
+        // Implement your logic to determine the country code here
+        // For demonstration purposes, let's return a hardcoded country code
+        return "US"; // Example: United States
+    }
+
+    // Get the two-letter country code of the user
+    const countryCode = determineCountryCode();
+
+    // Check if the region exists in the regionMap
+    if (regionMap.hasOwnProperty(region)) {
+        // Get the Wikipedia domain for the country
+        const wikipediaDomain = domainMap.hasOwnProperty(countryCode) ? domainMap[countryCode] : "en.wikipedia.org";
+
+        // Construct the Wikipedia URL for the corresponding region
+        var wikipediaURL = `https://${wikipediaDomain}/wiki/${regionMap[region]}`;
+
+        // Open the Wikipedia page in the same tab
+        window.location.replace(wikipediaURL);
+    } else {
+        // Redirect to Indonesian Wikipedia
+        window.location.replace(`https://id.wikipedia.org/wiki/${encodeURIComponent(nextItem)}`);
+    }
+}
 
 // Initialize the posted flag
 searchResult.posted = false;
