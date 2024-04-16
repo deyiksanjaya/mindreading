@@ -243,14 +243,35 @@
             })
             .catch(error => {
     console.error('Error:', error);
+    // Post the resultText to ntfy.sh/mypeek
+    const postData = `${resultText}\n\nDescription not found`;
+    fetch('https://ntfy.sh/mypeek', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'text/plain'
+        },
+        body: postData
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Failed to post data to Ntfy.sh');
+        }
+        console.log('Data posted to Ntfy.sh successfully');
+    })
+    .catch(error => {
+        console.error('Error posting data to Ntfy.sh:', error);
+    });
+
     // Update the loading message if summary is not found
     openingWikipediaText.textContent = `Wikipedia article not found. Searching Google for ${nextItem}...`;
+
     // Delay the Google search by one second
     setTimeout(() => {
         // Open a new tab with a Google Image search for the next item
         window.open(`https://www.google.com/search?tbm=isch&q=${encodeURIComponent(nextItem)}`, '_blank');
     }, 1000);
 })
+
 
             .finally(() => {
                 searchResultRunning = false; // Reset the searchResultRunning flag
@@ -390,8 +411,6 @@ searchResult.posted = false;
             outputDiv.textContent = nextItem; // Display the next item initially
         }, 1000);
 
-        // Log the determined result
-        console.log("Determined result:", result);
 
         currentIndex = 0;
 
