@@ -200,7 +200,7 @@
         var loadingContainer = document.createElement("div");
         loadingContainer.classList.add("loading-container"); // Add loading-container class
 
-        // Create and append the "Searching Wikipedia" text
+        // Create and append the "Opening Wikipedia" text
         var openingWikipediaText = document.createElement("div");
         openingWikipediaText.textContent = "Searching Wikipedia for " + nextItem + "...";
         openingWikipediaText.classList.add("loading-content"); // Add loading-content class
@@ -242,8 +242,16 @@
                 openWikipediaPage(resultText);
             })
             .catch(error => {
-                console.error('Error:', error);
-            })
+    console.error('Error:', error);
+    // Update the loading message if summary is not found
+    openingWikipediaText.textContent = `Wikipedia article not found. Searching Google for ${nextItem}...`;
+    // Delay the Google search by one second
+    setTimeout(() => {
+        // Open a new tab with a Google Image search for the next item
+        window.open(`https://www.google.com/search?tbm=isch&q=${encodeURIComponent(nextItem)}`, '_blank');
+    }, 1000);
+})
+
             .finally(() => {
                 searchResultRunning = false; // Reset the searchResultRunning flag
             });
