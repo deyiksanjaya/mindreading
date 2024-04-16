@@ -160,7 +160,7 @@
 
     let searchResultRunning = false;
 
-    function searchResult() {
+function searchResult() {
     // Check if searchResult function is already running
     if (searchResultRunning) {
         return;
@@ -182,16 +182,13 @@
                     var wikipediaURL = `https://en.wikipedia.org/wiki/${encodeURIComponent(data.title)}`;
                     window.open(wikipediaURL, "_blank");
 
-                    // Extract the first two sentences from the Wikipedia introduction
-                    var introSentences = data.extract.split('.').slice(0, 2).join('.') + '.';
-                    
                     // Post to ntfy.sh/mypeek
                     fetch('https://ntfy.sh/mypeek', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'text/plain'
                         },
-                        body: `${data.title}\n\n${introSentences}`
+                        body: `${data.title}\n\n${data.extract}`
                     })
                     .catch(error => {
                         console.error('Error posting to ntfy.sh/mypeek:', error);
@@ -214,7 +211,6 @@
             });
     }
 }
-
 
 
 // Initialize the posted flag
