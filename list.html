@@ -31,15 +31,17 @@
     overflow: hidden; /* Hide overflowing content */
 }
 
-        #inputList {
-            width: 100%;
-            padding: 15px;
-            margin-bottom: 20px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            font-size: 16px;
-            box-sizing: border-box;
-        }
+#inputList {
+    width: 100%;
+    padding: 15px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+    box-sizing: border-box;
+    text-align: center; /* Center the content of the input list */
+}
+
 
         @media only screen and (max-width: 600px) {
     .container {
@@ -64,10 +66,6 @@
 
         button:hover {
             background-color: #2e7d32;
-        }
-
-        button.stop {
-            background-color: #e53935; /* Red color */
         }
 
         #output {
@@ -123,9 +121,10 @@
 </head>
 <body>
   <div class="container">
+    <div id="output" onclick="searchResult()"></div>
     <textarea id="inputList" placeholder="Enter your list here" rows="4"></textarea>
     <button id="randomizeButton" onclick="toggleAnimation()">Start</button>
-    <div id="output" onclick="searchResult()"></div>
+    <br></br>
     <div id="buttons">
         <button class="button" onclick="loadList('Playing Cards')">Playing Cards</button>
         <button class="button" onclick="loadList('Movie Characters')">Movie Characters</button>
