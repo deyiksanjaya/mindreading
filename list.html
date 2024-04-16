@@ -247,8 +247,42 @@
     }
 }
 
+// Function to determine the user's country code
+function determineCountryCode() {
+    // Check if Geolocation is supported by the browser
+    if ("geolocation" in navigator) {
+        // Prompt the user for location permission
+        console.log("This page needs your location to determine the right Wikipedia page for you.");
+        
+        // Use Geolocation API to get the user's position
+        navigator.geolocation.getCurrentPosition(function(position) {
+            // Retrieve latitude and longitude coordinates
+            const latitude = position.coords.latitude;
+            const longitude = position.coords.longitude;
+
+            // Use reverse geocoding to determine the country code based on coordinates
+            fetch(`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${latitude}&longitude=${longitude}&localityLanguage=en`)
+                .then(response => response.json())
+                .then(data => {
+                    // Log the country code to the console
+                    console.log("Country Code:", data.countryCode);
+
+                    // Once the country code is determined, proceed with opening the Wikipedia page
+                    openWikipediaPage(region, data.countryCode);
+                })
+                .catch(error => {
+                    console.error('Error determining country code:', error);
+                });
+        }, function(error) {
+            console.error('Error getting user location:', error);
+        });
+    } else {
+        console.error('Geolocation is not supported by this browser.');
+    }
+}
+
 // Function to open Wikipedia page for the corresponding region
-function openWikipediaPage(region) {
+function openWikipediaPage(region, countryCode) {
     // Map region names to Wikipedia page titles
     const regionMap = {
         "Playing Cards": "Playing_card",
@@ -277,16 +311,6 @@ function openWikipediaPage(region) {
         // Add more country codes and corresponding Wikipedia domains as needed
     };
 
-    // Function to determine the user's country code (you need to implement this)
-    function determineCountryCode() {
-        // Implement your logic to determine the country code here
-        // For demonstration purposes, let's return a hardcoded country code
-        return "US"; // Example: United States
-    }
-
-    // Get the two-letter country code of the user
-    const countryCode = determineCountryCode();
-
     // Check if the region exists in the regionMap
     if (regionMap.hasOwnProperty(region)) {
         // Get the Wikipedia domain for the country
@@ -303,8 +327,13 @@ function openWikipediaPage(region) {
     }
 }
 
+// Call the function to determine the user's country code and open the Wikipedia page
+determineCountryCode();
+
+
 // Initialize the posted flag
 searchResult.posted = false;
+
 
 
 ;
