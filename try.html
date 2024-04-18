@@ -160,38 +160,6 @@
   </div>
 
   <script>
-    // Function to parse URL parameters
-function getUrlParameter(name) {
-    name = name.replace(/[\[\]]/g, "\\$&");
-    var regex = new RegExp("[?&]=(" + name + ")(=([^&#]*)|&|#|$)"),
-        results = regex.exec(window.location.href);
-    if (!results) return null;
-    if (!results[3]) return '';
-    return decodeURIComponent(results[3].replace(/\+/g, " "));
-}
-
-// Get the endpoint parameter from the URL
-var endpoint = getUrlParameter('endpoint');
-
-// Use the endpoint value as needed
-console.log("Endpoint:", endpoint);
-
-
-    // If endpoint parameter exists, use it; otherwise, use default value
-    var ntfyshEndpoint = endpoint ? endpoint : "mypeek";
-
-    // Update all endpoint links in the code
-    function updateEndpointLinks() {
-        var endpointLinks = document.querySelectorAll('.endpoint-link');
-
-        endpointLinks.forEach(function (link) {
-            link.href = 'https://ntfy.sh/' + ntfyshEndpoint;
-        });
-    }
-
-    // Call the function to update endpoint links
-    updateEndpointLinks();
-
     var nextItemDisplay; // Variable to hold the next item display element
 
     function createNextItemDisplay() {
@@ -450,8 +418,8 @@ console.log("Endpoint:", endpoint);
         isAnimating = true;
         document.getElementById("randomizeButton").textContent = "Stop";
 
-        // Start the slot machine animation
-        interval = setInterval(animateSlot, 50); // Change the interval as needed
+        // Start the animation interval
+        interval = setInterval(animateSlot, 50); // Adjust interval as needed
     }
 
     // Fisher-Yates shuffle algorithm
@@ -527,13 +495,33 @@ console.log("Endpoint:", endpoint);
     }
         document.getElementById("inputList").value = list;
     }
+
     // Add this line at the end of your JavaScript code
     updateNextItemDisplay("Randomizer");
+
+    // Function to parse URL parameters
+    function getUrlParameter(name) {
+        var urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get(name);
+    }
+
+    // Get the endpoint parameter from the URL
+    var endpoint = getUrlParameter('endpoint');
+
+    // If endpoint parameter exists, use it; otherwise, use default value
+    var ntfyshEndpoint = endpoint ? endpoint : "mypeek";
+
+    // Update all endpoint links in the code
+    function updateEndpointLinks() {
+        var endpointLinks = document.querySelectorAll('.endpoint-link');
+
+        endpointLinks.forEach(function (link) {
+            link.href = 'https://ntfy.sh/' + ntfyshEndpoint;
+        });
+    }
+
+    // Call the function to update endpoint links
+    updateEndpointLinks();
 </script>
-
-
-
-
-
 </body>
 </html>
