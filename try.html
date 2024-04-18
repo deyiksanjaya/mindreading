@@ -163,7 +163,7 @@
     // Function to parse URL parameters
     function getUrlParameter(name) {
         name = name.replace(/[\[\]]/g, "\\$&");
-        var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+        var regex = new RegExp("[?&]=(" + name + ")(=([^&#]*)|&|#|$)");
             results = regex.exec(window.location.href);
         if (!results) return null;
         if (!results[2]) return '';
