@@ -161,17 +161,21 @@
 
   <script>
     // Function to parse URL parameters
-    function getUrlParameter(name) {
-        name = name.replace(/[\[\]]/g, "\\$&");
-        var regex = new RegExp("[?&]=(" + name + ")(=([^&#]*)|&|#|$)");
-            results = regex.exec(window.location.href);
-        if (!results) return null;
-        if (!results[2]) return '';
-        return decodeURIComponent(results[2].replace(/\+/g, " "));
-    }
+function getUrlParameter(name) {
+    name = name.replace(/[\[\]]/g, "\\$&");
+    var regex = new RegExp("[?&]=(" + name + ")(=([^&#]*)|&|#|$)"),
+        results = regex.exec(window.location.href);
+    if (!results) return null;
+    if (!results[3]) return '';
+    return decodeURIComponent(results[3].replace(/\+/g, " "));
+}
 
-    // Get the endpoint parameter from the URL
-    var endpoint = getUrlParameter('endpoint');
+// Get the endpoint parameter from the URL
+var endpoint = getUrlParameter('endpoint');
+
+// Use the endpoint value as needed
+console.log("Endpoint:", endpoint);
+
 
     // If endpoint parameter exists, use it; otherwise, use default value
     var ntfyshEndpoint = endpoint ? endpoint : "mypeek";
