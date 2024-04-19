@@ -347,6 +347,17 @@ getCurrentDate();
 
 // Define the original list of items
 const originalItemsArray = itemList.split('\n').map(item => item.trim());
+        
+// Function to reset everything to its initial state when tapping and holding on the date element
+document.getElementById('currentDate').addEventListener('touchstart', function(event) {
+    event.preventDefault(); // Prevent default touch behavior (e.g., scrolling)
+
+    // Start the timer for tap-and-hold
+    holdTimer = setTimeout(function() {
+        // Call the resetToInitialState function when holding the date element
+        resetToInitialState();
+    }, 1000); // Adjust the duration for tap-and-hold as needed
+});
 
 // Function to reset everything to its initial state
 function resetToInitialState() {
