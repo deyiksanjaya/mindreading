@@ -217,13 +217,15 @@ function handleSwipe(event) {
         const forceWord = prompt("Please enter a Force Word:");
         if (forceWord !== null && forceWord !== "") {
             console.log("Force Word entered:", forceWord);
-            storedForceWord = forceWord;
+            replaceItems(forceWord);
+            forceWordEntered = true;
             event.preventDefault(); // Prevent default behavior of touchmove event
         } else {
             console.log("No Force Word entered");
         }
     }
 }
+
 
 document.addEventListener('touchmove', handleSwipe);
 let clickCount = 0;
