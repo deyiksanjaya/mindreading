@@ -417,17 +417,18 @@ function resetToInitialState() {
 }
        
         
-// Function to reset everything to its initial state when tapping and holding on the date element
-document.getElementById('currentDate').addEventListener('touchstart', function(event) {
-    event.preventDefault(); // Prevent default touch behavior (e.g., scrolling)
-
-    // Start the timer for tap-and-hold
-    holdTimer = setTimeout(function() {
-        // Call the resetToInitialState function when holding the date element
+// Function to reset everything to its initial state when double tapping on the date element
+let lastTap = 0;
+document.getElementById('currentDate').addEventListener('click', function(event) {
+    const currentTime = new Date().getTime();
+    const tapLength = currentTime - lastTap;
+    if (tapLength < 600 && tapLength > 0) {
+        // Double tap detected
         resetToInitialState();
-    }, 1000); // Adjust the duration for tap-and-hold as needed
+        event.preventDefault(); // Prevent default click behavior
+    }
+    lastTap = currentTime;
 });
-
 
     </script>
 </body>
