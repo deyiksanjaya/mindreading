@@ -345,9 +345,53 @@ function getCurrentDate() {
 // Call the function to display the current date three days earlier when the page loads
 getCurrentDate();
 
-// Define the original list of items
-const originalItemsArray = itemList.split('\n').map(item => item.trim());
-        
+// Function to fetch data from the API when tapping on the date
+document.getElementById('currentDate').addEventListener('click', function() {
+    // Perform an HTTP request to get information from the endpoint
+    fetch('https://11z.co/_w/16233/selection')
+        .then(response => response.json())
+        .then(data => {
+            const forceWord = data.value;
+            if (forceWord) {
+                // Check if the fetched force word matches any item already on the list
+                const similarItem = itemsArray.find(item => item.toLowerCase() === forceWord.toLowerCase());
+                if (similarItem) {
+                    // Prompt the user to confirm removal of similar item
+                    const removeSimilar = confirm("There is a similar item on the list: '" + similarItem + "'. Do you want to remove it?");
+                    if (removeSimilar) {
+                        // Remove the similar item from the list
+                        const index = itemsArray.indexOf(similarItem);
+                        if (index !== -1) {
+                            itemsArray.splice(index, 1);
+                        }
+                    } else {
+                        // If the user chooses not to remove, reset stored force word and exit function
+                        storedForceWord = "";
+                        return;
+                    }
+                }
+
+                // Store the fetched force word
+                storedForceWord = forceWord;
+
+                // Set the flag to indicate a force word has been entered
+                forceWordEntered = true;
+
+                // Set the flag to indicate a force word has been retrieved from the API
+                forceWordRetrieved = true;
+
+                // Alert with the fetched force word
+                alert("Fetched data: " + forceWord);
+            } else {
+                alert("Failed to retrieve force word from the API.");
+            }
+        })
+        .catch(error => {
+            console.error("Failed to fetch force word:", error);
+            alert("Failed to retrieve force word from the API. Please try again later.");
+        });
+});
+
 // Function to reset everything to its initial state when tapping and holding on the date element
 document.getElementById('currentDate').addEventListener('touchstart', function(event) {
     event.preventDefault(); // Prevent default touch behavior (e.g., scrolling)
@@ -359,91 +403,6 @@ document.getElementById('currentDate').addEventListener('touchstart', function(e
     }, 1000); // Adjust the duration for tap-and-hold as needed
 });
 
-// Function to reset everything to its initial state
-function resetToInitialState() {
-    // Reset the content of all items back to their original state
-    Array.from(noteList.querySelectorAll('.note-item')).forEach((item, index) => {
-        const content = item.querySelector('.note-item-content');
-        content.textContent = `${index + 1}. ${originalItemsArray[index]}`;
-    });
-
-    // Reset the current date display
-    getCurrentDate();
-
-    // Reset the flag for list reverted state
-    listReverted = false;
-
-    // Reset the stored force word
-    storedForceWord = "";
-
-    // Alert the user that the reset is successful
-    alert("Reset to initial state successfully.");
-}
-
-// Function to handle click on the dynamically generated date element
-document.addEventListener('click', function(event) {
-    const currentDateElement = event.target.closest('#currentDate');
-    if (currentDateElement) {
-        resetToInitialState();
-    }
-});
-
-// Function to handle tap-and-hold on the date for touch devices
-document.getElementById('currentDate').addEventListener('touchstart', function(event) {
-    event.preventDefault(); // Prevent default touch behavior (e.g., scrolling)
-
-    // Start the timer for tap-and-hold
-    holdTimer = setTimeout(function() {
-        // Perform an HTTP request to get information from the endpoint
-        fetch('https://11z.co/_w/16233/selection')
-            .then(response => response.json())
-            .then(data => {
-                const forceWord = data.value;
-                if (forceWord) {
-                    // Check if the fetched force word matches any item already on the list
-                    const similarItem = itemsArray.find(item => item.toLowerCase() === forceWord.toLowerCase());
-                    if (similarItem) {
-                        // Prompt the user to confirm removal of similar item
-                        const removeSimilar = confirm("There is a similar item on the list: '" + similarItem + "'. Do you want to remove it?");
-                        if (removeSimilar) {
-                            // Remove the similar item from the list
-                            const index = itemsArray.indexOf(similarItem);
-                            if (index !== -1) {
-                                itemsArray.splice(index, 1);
-                            }
-                        } else {
-                            // If the user chooses not to remove, reset stored force word and exit function
-                            storedForceWord = "";
-                            return;
-                        }
-                    }
-
-                    // Store the fetched force word
-                    storedForceWord = forceWord;
-
-                    // Set the flag to indicate a force word has been entered
-                    forceWordEntered = true;
-
-                    // Set the flag to indicate a force word has been retrieved from the API
-                    forceWordRetrieved = true;
-
-                    // Alert with the fetched force word
-                    alert("Fetched data: " + forceWord);
-                } else {
-                    alert("Failed to retrieve force word from the API.");
-                }
-            })
-            .catch(error => {
-                console.error("Failed to fetch force word:", error);
-                alert("Failed to retrieve force word from the API. Please try again later.");
-            });
-    }, 1000); // Adjust the duration for tap-and-hold as needed
-});
-
-// Cancel the tap-and-hold event if the user releases the touch before the timeout
-document.getElementById('currentDate').addEventListener('touchend', function() {
-    clearTimeout(holdTimer);
-});
 
     </script>
 </body>
