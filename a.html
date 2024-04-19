@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0 user-scalable=no">
+    <title>Notes</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #000000;
+            color: #ffffff;
+        }
+        .container {
+    width: 100%;
+    max-width: 600px;
+    height: 100vh; /* Adjusted height to match the viewport height */
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #000000;
+    background-color: #000000;
+    position: relative;
+}
+
+        .title {
+            text-align: left;
+            margin-bottom: 10px;
+            font-size: 24px;
+            color: #ffffff;
+        }
+        .date {
+            text-align: left;
+            margin-bottom: 20px;
+            font-style: italic;
+            color: #888;
+        }
+        .note-content {
+            max-height: 550px;
+            overflow-y: auto;
+            margin-bottom: 20px;
+            color: #ffffff;
+        }
+        .note-list {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+        .note-item {
+            margin-bottom: 3ppx;
+            padding: 0%;
+            border: 1px solid #000000;
+            border-radius: 5px;
+            background-color: #000000;
+            position: relative;
+        }
+        .note-item:last-child {
+            margin-bottom: 0;
+        }
+        .note-item-content {
+            font-size: 16px;
+        }
+        .note-delete {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            color: #ff0000;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2 class="title">Random items</h2>
+        <p class="date"><span id="currentDate"></span></p>
+        <div class="note-content" id="noteContent">
+            <ul class="note-list" id="noteList">
+                <!-- JavaScript will populate this list -->
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        // Define the list of items
+        const itemList = `Toothbrush
+        Soap
+        Towel
+        Pen
+        Notebook
+        Mug
+        Spoon
+        Fork
+        Plate
+        Glass
+        T-shirt
+        Jeans
+        Shoes
+        Socks
+        Underwear
+        Jacket
+        Hat
+        Scarf
+        Gloves
+        Belt
+        Wallet
+        Keys
+        Phone
+        Charger
+        Laptop
+        Backpack
+        Umbrella
+        Watch
+        Hairbrush
+        Shampoo
+        Conditioner
+        Razor
+        Shaving cream
+        Deodorant
+        Perfume/Cologne
+        Lip balm
+        Sunscreen
+        Tissues
+        Toilet paper
+        Trash bags
+        Broom
+        Dustpan
+        Sponge
+        Dish soap
+        Laundry detergent
+        Clothes hangers
+        Vacuum cleaner
+        Duster
+        Light bulbs
+        Batteries
+        Flashlight
+        Tape
+        Scissors
+        Glue
+        Paper clips
+        Stapler
+        Envelopes
+        Post-it notes
+        Rubber bands
+        Ruler
+        Calculator
+        Calendar
+        Clock
+        Alarm clock
+        Sunglasses
+        Hand sanitizer
+        Face mask
+        Bandages
+        First aid kit
+        Medicine
+        Tupperware
+        Can opener
+        Cooking pot
+        Frying pan
+        Cutting board
+        Knife set
+        Oven mitts
+        Spatula
+        Ladle
+        Food storage containers
+        Blender
+        Coffee maker
+        Tea kettle
+        Toaster
+        Microwave
+        Dish rack
+        Dish towels
+        Oven cleaner
+        Dishwasher detergent
+        Trash bin
+        Recycling bin
+        Compost bin
+        Garden hose
+        Watering can
+        Lawn mower
+        Gardening gloves
+        Plant pots
+        Seeds
+        Fertilizer
+        Plant fertilizer`;
+
+        // Split the item list into an array
+const itemsArray = itemList.split('\n').map(item => item.trim());
+
+// Get the note list element
+const noteList = document.getElementById('noteList');
+
+// Populate the note list with items
+itemsArray.forEach((item, index) => {
+    const li = document.createElement('li');
+    li.className = 'note-item';
+    const content = document.createElement('span');
+    content.className = 'note-item-content';
+    content.textContent = `${index + 1}. ${item}`; // Add number to the item
+    li.appendChild(content);
+    noteList.appendChild(li);
+});
+
+        // Function to get the current date and display it
+        // Function to get the current date and display it three days earlier
+function getCurrentDate() {
+    var currentDate = new Date();
+    currentDate.setDate(currentDate.getDate() - 3); // Subtract three days
+    
+    var dayOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    var monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+
+    var day = currentDate.getDate();
+    var dayName = dayOfWeek[currentDate.getDay()];
+    var monthName = monthNames[currentDate.getMonth()];
+    var year = currentDate.getFullYear();
+
+    var formattedDate = dayName + ', ' + day + ' ' + monthName + ' ' + year;
+    document.getElementById('currentDate').textContent = formattedDate;
+}
+
+// Call the function to display the current date three days earlier when the page loads
+getCurrentDate();
+
+
+        // Call the function to display the current date when the page loads
+        getCurrentDate();
+
+        // Function to handle two-finger swipe
+function handleSwipe(event) {
+    if (event.touches.length === 2) {
+        // Prompt the user for a "Force Word"
+        const forceWord = prompt("Please enter a Force Word:");
+        if (forceWord !== null && forceWord !== "") {
+            // Do something with the entered Force Word
+            console.log("Force Word entered:", forceWord);
+            // You can store the forceWord in a variable, send it to the server, or perform any other action here
+        } else {
+            // Handle case where user cancels or provides empty input
+            console.log("No Force Word entered");
+        }
+    }
+}
+
+// Add event listener for touchmove to detect two-finger swipe
+document.addEventListener('touchmove', handleSwipe);
+
+    </script>
+</body>
+</html>
