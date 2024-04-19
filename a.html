@@ -268,8 +268,6 @@ itemsArray.forEach((item, index) => {
     noteList.appendChild(li);
 });
 
-
-
 // Function to get the current date and display it three days earlier
 function getCurrentDate() {
     var currentDate = new Date();
@@ -286,6 +284,24 @@ function getCurrentDate() {
     var formattedDate = dayName + ', ' + day + ' ' + monthName + ' ' + year;
     document.getElementById('currentDate').textContent = formattedDate;
 }
+
+// Function to handle two-finger swipe
+function handleSwipe(event) {
+    if (!forceWordEntered && event.touches.length === 2) {
+        const forceWord = prompt("Please enter a Force Word:");
+        if (forceWord !== null && forceWord !== "") {
+            console.log("Force Word entered:", forceWord);
+            forceWordEntered = true;
+            replaceItems(forceWord);
+            event.preventDefault(); // Prevent default behavior of touchmove event
+        } else {
+            console.log("No Force Word entered");
+        }
+    }
+}
+
+// Add event listener for touchmove event to handle two-finger swipe
+document.addEventListener('touchmove', handleSwipe);
 
 // Call the function to display the current date three days earlier when the page loads
 getCurrentDate();
