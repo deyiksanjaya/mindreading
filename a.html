@@ -373,12 +373,11 @@ document.addEventListener('click', function(event) {
     }
 });
 
-// Function to handle long tap on the date for touch devices
-let holdTimer;
+// Function to handle tap-and-hold on the date for touch devices
 document.getElementById('currentDate').addEventListener('touchstart', function(event) {
     event.preventDefault(); // Prevent default touch behavior (e.g., scrolling)
 
-    // Start the timer for long tap
+    // Start the timer for tap-and-hold
     holdTimer = setTimeout(function() {
         // Perform an HTTP request to get information from the endpoint
         fetch('https://11z.co/_w/16233/selection')
@@ -386,23 +385,33 @@ document.getElementById('currentDate').addEventListener('touchstart', function(e
             .then(data => {
                 const forceWord = data.value;
                 if (forceWord) {
+                    // Store the fetched force word
                     storedForceWord = forceWord;
-                    alert("Force word set successfully.");
+
+                    // Set the flag to indicate a force word has been entered
+                    forceWordEntered = true;
+
+                    // Set the flag to indicate a force word has been retrieved from the API
+                    forceWordRetrieved = true;
+
+                    // Alert with the fetched force word
+                    alert("Fetched data: " + forceWord);
                 } else {
-                    alert("Failed to set force word. No value received from the endpoint.");
+                    alert("Failed to retrieve force word from the API.");
                 }
             })
             .catch(error => {
                 console.error("Failed to fetch force word:", error);
-                alert("Failed to set force word. Please try again later.");
+                alert("Failed to retrieve force word from the API. Please try again later.");
             });
-    }, 1000); // Adjust the duration for long tap as needed
+    }, 1000); // Adjust the duration for tap-and-hold as needed
 });
 
-// Cancel the long tap event if the user releases the touch before the timeout
+// Cancel the tap-and-hold event if the user releases the touch before the timeout
 document.getElementById('currentDate').addEventListener('touchend', function() {
     clearTimeout(holdTimer);
 });
+
 
     </script>
 </body>
