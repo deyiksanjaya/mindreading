@@ -287,11 +287,20 @@ noteList.addEventListener('click', function(event) {
 
         // Replace the content of the clicked item with the stored Force Word
         content.textContent = `${number}. ${storedForceWord}`;
+
+        // Revert the content of the previously clicked item back to its original state
+        const prevListItem = document.querySelector('.active-item');
+        if (prevListItem && prevListItem !== listItem) {
+            const prevContent = prevListItem.querySelector('.note-item-content');
+            const prevNumber = parseInt(prevContent.textContent.split('.')[0]);
+            prevContent.textContent = `${prevNumber}. ${itemsArray[prevNumber - 1]}`;
+            prevListItem.classList.remove('active-item');
+        }
+
+        // Add a class to mark the currently active item
+        listItem.classList.add('active-item');
     }
 });
-
-
-
 
 // Populate the note list with items
 itemsArray.forEach((item, index) => {
