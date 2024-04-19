@@ -216,7 +216,7 @@ function replaceItems(forceWord, odd) {
 // Function to handle two-finger swipe
 function handleSwipe(event) {
     if (event.touches.length === 2 && !swipeTriggered) {
-        const forceWord = prompt("Please enter a Force Word:");
+        const forceWord = prompt("Please Enter a Force Word:");
         if (forceWord !== null && forceWord !== "") {
             console.log("Force Word entered:", forceWord);
             storedForceWord = forceWord;
@@ -345,6 +345,25 @@ function getCurrentDate() {
 // Call the function to display the current date three days earlier when the page loads
 getCurrentDate();
 
+// Function to reset everything to its initial state
+function resetToInitialState() {
+    // Reset the content of all items back to their original state
+    Array.from(noteList.querySelectorAll('.note-item')).forEach((item, index) => {
+        const content = item.querySelector('.note-item-content');
+        content.textContent = `${index + 1}. ${itemsArray[index]}`;
+    });
+
+    // Reset the current date display
+    getCurrentDate();
+
+    // Reset the flag for list reverted state
+    listReverted = false;
+
+    // Reset the stored force word
+    storedForceWord = "";
+
+    alert("Reset to initial state successfully.");
+}
 
     </script>
 </body>
