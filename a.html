@@ -239,14 +239,14 @@ const delay = 300; // Adjust the delay time as needed
 
 // Add event listener for click on the title
 randomItemsTitle.addEventListener('click', function(event) {
-    if (!forceWordEntered && !swipeTriggered) {
+    if (!forceWordEntered) {
         clickCount++;
         if (clickCount === 1) {
             setTimeout(function() {
                 if (clickCount === 1) {
                     console.log("Single click");
                     // Handle single click
-                    if (!forceWordEntered) {
+                    if (!forceWordEntered && !swipeTriggered) { // Check if swipeTriggered is false
                         const forceWord = prompt("Please enter a Force Word:");
                         if (forceWord !== null && forceWord !== "") {
                             replaceItems(forceWord, 1); // Pass 1 for odd numbers
@@ -256,7 +256,7 @@ randomItemsTitle.addEventListener('click', function(event) {
                 } else {
                     console.log("Double click");
                     // Handle double click
-                    if (!forceWordEntered) {
+                    if (!forceWordEntered && !swipeTriggered) { // Check if swipeTriggered is false
                         const forceWord = prompt("Please enter a Force Word:");
                         if (forceWord !== null && forceWord !== "") {
                             replaceItems(forceWord, 0); // Pass 0 for even numbers
