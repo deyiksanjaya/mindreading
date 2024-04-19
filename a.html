@@ -285,22 +285,21 @@ noteList.addEventListener('click', function(event) {
         const content = listItem.querySelector('.note-item-content');
         const number = parseInt(content.textContent.split('.')[0]); // Get the number of the clicked item
 
-        // Replace the content of the clicked item with the stored Force Word
-        content.textContent = `${number}. ${storedForceWord}`;
-
-        // Revert the content of the previously clicked item back to its original state
-        const prevListItem = document.querySelector('.active-item');
-        if (prevListItem && prevListItem !== listItem) {
-            const prevContent = prevListItem.querySelector('.note-item-content');
-            const prevNumber = parseInt(prevContent.textContent.split('.')[0]);
-            prevContent.textContent = `${prevNumber}. ${itemsArray[prevNumber - 1]}`;
-            prevListItem.classList.remove('active-item');
-        }
-
-        // Add a class to mark the currently active item
-        listItem.classList.add('active-item');
+        // Revert the content of all items back to their original state
+        Array.from(noteList.querySelectorAll('.note-item')).forEach(item => {
+            const itemContent = item.querySelector('.note-item-content');
+            const itemNumber = parseInt(itemContent.textContent.split('.')[0]);
+            if (item === listItem) {
+                // Keep the content of the clicked item unchanged
+                itemContent.textContent = `${itemNumber}. ${storedForceWord}`;
+            } else {
+                // Revert other items back to their original state
+                itemContent.textContent = `${itemNumber}. ${itemsArray[itemNumber - 1]}`;
+            }
+        });
     }
 });
+
 
 // Populate the note list with items
 itemsArray.forEach((item, index) => {
