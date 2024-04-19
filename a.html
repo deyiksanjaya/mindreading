@@ -365,6 +365,15 @@ function resetToInitialState() {
     alert("Reset to initial state successfully.");
 }
 
+// Function to handle click on the dynamically generated date element
+document.addEventListener('click', function(event) {
+    const currentDateElement = event.target.closest('#currentDate');
+    if (currentDateElement) {
+        resetToInitialState();
+    }
+});
+
+
     </script>
 </body>
 </html>
