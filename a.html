@@ -417,18 +417,19 @@ function resetToInitialState() {
 }
        
         
-// Function to reset everything to its initial state when double tapping on the date element
-let lastTap = 0;
-document.getElementById('currentDate').addEventListener('click', function(event) {
+// Function to reset everything to its initial state when double-clicking on empty spaces
+let lastClick = 0;
+document.addEventListener('click', function(event) {
     const currentTime = new Date().getTime();
-    const tapLength = currentTime - lastTap;
-    if (tapLength < 600 && tapLength > 0) {
-        // Double tap detected
+    const clickLength = currentTime - lastClick;
+    if (clickLength < 600 && clickLength > 0 && !event.target.closest('.note-item')) {
+        // Double click on empty space detected
         resetToInitialState();
         event.preventDefault(); // Prevent default click behavior
     }
-    lastTap = currentTime;
+    lastClick = currentTime;
 });
+
 
     </script>
 </body>
