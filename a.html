@@ -284,30 +284,12 @@ noteList.addEventListener('click', function(event) {
     if (listItem) {
         const content = listItem.querySelector('.note-item-content');
         const number = parseInt(content.textContent.split('.')[0]); // Get the number of the clicked item
-        if (prevNumberType === null) {
-            // No previous selection, default to odd
-            prevNumberType = number % 2 === 0 ? 'even' : 'odd';
-        }
-        if ((prevNumberType === 'even' && number % 2 === 0) || (prevNumberType === 'odd' && number % 2 !== 0)) {
-            // If the clicked item matches the previous selection, keep it as it is
-            // Revert the other items back to normal
-            Array.from(noteList.childNodes).forEach(node => {
-                const itemContent = node.querySelector('.note-item-content');
-                const itemNumber = parseInt(itemContent.textContent.split('.')[0]);
-                if (node !== listItem) {
-                    itemContent.textContent = `${itemNumber}. ${itemsArray[itemNumber - 1]}`;
-                }
-                itemContent.style.fontWeight = 'normal'; // Ensure other items are not highlighted
-            });
-            // Replace the content of the clicked item with the Force Word
-            content.textContent = `${number}. ${storedForceWord}`;
-            content.style.fontWeight = 'bold'; // Highlight the clicked item
-        } else {
-            // If the clicked item does not match the previous selection, alert the user
-            alert(`Please select a ${prevNumberType} numbered item.`);
-        }
+
+        // Replace the content of the clicked item with the stored Force Word
+        content.textContent = `${number}. ${storedForceWord}`;
     }
 });
+
 
 
 
