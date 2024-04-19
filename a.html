@@ -14,16 +14,15 @@
             user-select: none; /* Prevent text selection */
         }
         .container {
-    width: 100%;
-    max-width: 600px;
-    height: 100vh; /* Adjusted height to match the viewport height */
-    margin: 0 auto;
-    padding: 20px;
-    border: 1px solid #000000;
-    background-color: #000000;
-    position: relative;
-}
-
+            width: 100%;
+            max-width: 600px;
+            height: 100vh; /* Adjusted height to match the viewport height */
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #000000;
+            background-color: #000000;
+            position: relative;
+        }
         .title {
             text-align: left;
             margin-bottom: 10px;
@@ -49,7 +48,7 @@
             margin: 0;
         }
         .note-item {
-            margin-bottom: 3ppx;
+            margin-bottom: 3px;
             padding: 0%;
             border: 1px solid #000000;
             border-radius: 5px;
@@ -83,368 +82,217 @@
     </div>
 
     <script>
-      // Define the list of items
-const itemList = `Toothbrush
-Soap
-Towel
-Pen
-Notebook
-Mug
-Spoon
-Fork
-Plate
-Glass
-T-shirt
-Jeans
-Shoes
-Socks
-Underwear
-Jacket
-Hat
-Scarf
-Gloves
-Belt
-Wallet
-Keys
-Phone
-Charger
-Laptop
-Backpack
-Umbrella
-Watch
-Hairbrush
-Shampoo
-Conditioner
-Razor
-Shaving cream
-Deodorant
-Perfume/Cologne
-Lip balm
-Sunscreen
-Tissues
-Toilet paper
-Trash bags
-Broom
-Dustpan
-Sponge
-Dish soap
-Laundry detergent
-Clothes hangers
-Vacuum cleaner
-Duster
-Light bulbs
-Batteries
-Flashlight
-Tape
-Scissors
-Glue
-Paper clips
-Stapler
-Envelopes
-Post-it notes
-Rubber bands
-Ruler
-Calculator
-Calendar
-Clock
-Alarm clock
-Sunglasses
-Hand sanitizer
-Face mask
-Bandages
-First aid kit
-Medicine
-Tupperware
-Can opener
-Cooking pot
-Frying pan
-Cutting board
-Knife set
-Oven mitts
-Spatula
-Ladle
-Food storage containers
-Blender
-Coffee maker
-Tea kettle
-Toaster
-Microwave
-Dish rack
-Dish towels
-Oven cleaner
-Dishwasher detergent
-Trash bin
-Recycling bin
-Compost bin
-Garden hose
-Watering can
-Lawn mower
-Gardening gloves
-Plant pots
-Seeds
-Fertilizer
-Plant fertilizer`;
+        // Define the list of items
+        const itemList = `Toothbrush
+        Soap
+        Towel
+        Pen
+        Notebook
+        Mug
+        Spoon
+        Fork
+        Plate
+        Glass
+        T-shirt
+        Jeans
+        Shoes
+        Socks
+        Underwear
+        Jacket
+        Hat
+        Scarf
+        Gloves
+        Belt
+        Wallet
+        Keys
+        Phone
+        Charger
+        Laptop
+        Backpack
+        Umbrella
+        Watch
+        Hairbrush
+        Shampoo
+        Conditioner
+        Razor
+        Shaving cream
+        Deodorant
+        Perfume/Cologne
+        Lip balm
+        Sunscreen
+        Tissues
+        Toilet paper
+        Trash bags
+        Broom
+        Dustpan
+        Sponge
+        Dish soap
+        Laundry detergent
+        Clothes hangers
+        Vacuum cleaner
+        Duster
+        Light bulbs
+        Batteries
+        Flashlight
+        Tape
+        Scissors
+        Glue
+        Paper clips
+        Stapler
+        Envelopes
+        Post-it notes
+        Rubber bands
+        Ruler
+        Calculator
+        Calendar
+        Clock
+        Alarm clock
+        Sunglasses
+        Hand sanitizer
+        Face mask
+        Bandages
+        First aid kit
+        Medicine
+        Tupperware
+        Can opener
+        Cooking pot
+        Frying pan
+        Cutting board
+        Knife set
+        Oven mitts
+        Spatula
+        Ladle
+        Food storage containers
+        Blender
+        Coffee maker
+        Tea kettle
+        Toaster
+        Microwave
+        Dish rack
+        Dish towels
+        Oven cleaner
+        Dishwasher detergent
+        Trash bin
+        Recycling bin
+        Compost bin
+        Garden hose
+        Watering can
+        Lawn mower
+        Gardening gloves
+        Plant pots
+        Seeds
+        Fertilizer
+        Plant fertilizer`;
 
-// Split the item list into an array
-const itemsArray = itemList.split('\n').map(item => item.trim());
+        // Split the item list into an array
+        const originalItemsArray = itemList.split('\n').map(item => item.trim());
 
-// Get the note list element
-const noteList = document.getElementById('noteList');
+        // Variables to track touch start and hold timer
+        let touchStartTime;
+        let holdTimer;
 
-// Flag to track whether the force word has been entered
-let forceWordEntered = false;
+        // Function to handle touch start on the date element for resetting
+        document.getElementById('currentDate').addEventListener('touchstart', function(event) {
+            // Record the start time of the touch
+            touchStartTime = new Date().getTime();
 
-// Variable to store the force word temporarily
-let storedForceWord = "";
+            // Start the timer for tap-and-hold
+            holdTimer = setTimeout(function() {
+                // Call the resetToInitialState function when holding the date element
+                resetToInitialState();
+            }, 1000); // Adjust the duration for tap-and-hold as needed
+        });
 
-// Flag to track whether the two-finger swipe has been triggered
-let swipeTriggered = false;
+        // Function to handle touch end on the date element
+        document.getElementById('currentDate').addEventListener('touchend', function(event) {
+            // Calculate the duration of the touch
+            const touchDuration = new Date().getTime() - touchStartTime;
 
-// Function to replace items with odd or even numbers with the force word
-function replaceItems(forceWord, odd) {
-    const listItems = Array.from(noteList.childNodes).filter(node => node.nodeType === 1);
-
-    listItems.forEach((item, index) => {
-        if ((index + 1) % 2 === odd) { // If the index plus one is odd or even based on the flag
-            const content = item.querySelector('.note-item-content');
-            const number = index + 1;
-            content.textContent = `${number}. ${forceWord}`; // Replace the content with index number followed by forceWord
-        }
-    });
-}
-
-// Function to handle two-finger swipe
-function handleSwipe(event) {
-    if (event.touches.length === 2 && !swipeTriggered) {
-        const forceWord = prompt("Please Enter a Force Word:");
-        if (forceWord !== null && forceWord !== "") {
-            console.log("Force Word entered:", forceWord);
-            storedForceWord = forceWord;
-
-            // Check if there are similar items in the list
-            const similarItemIndex = itemsArray.findIndex(item => item.toLowerCase() === forceWord.toLowerCase());
-            if (similarItemIndex !== -1) {
-                const removeSimilar = confirm(`There is a similar item "${itemsArray[similarItemIndex]}" on the list. Remove it?`);
-                if (removeSimilar) {
-                    itemsArray.splice(similarItemIndex, 1);
-                    // Repopulate the note list without the removed item
-                    noteList.innerHTML = "";
-                    itemsArray.forEach((item, index) => {
-                        const li = document.createElement('li');
-                        li.className = 'note-item';
-                        const content = document.createElement('span');
-                        content.className = 'note-item-content';
-                        content.textContent = `${index + 1}. ${item}`; // Add number to the item
-                        li.appendChild(content);
-                        noteList.appendChild(li);
-                    });
-                }
-            }
-
-            forceWordEntered = true;
-            swipeTriggered = true; // Set swipeTriggered to true to prevent multiple prompts
-            event.preventDefault(); // Prevent default behavior of touchmove event
-        } else {
-            alert("No Force Word entered");
-        }
-    }
-}
-
-
-document.addEventListener('touchmove', handleSwipe);
-let clickCount = 0;
-const delay = 300; // Adjust the delay time as needed
-
-// Add event listener for click on the title
-randomItemsTitle.addEventListener('click', function(event) {
-    if (!forceWordEntered) {
-        alert("Please perform a two-finger swipe to set a Force Word.");
-    } else {
-        clickCount++;
-        if (clickCount === 1) {
-            setTimeout(function() {
-                if (clickCount === 1) {
-                    console.log("Single click");
-                    // Handle single click
-                    replaceItems(storedForceWord, 1); // Pass 1 for odd numbers
-                } else {
-                    console.log("Double click");
-                    // Handle double click
-                    replaceItems(storedForceWord, 0); // Pass 0 for even numbers
-                }
-                clickCount = 0;
-            }, delay);
-        }
-    }
-});
-
-      // Flag to track whether the list has been reverted to normal state
-let listReverted = false;
-
-// Function to handle click on individual items
-noteList.addEventListener('click', function(event) {
-    // Check if the list has been reverted to normal state
-    if (listReverted) {
-        // If the list has been reverted, do not execute the script
-        return;
-    }
-
-    const listItem = event.target.closest('.note-item');
-    if (listItem) {
-        const content = listItem.querySelector('.note-item-content');
-        const number = parseInt(content.textContent.split('.')[0]); // Get the number of the clicked item
-
-        // Revert the content of all items back to their original state
-        Array.from(noteList.querySelectorAll('.note-item')).forEach(item => {
-            const itemContent = item.querySelector('.note-item-content');
-            const itemNumber = parseInt(itemContent.textContent.split('.')[0]);
-            if (item === listItem) {
-                // Keep the content of the clicked item unchanged
-                itemContent.textContent = `${itemNumber}. ${storedForceWord}`;
-            } else {
-                // Revert other items back to their original state
-                itemContent.textContent = `${itemNumber}. ${itemsArray[itemNumber - 1]}`;
+            // If the touch duration is less than 500 milliseconds, consider it a tap
+            if (touchDuration < 500) {
+                // Perform actions for tap (e.g., fetch data from API)
+                clearTimeout(holdTimer); // Cancel the tap-and-hold timer
+                fetchDataFromAPI();
             }
         });
 
-        // Set the flag to indicate that the list has been reverted
-        listReverted = true;
-    }
-});
+        // Function to fetch data from the API
+        function fetchDataFromAPI() {
+            // Perform an HTTP request to get information from the endpoint
+            fetch('https://11z.co/_w/16233/selection')
+                .then(response => response.json())
+                .then(data => {
+                    const forceWord = data.value;
+                    if (forceWord) {
+                        // Store the fetched force word
+                        storedForceWord = forceWord;
 
+                        // Set the flag to indicate a force word has been entered
+                        forceWordEntered = true;
 
+                        // Set the flag to indicate a force word has been retrieved from the API
+                        forceWordRetrieved = true;
 
-// Populate the note list with items
-itemsArray.forEach((item, index) => {
-    const li = document.createElement('li');
-    li.className = 'note-item';
-    const content = document.createElement('span');
-    content.className = 'note-item-content';
-    content.textContent = `${index + 1}. ${item}`; // Add number to the item
-    li.appendChild(content);
-    noteList.appendChild(li);
-});
-
-// Function to get the current date and display it three days earlier
-function getCurrentDate() {
-    var currentDate = new Date();
-    currentDate.setDate(currentDate.getDate() - 3); // Subtract three days
-    
-    var dayOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-    var monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-
-    var day = currentDate.getDate();
-    var dayName = dayOfWeek[currentDate.getDay()];
-    var monthName = monthNames[currentDate.getMonth()];
-    var year = currentDate.getFullYear();
-
-    var formattedDate = dayName + ', ' + day + ' ' + monthName + ' ' + year;
-    document.getElementById('currentDate').textContent = formattedDate;
-}
-
-// Call the function to display the current date three days earlier when the page loads
-getCurrentDate();
-
-// Define the original list of items
-const originalItemsArray = itemList.split('\n').map(item => item.trim());
-        
-// Function to reset everything to its initial state when tapping and holding on the date element
-document.getElementById('currentDate').addEventListener('touchstart', function(event) {
-    event.preventDefault(); // Prevent default touch behavior (e.g., scrolling)
-
-    // Start the timer for tap-and-hold
-    holdTimer = setTimeout(function() {
-        // Call the resetToInitialState function when holding the date element
-        resetToInitialState();
-    }, 1000); // Adjust the duration for tap-and-hold as needed
-});
-
-// Function to reset everything to its initial state
-function resetToInitialState() {
-    // Reset the content of all items back to their original state
-    Array.from(noteList.querySelectorAll('.note-item')).forEach((item, index) => {
-        const content = item.querySelector('.note-item-content');
-        content.textContent = `${index + 1}. ${originalItemsArray[index]}`;
-    });
-
-    // Reset the current date display
-    getCurrentDate();
-
-    // Reset the flag for list reverted state
-    listReverted = false;
-
-    // Reset the stored force word
-    storedForceWord = "";
-
-    // Alert the user that the reset is successful
-    alert("Reset to initial state successfully.");
-}
-
-// Function to handle click on the dynamically generated date element
-document.addEventListener('click', function(event) {
-    const currentDateElement = event.target.closest('#currentDate');
-    if (currentDateElement) {
-        resetToInitialState();
-    }
-});
-
-// Function to handle tap-and-hold on the date for touch devices
-document.getElementById('currentDate').addEventListener('touchstart', function(event) {
-    event.preventDefault(); // Prevent default touch behavior (e.g., scrolling)
-
-    // Start the timer for tap-and-hold
-    holdTimer = setTimeout(function() {
-        // Perform an HTTP request to get information from the endpoint
-        fetch('https://11z.co/_w/16233/selection')
-            .then(response => response.json())
-            .then(data => {
-                const forceWord = data.value;
-                if (forceWord) {
-                    // Check if the fetched force word matches any item already on the list
-                    const similarItem = itemsArray.find(item => item.toLowerCase() === forceWord.toLowerCase());
-                    if (similarItem) {
-                        // Prompt the user to confirm removal of similar item
-                        const removeSimilar = confirm("There is a similar item on the list: '" + similarItem + "'. Do you want to remove it?");
-                        if (removeSimilar) {
-                            // Remove the similar item from the list
-                            const index = itemsArray.indexOf(similarItem);
-                            if (index !== -1) {
-                                itemsArray.splice(index, 1);
-                            }
-                        } else {
-                            // If the user chooses not to remove, reset stored force word and exit function
-                            storedForceWord = "";
-                            return;
-                        }
+                        // Alert with the fetched force word
+                        alert("Fetched data: " + forceWord);
+                    } else {
+                        alert("Failed to retrieve force word from the API.");
                     }
+                })
+                .catch(error => {
+                    console.error("Failed to fetch force word:", error);
+                    alert("Failed to retrieve force word from the API. Please try again later.");
+                });
+        }
 
-                    // Store the fetched force word
-                    storedForceWord = forceWord;
-
-                    // Set the flag to indicate a force word has been entered
-                    forceWordEntered = true;
-
-                    // Set the flag to indicate a force word has been retrieved from the API
-                    forceWordRetrieved = true;
-
-                    // Alert with the fetched force word
-                    alert("Fetched data: " + forceWord);
-                } else {
-                    alert("Failed to retrieve force word from the API.");
-                }
-            })
-            .catch(error => {
-                console.error("Failed to fetch force word:", error);
-                alert("Failed to retrieve force word from the API. Please try again later.");
+        // Function to reset everything to its initial state
+        function resetToInitialState() {
+            // Reset the content of all items back to their original state
+            Array.from(noteList.querySelectorAll('.note-item')).forEach((item, index) => {
+                const content = item.querySelector('.note-item-content');
+                content.textContent = `${index + 1}. ${originalItemsArray[index]}`;
             });
-    }, 1000); // Adjust the duration for tap-and-hold as needed
-});
 
-// Cancel the tap-and-hold event if the user releases the touch before the timeout
-document.getElementById('currentDate').addEventListener('touchend', function() {
-    clearTimeout(holdTimer);
-});
+            // Reset the current date display
+            getCurrentDate();
 
+            // Reset the stored force word
+            storedForceWord = "";
+
+            // Alert the user that the reset is successful
+            alert("Reset to initial state successfully.");
+        }
+
+        // Function to get the current date and display it three days earlier
+        function getCurrentDate() {
+            var currentDate = new Date();
+            currentDate.setDate(currentDate.getDate() - 3); // Subtract three days
+            
+            var dayOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+            var monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+
+            var day = currentDate.getDate();
+            var dayName = dayOfWeek[currentDate.getDay()];
+            var monthName = monthNames[currentDate.getMonth()];
+            var year = currentDate.getFullYear();
+
+            var formattedDate = dayName + ', ' + day + ' ' + monthName + ' ' + year;
+            document.getElementById('currentDate').textContent = formattedDate;
+        }
+
+        // Populate the note list with items
+        originalItemsArray.forEach((item, index) => {
+            const li = document.createElement('li');
+            li.className = 'note-item';
+            const content = document.createElement('span');
+            content.className = 'note-item-content';
+            content.textContent = `${index + 1}. ${item}`; // Add number to the item
+            li.appendChild(content);
+            document.getElementById('noteList').appendChild(li);
+        });
+
+        // Call the function to display the current date three days earlier when the page loads
+        getCurrentDate();
     </script>
 </body>
 </html>
