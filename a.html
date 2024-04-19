@@ -195,39 +195,17 @@ let forceWordEntered = false;
 
 // Function to replace items with odd or even numbers with the force word
 function replaceItems(forceWord, odd) {
-    // Filter out only the elements from childNodes
     const listItems = Array.from(noteList.childNodes).filter(node => node.nodeType === 1);
 
     listItems.forEach((item, index) => {
-        if ((index + 1) % 2 === odd) {
+        if ((index + 1) % 2 === odd) { // If the index plus one is odd or even based on the flag
             const content = item.querySelector('.note-item-content');
             const number = index + 1;
-            content.textContent = `${number}. ${forceWord}`;
+            content.textContent = `${number}. ${forceWord}`; // Replace the content with index number followed by forceWord
         }
     });
 }
 
-// Add event listener for click on the title
-randomItemsTitle.addEventListener('click', function(event) {
-    if (!forceWordEntered) {
-        const forceWord = prompt("Please enter a Force Word:");
-        if (forceWord !== null && forceWord !== "") {
-            replaceItems(forceWord, 1); // Pass 1 for odd numbers
-            forceWordEntered = true;
-        }
-    }
-});
-
-// Add event listener for double click on the title
-randomItemsTitle.addEventListener('dblclick', function(event) {
-    if (!forceWordEntered) {
-        const forceWord = prompt("Please enter a Force Word:");
-        if (forceWord !== null && forceWord !== "") {
-            replaceItems(forceWord, 0); // Pass 0 for even numbers
-            forceWordEntered = true;
-        }
-    }
-});
 
 // Function to handle two-finger swipe
 function handleSwipe(event) {
@@ -236,16 +214,48 @@ function handleSwipe(event) {
         if (forceWord !== null && forceWord !== "") {
             console.log("Force Word entered:", forceWord);
             forceWordEntered = true;
-            replaceItems(forceWord, 1); // Default to replacing odd numbers
+            replaceItems(forceWord);
             event.preventDefault(); // Prevent default behavior of touchmove event
         } else {
             console.log("No Force Word entered");
         }
     }
 }
-
-// Add event listener for touchmove event to handle two-finger swipe
 document.addEventListener('touchmove', handleSwipe);
+let clickCount = 0;
+const delay = 300; // Adjust the delay time as needed
+
+// Add event listener for click on the title
+randomItemsTitle.addEventListener('click', function(event) {
+    clickCount++;
+    if (clickCount === 1) {
+        setTimeout(function() {
+            if (clickCount === 1) {
+                console.log("Single click");
+                // Handle single click
+                if (!forceWordEntered) {
+                    const forceWord = prompt("Please enter a Force Word:");
+                    if (forceWord !== null && forceWord !== "") {
+                        replaceItems(forceWord, 1); // Pass 1 for odd numbers
+                        forceWordEntered = true;
+                    }
+                }
+            } else {
+                console.log("Double click");
+                // Handle double click
+                if (!forceWordEntered) {
+                    const forceWord = prompt("Please enter a Force Word:");
+                    if (forceWord !== null && forceWord !== "") {
+                        replaceItems(forceWord, 0); // Pass 0 for even numbers
+                        forceWordEntered = true;
+                    }
+                }
+            }
+            clickCount = 0;
+        }, delay);
+    }
+});
+
 
 // Populate the note list with items
 itemsArray.forEach((item, index) => {
