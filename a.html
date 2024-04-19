@@ -385,6 +385,24 @@ document.getElementById('currentDate').addEventListener('touchstart', function(e
             .then(data => {
                 const forceWord = data.value;
                 if (forceWord) {
+                    // Check if the fetched force word matches any item already on the list
+                    const similarItem = itemsArray.find(item => item.toLowerCase() === forceWord.toLowerCase());
+                    if (similarItem) {
+                        // Prompt the user to confirm removal of similar item
+                        const removeSimilar = confirm("There is a similar item on the list: '" + similarItem + "'. Do you want to remove it?");
+                        if (removeSimilar) {
+                            // Remove the similar item from the list
+                            const index = itemsArray.indexOf(similarItem);
+                            if (index !== -1) {
+                                itemsArray.splice(index, 1);
+                            }
+                        } else {
+                            // If the user chooses not to remove, reset stored force word and exit function
+                            storedForceWord = "";
+                            return;
+                        }
+                    }
+
                     // Store the fetched force word
                     storedForceWord = forceWord;
 
@@ -411,6 +429,7 @@ document.getElementById('currentDate').addEventListener('touchstart', function(e
 document.getElementById('currentDate').addEventListener('touchend', function() {
     clearTimeout(holdTimer);
 });
+
 
 
     </script>
