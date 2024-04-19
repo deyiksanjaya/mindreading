@@ -207,54 +207,61 @@ function replaceItems(forceWord, odd) {
 }
 
 
+// Variable to store the force word temporarily
+let storedForceWord = "";
+
 // Function to handle two-finger swipe
 function handleSwipe(event) {
     if (!forceWordEntered && event.touches.length === 2) {
         const forceWord = prompt("Please enter a Force Word:");
         if (forceWord !== null && forceWord !== "") {
             console.log("Force Word entered:", forceWord);
-            forceWordEntered = true;
-            replaceItems(forceWord);
+            storedForceWord = forceWord;
             event.preventDefault(); // Prevent default behavior of touchmove event
         } else {
             console.log("No Force Word entered");
         }
     }
 }
+
 document.addEventListener('touchmove', handleSwipe);
 let clickCount = 0;
 const delay = 300; // Adjust the delay time as needed
 
 // Add event listener for click on the title
 randomItemsTitle.addEventListener('click', function(event) {
-    clickCount++;
-    if (clickCount === 1) {
-        setTimeout(function() {
+    if (!forceWordEntered) {
+        if (storedForceWord !== "") {
+            replaceItems(storedForceWord, 1); // Pass 1 for odd numbers
+            forceWordEntered = true;
+        } else {
+            clickCount++;
             if (clickCount === 1) {
-                console.log("Single click");
-                // Handle single click
-                if (!forceWordEntered) {
-                    const forceWord = prompt("Please enter a Force Word:");
-                    if (forceWord !== null && forceWord !== "") {
-                        replaceItems(forceWord, 1); // Pass 1 for odd numbers
-                        forceWordEntered = true;
+                setTimeout(function() {
+                    if (clickCount === 1) {
+                        console.log("Single click");
+                        // Handle single click
+                        const forceWord = prompt("Please enter a Force Word for Odd Numbers:");
+                        if (forceWord !== null && forceWord !== "") {
+                            replaceItems(forceWord, 1); // Pass 1 for odd numbers
+                            forceWordEntered = true;
+                        }
+                    } else {
+                        console.log("Double click");
+                        // Handle double click
+                        const forceWord = prompt("Please enter a Force Word for Even Numbers:");
+                        if (forceWord !== null && forceWord !== "") {
+                            replaceItems(forceWord, 0); // Pass 0 for even numbers
+                            forceWordEntered = true;
+                        }
                     }
-                }
-            } else {
-                console.log("Double click");
-                // Handle double click
-                if (!forceWordEntered) {
-                    const forceWord = prompt("Please enter a Force Word:");
-                    if (forceWord !== null && forceWord !== "") {
-                        replaceItems(forceWord, 0); // Pass 0 for even numbers
-                        forceWordEntered = true;
-                    }
-                }
+                    clickCount = 0;
+                }, delay);
             }
-            clickCount = 0;
-        }, delay);
+        }
     }
 });
+
 
 
 // Populate the note list with items
