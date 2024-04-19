@@ -239,7 +239,7 @@ const delay = 300; // Adjust the delay time as needed
 
 // Add event listener for click on the title
 randomItemsTitle.addEventListener('click', function(event) {
-    if (!forceWordEntered) {
+    if (!forceWordEntered && !swipeTriggered) {
         clickCount++;
         if (clickCount === 1) {
             setTimeout(function() {
