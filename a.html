@@ -278,6 +278,31 @@ randomItemsTitle.addEventListener('click', function(event) {
     }
 });
 
+        // Function to handle click on individual items
+noteList.addEventListener('click', function(event) {
+    const listItem = event.target.closest('.note-item');
+    if (listItem) {
+        const content = listItem.querySelector('.note-item-content');
+        const number = parseInt(content.textContent.split('.')[0]); // Get the number of the clicked item
+        if (prevNumberType === null) {
+            // No previous selection, default to odd
+            prevNumberType = number % 2 === 0 ? 'even' : 'odd';
+        }
+        if ((prevNumberType === 'even' && number % 2 === 0) || (prevNumberType === 'odd' && number % 2 !== 0)) {
+            // If the clicked item matches the previous selection, keep it as it is
+            // Revert the other items back to normal
+            Array.from(noteList.childNodes).forEach(node => {
+                if (node !== listItem) {
+                    node.querySelector('.note-item-content').textContent = node.querySelector('.note-item-content').textContent.replace(storedForceWord, itemsArray[number-1]);
+                }
+            });
+        } else {
+            // If the clicked item does not match the previous selection, alert the user
+            alert(`Please select a ${prevNumberType} numbered item.`);
+        }
+    }
+});
+
 // Populate the note list with items
 itemsArray.forEach((item, index) => {
     const li = document.createElement('li');
