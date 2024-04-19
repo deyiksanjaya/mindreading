@@ -1,26 +1,43 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Randomizer</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>Random Picker</title>
     <style>
         body {
-            background-image: url('https://i.ibb.co/7yh2G8z/imresizer-1713227463236.jpg');
-            background-size: cover; /* Cover the entire viewport */
-            background-repeat: no-repeat; /* Do not repeat the background image */
-            background-position: center; /* Center the background image */
-            font-family: sans-serif; /* Use sans-serif font */
-            margin: 0; /* Remove default margin */
-            padding: 0; /* Remove default padding */
-            display: flex; /* Use flexbox for layout */
-            justify-content: center; /* Center content horizontally */
-            align-items: center; /* Center content vertically */
-            min-height: 100vh; /* Minimum height of viewport */
-        }
+    background-image: url('https://i.ibb.co/7yh2G8z/imresizer-1713227463236.jpg');
+    background-size: cover; /* Cover the entire viewport */
+    background-repeat: no-repeat; /* Do not repeat the background image */
+    background-position: center; /* Center the background image */
+    font-family: sans-serif; /* Use sans-serif font */
+    margin: 0; /* Remove default margin */
+    padding: 0; /* Remove default padding */
+    display: flex; /* Use flexbox for layout */
+    justify-content: center; /* Center content horizontally */
+    align-items: center; /* Center content vertically */
+    min-height: 100vh; /* Minimum height of viewport */
+    touch-action: manipulation;
+    user-select: none;
+    -ms-content-zooming: none;
+    -ms-touch-action: manipulation;
+    zoom: reset;
+    max-height: 100%;
+    overflow: hidden;
+}
 
-        .loading-container {
+/* Disable zooming on mobile devices */
+@media (max-width: 767px) {
+    body {
+        touch-action: pan-x pan-y;
+        -ms-touch-action: pan-x pan-y;
+        -ms-content-zooming: none;
+        -ms-user-zoom: none;
+        overflow: hidden;
+    }
+}
+
+    .loading-container {
     position: fixed;
     top: 0;
     left: 0;
@@ -62,7 +79,7 @@
     border-radius: 5px;
     font-size: 16px;
     box-sizing: border-box;
-    text-align: center; /* Center the content of the input list */
+    text-align: center; 
 }
 
 
@@ -514,7 +531,7 @@
             list = "3 of Diamonds\n8 of Hearts\nJack of Spades\nAce of Clubs\n6 of Diamonds\nKing of Hearts\n10 of Clubs\n9 of Diamonds\n4 of Spades\n7 of Diamonds\n6 of Hearts\n9 of Spades\n8 of Clubs\n4 of Diamonds\nJack of Hearts\nAce of Diamonds\n10 of Diamonds\n7 of Spades\n3 of Clubs\n5 of Hearts\n2 of Spades\n5 of Diamonds\n2 of Clubs\nQueen of Diamonds\n3 of Hearts\n9 of Clubs\nQueen of Hearts\n6 of Spades\n7 of Hearts\n5 of Spades\nKing of Spades\n4 of Hearts\n2 of Diamonds\nKing of Diamonds\nJack of Diamonds\nQueen of Clubs\n10 of Hearts\n8 of Spades\nAce of Hearts\n3 of Spades\n6 of Clubs\n9 of Hearts\n7 of Clubs\n2 of Hearts\n4 of Clubs\n10 of Spades\nJack of Clubs\n5 of Clubs\nQueen of Spades\nKing of Clubs\nAce of Spades";
             break;
         case 'Movie Characters':
-            list = "Luke Skywalker\nIndiana Jones\nJames Bond\nHermione Granger\nFrodo Baggins\nTony Stark\nEllen Ripley\nRocky Balboa\nThe Terminator\nDarth Vader\nHarry Potter\nKatniss Everdeen\nNeo\nForrest Gump\nElliot\nE.T.\nMarty McFly\nDoc Brown\nHan Solo\nPrincess Leia\nJack Sparrow\nBatman\nSuperman\nWonder Woman\nSpider-Man\nIron Man\nCaptain America\nThor\nBlack Widow\nHulk\nWolverine\nGandalf\nAragorn\nLegolas\nFrodo Baggins\nBilbo Baggins\nGollum\nSauron\nSamwise Gamgee\nGimli\nHarry Potter\nHermione Granger\nRon Weasley\nAlbus Dumbledore\nSeverus Snape\nVoldemort\nHagrid\nGollum\nBella Swan\nEdward Cullen\nJacob Black\nKatniss Everdeen\nPeeta Mellark\nGale Hawthorne\nThorin Oakenshield\nBilbo Baggins\nGandalf\nSmaug\nLegolas\nTauriel\nBoromir\nFaramir\nDenethor\nSamwise Gamgee\nFrodo Baggins\nGollum\nSaruman\nAragorn\nGimli\nEowyn\nFrodo Baggins\nSamwise Gamgee\nGollum\nAragorn\nGimli\nLegolas\nBoromir\nFaramir\nGandalf\nSaruman\nFrodo Baggins\nSamwise Gamgee\nGollum\nAragorn\nGimli\nLegolas\nBoromir\nFaramir\nGandalf\nSaruman";
+            list = "Luke Skywalker\nIndiana Jones\nJames Bond\nHermione Granger\nFrodo Baggins\nTony Stark\nEllen Ripley\nRocky Balboa\nThe Terminator\nDarth Vader\nHarry Potter\nKatniss Everdeen\nNeo\nForrest Gump\nElliot\nE.T.\nMarty McFly\nDoc Brown\nHan Solo\nPrincess Leia\nJack Sparrow\nBatman\nSuperman\nWonder Woman\nSpider-Man\nIron Man\nCaptain America\nThor\nBlack Widow\nHulk\nWolverine\nGandalf\nAragorn\nLegolas\nBilbo Baggins\nGollum\nSauron\nSamwise Gamgee\nGimli\nRon Weasley\nAlbus Dumbledore\nSeverus Snape\nVoldemort\nHagrid\nBella Swan\nEdward Cullen\nJacob Black\nPeeta Mellark\nGale Hawthorne\nThorin Oakenshield\nSmaug\nTauriel\nBoromir\nFaramir\nDenethor\nEowyn\nSaruman";
             break;
         case 'Famous Individuals':
             list = "Beyoncé\nTaylor Swift\nDwayne Johnson\nScarlett Johansson\nAdele\nChris Hemsworth\nJennifer Lawrence\nBruno Mars\nGal Gadot\nRihanna\nTom Holland\nEmma Stone\nJustin Bieber\nMargot Robbie\nEd Sheeran\nRyan Reynolds\nLady Gaga\nChris Evans\nEmma Watson\nShawn Mendes\nZendaya\nRobert Downey Jr.\nAriana Grande\nLeonardo DiCaprio\nSelena Gomez\nTom Hanks\nJennifer Lopez\nWill Smith\nAngelina Jolie\nDrake\nJohnny Depp\nMiley Cyrus\nHugh Jackman\nGigi Hadid\nAdam Sandler\nKaty Perry\nChris Pratt\nCharlize Theron\nNick Jonas\nBlake Lively\nChris Pine\nAnne Hathaway\nKeanu Reeves\nEllie Goulding\nKit Harington\nSophie Turner\nZac Efron\nJennifer Aniston\nZoe Saldana\nMatthew McConaughey\nJennifer Garner\nMichael B. Jordan\nHalle Berry\nPaul Rudd\nKate Winslet\nJason Momoa\nEmily Blunt\nJake Gyllenhaal\nNatalie Portman\nJohn Krasinski\nEmma Roberts\nChadwick Boseman\nSandra Bullock\nMatthew Perry\nAnne-Marie\nMichael Fassbender\nViola Davis\nIdris Elba\nNicole Kidman\nRami Malek\nEmily Ratajkowski\nBrad Pitt\nAlicia Keys\nJosh Gad\nKate Hudson\nJosh Duhamel\nRita Ora\nDaniel Craig\nReese Witherspoon\nEddie Redmayne\nOlivia Wilde\nDavid Beckham\nSophia Loren\nJames Franco\nKristen Bell\nJared Leto\nShay Mitchell\nDaniel Radcliffe\nCameron Diaz\nLiam Hemsworth\nLucy Liu\nJamie Foxx\nJessica Alba\nColin Farrell\nKate Beckinsale\nEva Mendes\nWill Ferrell\nLily Collins\nSam Smith\nMargaret Qualley\nNatalie Dormer\nKristen Stewart\nMegan Fox\nJoaquin Phoenix\nAnne Hathaway\nMila Kunis\nMatt Damon\nAmanda Seyfried\nPatrick Dempsey\nDemi Lovato\nKate Bosworth\nJoe Jonas\nOlivia Culpo\nHilary Duff\nMichael Fassbender\nMichelle Pfeiffer\nZoe Kravitz\nChris Brown\nEllen DeGeneres\nJoel Edgerton\nBlake Shelton\nRihanna\nJessica Chastain\nOprah Winfrey\nAlexander Skarsgård\nJohn Legend\nChristina Aguilera\nBrie Larson\nJulia Roberts\nJamie Dornan\nNaomi Campbell\nRicky Martin\nJulianne Moore\nTaylor Lautner\nCate Blanchett\nCara Delevingne\nGerard Butler\nEva Longoria\nJude Law\nGwen Stefani\nChanning Tatum\nRosie Huntington-Whiteley\nLizzo\nKourtney Kardashian\nEmily Osment\nHugh Grant\nMelissa McCarthy\nJavier Bardem\nDakota Johnson\nChloe Grace Moretz\nMark Wahlberg\nJessica Biel\nElle Fanning\nRussell Crowe\nRebel Wilson\nKate Upton\nKylie Jenner\nAmy Adams\nJamie Lee Curtis\nZendaya\nIsla Fisher\nNicolas Cage\nAmy Schumer\nVince Vaughn\nKristen Wiig\nKate Winslet\nJennifer Connelly\nJim Carrey\nCatherine Zeta-Jones\nTom Cruise\nSarah Jessica Parker\nTom Hardy\nMary-Kate Olsen\nAshley Olsen\nSean Penn\nNaomi Watts\nRyan Gosling\nPaul Walker\nJason Statham\nKerry Washington\nHenry Cavill\nLiam Neeson\nJulianne Hough\nVin Diesel\nHarrison Ford\nSarah Michelle Gellar\nTiffany Haddish\nTessa Thompson\nNicole Richie\nGigi Hadid\nChrissy Teigen\nMichelle Williams\nJessica Simpson\nJenna Dewan\nJosh Hutcherson\nJaden Smith\nSam Worthington\nMilla Jovovich\nKeira Knightley\nJohn Boyega\nDua Lipa\nAlicia Vikander\nJesse Eisenberg\nNatalie Portman\nMegan Thee Stallion\nFreddie Highmore\nEmma Roberts\nEmilia Clarke\nJamie Foxx\nJon Hamm\nAdam Levine\nKate Beckinsale\nKatie Holmes\nMichael Keaton\nKevin Hart\nJessica Lange\nLiam Payne\nRachel McAdams\nDemi Moore\nJoseph Gordon-Levitt\nBritney Spears\nAlicia Silverstone";            
