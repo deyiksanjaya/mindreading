@@ -211,14 +211,18 @@ function replaceItems(forceWord, odd) {
 // Variable to store the force word temporarily
 let storedForceWord = "";
 
+// Flag to track whether the two-finger swipe has been triggered
+let swipeTriggered = false;
+
 // Function to handle two-finger swipe
 function handleSwipe(event) {
-    if (!forceWordEntered && event.touches.length === 2) {
+    if (!forceWordEntered && event.touches.length === 2 && !swipeTriggered) {
         const forceWord = prompt("Please enter a Force Word:");
         if (forceWord !== null && forceWord !== "") {
             console.log("Force Word entered:", forceWord);
             replaceItems(forceWord);
             forceWordEntered = true;
+            swipeTriggered = true; // Set swipeTriggered to true to prevent multiple prompts
             event.preventDefault(); // Prevent default behavior of touchmove event
         } else {
             console.log("No Force Word entered");
@@ -226,6 +230,7 @@ function handleSwipe(event) {
         forceWordEntered = false; // Reset forceWordEntered
     }
 }
+
 
 
 document.addEventListener('touchmove', handleSwipe);
