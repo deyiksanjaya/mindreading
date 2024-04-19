@@ -220,6 +220,27 @@ function handleSwipe(event) {
         if (forceWord !== null && forceWord !== "") {
             console.log("Force Word entered:", forceWord);
             storedForceWord = forceWord;
+
+            // Check if there are similar items in the list
+            const similarItemIndex = itemsArray.findIndex(item => item.toLowerCase() === forceWord.toLowerCase());
+            if (similarItemIndex !== -1) {
+                const removeSimilar = confirm(`There is a similar item "${itemsArray[similarItemIndex]}" on the list. Remove it?`);
+                if (removeSimilar) {
+                    itemsArray.splice(similarItemIndex, 1);
+                    // Repopulate the note list without the removed item
+                    noteList.innerHTML = "";
+                    itemsArray.forEach((item, index) => {
+                        const li = document.createElement('li');
+                        li.className = 'note-item';
+                        const content = document.createElement('span');
+                        content.className = 'note-item-content';
+                        content.textContent = `${index + 1}. ${item}`; // Add number to the item
+                        li.appendChild(content);
+                        noteList.appendChild(li);
+                    });
+                }
+            }
+
             forceWordEntered = true;
             swipeTriggered = true; // Set swipeTriggered to true to prevent multiple prompts
             event.preventDefault(); // Prevent default behavior of touchmove event
@@ -228,6 +249,7 @@ function handleSwipe(event) {
         }
     }
 }
+
 
 document.addEventListener('touchmove', handleSwipe);
 let clickCount = 0;
