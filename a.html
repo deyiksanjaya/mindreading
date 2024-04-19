@@ -278,8 +278,17 @@ randomItemsTitle.addEventListener('click', function(event) {
     }
 });
 
-       // Function to handle click on individual items
+      // Flag to track whether the list has been reverted to normal state
+let listReverted = false;
+
+// Function to handle click on individual items
 noteList.addEventListener('click', function(event) {
+    // Check if the list has been reverted to normal state
+    if (listReverted) {
+        // If the list has been reverted, do not execute the script
+        return;
+    }
+
     const listItem = event.target.closest('.note-item');
     if (listItem) {
         const content = listItem.querySelector('.note-item-content');
@@ -297,8 +306,12 @@ noteList.addEventListener('click', function(event) {
                 itemContent.textContent = `${itemNumber}. ${itemsArray[itemNumber - 1]}`;
             }
         });
+
+        // Set the flag to indicate that the list has been reverted
+        listReverted = true;
     }
 });
+
 
 
 // Populate the note list with items
