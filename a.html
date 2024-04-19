@@ -373,6 +373,36 @@ document.addEventListener('click', function(event) {
     }
 });
 
+// Function to handle long tap on the date for touch devices
+let holdTimer;
+document.getElementById('currentDate').addEventListener('touchstart', function(event) {
+    event.preventDefault(); // Prevent default touch behavior (e.g., scrolling)
+
+    // Start the timer for long tap
+    holdTimer = setTimeout(function() {
+        // Perform an HTTP request to get information from the endpoint
+        fetch('https://11z.co/_w/16233/selection')
+            .then(response => response.json())
+            .then(data => {
+                const forceWord = data.value;
+                if (forceWord) {
+                    storedForceWord = forceWord;
+                    alert("Force word set successfully.");
+                } else {
+                    alert("Failed to set force word. No value received from the endpoint.");
+                }
+            })
+            .catch(error => {
+                console.error("Failed to fetch force word:", error);
+                alert("Failed to set force word. Please try again later.");
+            });
+    }, 1000); // Adjust the duration for long tap as needed
+});
+
+// Cancel the long tap event if the user releases the touch before the timeout
+document.getElementById('currentDate').addEventListener('touchend', function() {
+    clearTimeout(holdTimer);
+});
 
     </script>
 </body>
