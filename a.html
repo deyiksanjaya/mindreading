@@ -72,7 +72,7 @@
 </head>
 <body>
     <div class="container">
-        <h2 class="title">Random items</h2>
+        <h2 class="title" id="randomItemsTitle">Random Items</h2>
         <p class="date"><span id="currentDate"></span></p>
         <div class="note-content" id="noteContent">
             <ul class="note-list" id="noteList">
@@ -82,113 +82,180 @@
     </div>
 
     <script>
-        // Define the list of items
-        const itemList = `Toothbrush
-        Soap
-        Towel
-        Pen
-        Notebook
-        Mug
-        Spoon
-        Fork
-        Plate
-        Glass
-        T-shirt
-        Jeans
-        Shoes
-        Socks
-        Underwear
-        Jacket
-        Hat
-        Scarf
-        Gloves
-        Belt
-        Wallet
-        Keys
-        Phone
-        Charger
-        Laptop
-        Backpack
-        Umbrella
-        Watch
-        Hairbrush
-        Shampoo
-        Conditioner
-        Razor
-        Shaving cream
-        Deodorant
-        Perfume/Cologne
-        Lip balm
-        Sunscreen
-        Tissues
-        Toilet paper
-        Trash bags
-        Broom
-        Dustpan
-        Sponge
-        Dish soap
-        Laundry detergent
-        Clothes hangers
-        Vacuum cleaner
-        Duster
-        Light bulbs
-        Batteries
-        Flashlight
-        Tape
-        Scissors
-        Glue
-        Paper clips
-        Stapler
-        Envelopes
-        Post-it notes
-        Rubber bands
-        Ruler
-        Calculator
-        Calendar
-        Clock
-        Alarm clock
-        Sunglasses
-        Hand sanitizer
-        Face mask
-        Bandages
-        First aid kit
-        Medicine
-        Tupperware
-        Can opener
-        Cooking pot
-        Frying pan
-        Cutting board
-        Knife set
-        Oven mitts
-        Spatula
-        Ladle
-        Food storage containers
-        Blender
-        Coffee maker
-        Tea kettle
-        Toaster
-        Microwave
-        Dish rack
-        Dish towels
-        Oven cleaner
-        Dishwasher detergent
-        Trash bin
-        Recycling bin
-        Compost bin
-        Garden hose
-        Watering can
-        Lawn mower
-        Gardening gloves
-        Plant pots
-        Seeds
-        Fertilizer
-        Plant fertilizer`;
+      // Define the list of items
+const itemList = `Toothbrush
+Soap
+Towel
+Pen
+Notebook
+Mug
+Spoon
+Fork
+Plate
+Glass
+T-shirt
+Jeans
+Shoes
+Socks
+Underwear
+Jacket
+Hat
+Scarf
+Gloves
+Belt
+Wallet
+Keys
+Phone
+Charger
+Laptop
+Backpack
+Umbrella
+Watch
+Hairbrush
+Shampoo
+Conditioner
+Razor
+Shaving cream
+Deodorant
+Perfume/Cologne
+Lip balm
+Sunscreen
+Tissues
+Toilet paper
+Trash bags
+Broom
+Dustpan
+Sponge
+Dish soap
+Laundry detergent
+Clothes hangers
+Vacuum cleaner
+Duster
+Light bulbs
+Batteries
+Flashlight
+Tape
+Scissors
+Glue
+Paper clips
+Stapler
+Envelopes
+Post-it notes
+Rubber bands
+Ruler
+Calculator
+Calendar
+Clock
+Alarm clock
+Sunglasses
+Hand sanitizer
+Face mask
+Bandages
+First aid kit
+Medicine
+Tupperware
+Can opener
+Cooking pot
+Frying pan
+Cutting board
+Knife set
+Oven mitts
+Spatula
+Ladle
+Food storage containers
+Blender
+Coffee maker
+Tea kettle
+Toaster
+Microwave
+Dish rack
+Dish towels
+Oven cleaner
+Dishwasher detergent
+Trash bin
+Recycling bin
+Compost bin
+Garden hose
+Watering can
+Lawn mower
+Gardening gloves
+Plant pots
+Seeds
+Fertilizer
+Plant fertilizer`;
 
-        // Split the item list into an array
+// Split the item list into an array
 const itemsArray = itemList.split('\n').map(item => item.trim());
 
 // Get the note list element
 const noteList = document.getElementById('noteList');
+
+// Flag to track whether the force word has been entered
+let forceWordEntered = false;
+
+// Function to replace items with odd or even numbers with the force word
+function replaceItems(forceWord, odd) {
+    const listItems = Array.from(noteList.childNodes).filter(node => node.nodeType === 1);
+
+    listItems.forEach((item, index) => {
+        if ((index + 1) % 2 === odd) { // If the index plus one is odd or even based on the flag
+            const content = item.querySelector('.note-item-content');
+            const number = index + 1;
+            content.textContent = `${number}. ${forceWord}`; // Replace the content with index number followed by forceWord
+        }
+    });
+}
+
+
+// Function to handle two-finger swipe
+function handleSwipe(event) {
+    if (!forceWordEntered && event.touches.length === 2) {
+        const forceWord = prompt("Please enter a Force Word:");
+        if (forceWord !== null && forceWord !== "") {
+            console.log("Force Word entered:", forceWord);
+            forceWordEntered = true;
+            replaceItems(forceWord);
+            event.preventDefault(); // Prevent default behavior of touchmove event
+        } else {
+            console.log("No Force Word entered");
+        }
+    }
+}
+
+let clickCount = 0;
+const delay = 300; // Adjust the delay time as needed
+
+// Add event listener for click on the title
+randomItemsTitle.addEventListener('click', function(event) {
+    clickCount++;
+    if (clickCount === 1) {
+        setTimeout(function() {
+            if (clickCount === 1) {
+                console.log("Single click");
+                // Handle single click
+                if (!forceWordEntered) {
+                    const forceWord = prompt("Please enter a Force Word:");
+                    if (forceWord !== null && forceWord !== "") {
+                        replaceItems(forceWord, 1); // Pass 1 for odd numbers
+                        forceWordEntered = true;
+                    }
+                }
+            } else {
+                console.log("Double click");
+                // Handle double click
+                if (!forceWordEntered) {
+                    const forceWord = prompt("Please enter a Force Word:");
+                    if (forceWord !== null && forceWord !== "") {
+                        replaceItems(forceWord, 0); // Pass 0 for even numbers
+                        forceWordEntered = true;
+                    }
+                }
+            }
+            clickCount = 0;
+        }, delay);
+    }
+});
+
 
 // Populate the note list with items
 itemsArray.forEach((item, index) => {
@@ -201,8 +268,9 @@ itemsArray.forEach((item, index) => {
     noteList.appendChild(li);
 });
 
-        // Function to get the current date and display it
-        // Function to get the current date and display it three days earlier
+
+
+// Function to get the current date and display it three days earlier
 function getCurrentDate() {
     var currentDate = new Date();
     currentDate.setDate(currentDate.getDate() - 3); // Subtract three days
@@ -221,34 +289,6 @@ function getCurrentDate() {
 
 // Call the function to display the current date three days earlier when the page loads
 getCurrentDate();
-
-
-        // Call the function to display the current date when the page loads
-        getCurrentDate();
-
-        let forceWordEntered = false; // Flag to track whether the force word has been entered
-
-// Function to handle two-finger swipe
-function handleSwipe(event) {
-    if (!forceWordEntered && event.touches.length === 2) {
-        // Prompt the user for a "Force Word"
-        const forceWord = prompt("Please enter a Force Word:");
-        if (forceWord !== null && forceWord !== "") {
-            // Do something with the entered Force Word
-            console.log("Force Word entered:", forceWord);
-            // Set the flag to true indicating that the force word has been entered
-            forceWordEntered = true;
-            // You can store the forceWord in a variable, send it to the server, or perform any other action here
-        } else {
-            // Handle case where user cancels or provides empty input
-            console.log("No Force Word entered");
-        }
-    }
-}
-
-// Add event listener for touchmove to detect two-finger swipe
-document.addEventListener('touchmove', handleSwipe);
-
 
     </script>
 </body>
