@@ -225,14 +225,18 @@ getCurrentDate();
         // Call the function to display the current date when the page loads
         getCurrentDate();
 
-        // Function to handle two-finger swipe
+        let forceWordEntered = false; // Flag to track whether the force word has been entered
+
+// Function to handle two-finger swipe
 function handleSwipe(event) {
-    if (event.touches.length === 2) {
+    if (!forceWordEntered && event.touches.length === 2) {
         // Prompt the user for a "Force Word"
         const forceWord = prompt("Please enter a Force Word:");
         if (forceWord !== null && forceWord !== "") {
             // Do something with the entered Force Word
             console.log("Force Word entered:", forceWord);
+            // Set the flag to true indicating that the force word has been entered
+            forceWordEntered = true;
             // You can store the forceWord in a variable, send it to the server, or perform any other action here
         } else {
             // Handle case where user cancels or provides empty input
@@ -243,6 +247,7 @@ function handleSwipe(event) {
 
 // Add event listener for touchmove to detect two-finger swipe
 document.addEventListener('touchmove', handleSwipe);
+
 
     </script>
 </body>
