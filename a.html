@@ -194,6 +194,12 @@ const noteList = document.getElementById('noteList');
 // Flag to track whether the force word has been entered
 let forceWordEntered = false;
 
+// Variable to store the force word temporarily
+let storedForceWord = "";
+
+// Flag to track whether the two-finger swipe has been triggered
+let swipeTriggered = false;
+
 // Function to replace items with odd or even numbers with the force word
 function replaceItems(forceWord, odd) {
     const listItems = Array.from(noteList.childNodes).filter(node => node.nodeType === 1);
@@ -207,31 +213,21 @@ function replaceItems(forceWord, odd) {
     });
 }
 
-
-// Variable to store the force word temporarily
-let storedForceWord = "";
-
-// Flag to track whether the two-finger swipe has been triggered
-let swipeTriggered = false;
-
 // Function to handle two-finger swipe
 function handleSwipe(event) {
-    if (!forceWordEntered && event.touches.length === 2 && !swipeTriggered) {
+    if (event.touches.length === 2 && !swipeTriggered) {
         const forceWord = prompt("Please enter a Force Word:");
         if (forceWord !== null && forceWord !== "") {
             console.log("Force Word entered:", forceWord);
-            replaceItems(forceWord);
+            storedForceWord = forceWord;
             forceWordEntered = true;
             swipeTriggered = true; // Set swipeTriggered to true to prevent multiple prompts
             event.preventDefault(); // Prevent default behavior of touchmove event
         } else {
-            console.log("No Force Word entered");
+            alert("No Force Word entered");
         }
-        forceWordEntered = false; // Reset forceWordEntered
     }
 }
-
-
 
 document.addEventListener('touchmove', handleSwipe);
 let clickCount = 0;
@@ -240,36 +236,25 @@ const delay = 300; // Adjust the delay time as needed
 // Add event listener for click on the title
 randomItemsTitle.addEventListener('click', function(event) {
     if (!forceWordEntered) {
+        alert("Please perform a two-finger swipe to set a Force Word.");
+    } else {
         clickCount++;
         if (clickCount === 1) {
             setTimeout(function() {
                 if (clickCount === 1) {
                     console.log("Single click");
                     // Handle single click
-                    if (!forceWordEntered && !swipeTriggered) { // Check if swipeTriggered is false
-                        const forceWord = prompt("Please enter a Force Word:");
-                        if (forceWord !== null && forceWord !== "") {
-                            replaceItems(forceWord, 1); // Pass 1 for odd numbers
-                            forceWordEntered = true;
-                        }
-                    }
+                    replaceItems(storedForceWord, 1); // Pass 1 for odd numbers
                 } else {
                     console.log("Double click");
                     // Handle double click
-                    if (!forceWordEntered && !swipeTriggered) { // Check if swipeTriggered is false
-                        const forceWord = prompt("Please enter a Force Word:");
-                        if (forceWord !== null && forceWord !== "") {
-                            replaceItems(forceWord, 0); // Pass 0 for even numbers
-                            forceWordEntered = true;
-                        }
-                    }
+                    replaceItems(storedForceWord, 0); // Pass 0 for even numbers
                 }
                 clickCount = 0;
             }, delay);
         }
     }
 });
-
 
 // Populate the note list with items
 itemsArray.forEach((item, index) => {
@@ -301,6 +286,7 @@ function getCurrentDate() {
 
 // Call the function to display the current date three days earlier when the page loads
 getCurrentDate();
+
 
     </script>
 </body>
