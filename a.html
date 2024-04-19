@@ -232,38 +232,35 @@ const delay = 300; // Adjust the delay time as needed
 // Add event listener for click on the title
 randomItemsTitle.addEventListener('click', function(event) {
     if (!forceWordEntered) {
-        if (storedForceWord !== "") {
-            replaceItems(storedForceWord, 1); // Pass 1 for odd numbers
-            forceWordEntered = true;
-        } else {
-            clickCount++;
-            if (clickCount === 1) {
-                setTimeout(function() {
-                    if (clickCount === 1) {
-                        console.log("Single click");
-                        // Handle single click
+        clickCount++;
+        if (clickCount === 1) {
+            setTimeout(function() {
+                if (clickCount === 1) {
+                    console.log("Single click");
+                    // Handle single click
+                    if (!forceWordEntered) {
                         const forceWord = prompt("Please enter a Force Word:");
                         if (forceWord !== null && forceWord !== "") {
                             replaceItems(forceWord, 1); // Pass 1 for odd numbers
                             forceWordEntered = true;
                         }
-                    } else {
-                        console.log("Double click");
-                        // Handle double click
+                    }
+                } else {
+                    console.log("Double click");
+                    // Handle double click
+                    if (!forceWordEntered) {
                         const forceWord = prompt("Please enter a Force Word:");
                         if (forceWord !== null && forceWord !== "") {
                             replaceItems(forceWord, 0); // Pass 0 for even numbers
                             forceWordEntered = true;
                         }
                     }
-                    clickCount = 0;
-                }, delay);
-            }
+                }
+                clickCount = 0;
+            }, delay);
         }
     }
 });
-
-
 
 // Populate the note list with items
 itemsArray.forEach((item, index) => {
