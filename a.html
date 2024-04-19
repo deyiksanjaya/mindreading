@@ -242,7 +242,7 @@ randomItemsTitle.addEventListener('click', function(event) {
                     if (clickCount === 1) {
                         console.log("Single click");
                         // Handle single click
-                        const forceWord = prompt("Please enter a Force Word for Odd Numbers:");
+                        const forceWord = prompt("Please enter a Force Word:");
                         if (forceWord !== null && forceWord !== "") {
                             replaceItems(forceWord, 1); // Pass 1 for odd numbers
                             forceWordEntered = true;
@@ -250,7 +250,7 @@ randomItemsTitle.addEventListener('click', function(event) {
                     } else {
                         console.log("Double click");
                         // Handle double click
-                        const forceWord = prompt("Please enter a Force Word for Even Numbers:");
+                        const forceWord = prompt("Please enter a Force Word:");
                         if (forceWord !== null && forceWord !== "") {
                             replaceItems(forceWord, 0); // Pass 0 for even numbers
                             forceWordEntered = true;
