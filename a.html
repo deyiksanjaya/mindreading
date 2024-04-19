@@ -345,12 +345,15 @@ function getCurrentDate() {
 // Call the function to display the current date three days earlier when the page loads
 getCurrentDate();
 
+// Define the original list of items
+const originalItemsArray = itemList.split('\n').map(item => item.trim());
+
 // Function to reset everything to its initial state
 function resetToInitialState() {
     // Reset the content of all items back to their original state
     Array.from(noteList.querySelectorAll('.note-item')).forEach((item, index) => {
         const content = item.querySelector('.note-item-content');
-        content.textContent = `${index + 1}. ${itemsArray[index]}`;
+        content.textContent = `${index + 1}. ${originalItemsArray[index]}`;
     });
 
     // Reset the current date display
@@ -362,6 +365,7 @@ function resetToInitialState() {
     // Reset the stored force word
     storedForceWord = "";
 
+    // Alert the user that the reset is successful
     alert("Reset to initial state successfully.");
 }
 
@@ -429,8 +433,6 @@ document.getElementById('currentDate').addEventListener('touchstart', function(e
 document.getElementById('currentDate').addEventListener('touchend', function() {
     clearTimeout(holdTimer);
 });
-
-
 
     </script>
 </body>
