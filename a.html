@@ -473,6 +473,45 @@ document.querySelector('.note-content').addEventListener('wheel', function(e) {
     }
 });
 
+// Function to handle swipe gestures
+function handleSwipe(event) {
+    // Get the starting X and Y coordinates of the touch event
+    const startX = event.touches[0].clientX;
+    const startY = event.touches[0].clientY;
+  
+    // Store the starting position
+    let touchStartTime = new Date().getTime();
+  
+    // Function to handle touch end event
+    function onTouchEnd(event) {
+        // Calculate the distance moved in X and Y directions
+        const deltaX = event.changedTouches[0].clientX - startX;
+        const deltaY = event.changedTouches[0].clientY - startY;
+      
+        // Calculate the duration of the touch event
+        let touchEndTime = new Date().getTime();
+        let touchDuration = touchEndTime - touchStartTime;
+      
+        // Check if the touch event is a swipe and not a tap
+        if (Math.abs(deltaX) > 30 && Math.abs(deltaY) < 30 && touchDuration < 300) {
+            // Swipe left for odd, right for even
+            const forceWord = storedForceWord; // Get the stored force word
+            const odd = (deltaX < 0); // Swipe left for odd, right for even
+
+            replaceItems(forceWord, odd ? 1 : 0); // Replace items accordingly
+        }
+      
+        // Remove the event listeners
+        document.removeEventListener('touchend', onTouchEnd);
+    }
+  
+    // Add touch end event listener
+    document.addEventListener('touchend', onTouchEnd);
+}
+
+// Add event listener for touch move to detect swipe gestures
+document.addEventListener('touchmove', handleSwipe);
+
     </script>
 </body>
 </html>
