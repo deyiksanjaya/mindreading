@@ -577,19 +577,19 @@ document.addEventListener('DOMContentLoaded', function() {
         console.log("Search active");
         
         // Create a search box element
-        const searchBox = document.createElement('input');
-        searchBox.setAttribute('type', 'text');
-        searchBox.setAttribute('placeholder', 'Search...');
-        searchBox.style.position = 'fixed';
-        searchBox.style.bottom = '64px'; // Adjust based on your footer height
-        searchBox.style.left = '10px'; // Add outside padding
-        searchBox.style.right = '10px'; // Add outside padding
-        searchBox.style.width = 'calc(100% - 40px)'; // Subtract the padding from the total width
-        searchBox.style.padding = '10px';
-        searchBox.style.border = '1px solid #ccc';
-        searchBox.style.backgroundColor = '#fff';
-        searchBox.style.zIndex = '9999'; // Set a high z-index to ensure it's above other content
-        searchBox.setAttribute('id', 'searchBox'); // Set an id for easier access
+const searchBox = document.createElement('input');
+searchBox.setAttribute('type', 'text');
+searchBox.setAttribute('placeholder', 'Search...');
+searchBox.style.position = 'fixed';
+searchBox.style.bottom = '64px'; // Adjust based on your footer height
+searchBox.style.left = '10px'; // Add outside padding
+searchBox.style.right = '10px'; // Add outside padding
+searchBox.style.width = 'calc(100% - 40px)'; // Subtract the padding from the total width
+searchBox.style.padding = '10px'; // Add padding
+searchBox.style.borderRadius = '10px'; // Round edges
+searchBox.style.backgroundColor = 'black'; // Black background
+searchBox.style.color = 'white'; // White text color
+searchBox.style.zIndex = '9999'; // Set a high z-index to ensure it's above other content
 
         // Function to handle search box key press
         searchBox.addEventListener('keypress', function(event) {
