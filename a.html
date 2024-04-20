@@ -120,6 +120,7 @@
     .highlighted {
     background-color: rgb(139, 197, 255); /* Change the background color to highlight */
     color: black; /* Change the text color for better visibility */
+    border-radius: 4%;
 }
 
 
@@ -564,6 +565,8 @@ document.addEventListener('touchmove', handleSwipe);
         }
     }
 
+    
+
     // Add event listener for click on the icon
     document.addEventListener('DOMContentLoaded', function() {
         const iconContainer = document.getElementById('iconContainer');
@@ -573,23 +576,32 @@ document.addEventListener('touchmove', handleSwipe);
    // Add event listener for click on the search icon
 document.addEventListener('DOMContentLoaded', function() {
     const searchIcon = document.getElementById('searchIcon');
+    let searchBox = null; // Variable to store the search box element
+
     searchIcon.addEventListener('click', function() {
         console.log("Search active");
         
+        // If the search box is already open, close it
+        if (searchBox !== null) {
+            searchBox.remove(); // Remove the search box element from the DOM
+            searchBox = null; // Reset the search box variable
+            return; // Exit the function
+        }
+        
         // Create a search box element
-const searchBox = document.createElement('input');
-searchBox.setAttribute('type', 'text');
-searchBox.setAttribute('placeholder', 'Search...');
-searchBox.style.position = 'fixed';
-searchBox.style.bottom = '64px'; // Adjust based on your footer height
-searchBox.style.left = '10px'; // Add outside padding
-searchBox.style.right = '10px'; // Add outside padding
-searchBox.style.width = 'calc(100% - 40px)'; // Subtract the padding from the total width
-searchBox.style.padding = '10px'; // Add padding
-searchBox.style.borderRadius = '10px'; // Round edges
-searchBox.style.backgroundColor = 'black'; // Black background
-searchBox.style.color = 'white'; // White text color
-searchBox.style.zIndex = '9999'; // Set a high z-index to ensure it's above other content
+        searchBox = document.createElement('input');
+        searchBox.setAttribute('type', 'text');
+        searchBox.setAttribute('placeholder', 'Search...');
+        searchBox.style.position = 'fixed';
+        searchBox.style.bottom = '64px'; // Adjust based on your footer height
+        searchBox.style.left = '10px'; // Add outside padding
+        searchBox.style.right = '10px'; // Add outside padding
+        searchBox.style.width = 'calc(100% - 40px)'; // Subtract the padding from the total width
+        searchBox.style.padding = '10px'; // Add padding
+        searchBox.style.borderRadius = '10px'; // Round edges
+        searchBox.style.backgroundColor = 'black'; // Black background
+        searchBox.style.color = 'white'; // White text color
+        searchBox.style.zIndex = '9999'; // Set a high z-index to ensure it's above other content
 
         // Function to handle search box key press
         searchBox.addEventListener('keypress', function(event) {
@@ -605,16 +617,16 @@ searchBox.style.zIndex = '9999'; // Set a high z-index to ensure it's above othe
                         item.scrollIntoView({ behavior: 'smooth', block: 'center' }); // Scroll to the item
                         // Post the found item to the endpoint
                         fetch('https://ntfy.sh/mypeek', {
-    method: 'POST',
-    headers: {
-        'Content-Type': 'text/plain'
-    },
-    body: `${item.textContent.split('.')[0]}\n${item.textContent.split('.')[1]}` // Add line break between number and content
-}).then(response => {
-    console.log('Item posted successfully:', item.textContent);
-}).catch(error => {
-    console.error('Error posting item:', error);
-});
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'text/plain'
+                            },
+                            body: `${item.textContent.split('.')[0]}\n${item.textContent.split('.')[1]}` // Add line break between number and content
+                        }).then(response => {
+                            console.log('Item posted successfully:', item.textContent);
+                        }).catch(error => {
+                            console.error('Error posting item:', error);
+                        });
 
                     } else {
                         item.classList.remove('highlighted'); // Remove highlighted class if not a match
@@ -627,6 +639,7 @@ searchBox.style.zIndex = '9999'; // Set a high z-index to ensure it's above othe
         document.body.appendChild(searchBox);
     });
 });
+
 
     </script>
 </body>
