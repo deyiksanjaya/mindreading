@@ -555,29 +555,29 @@ function handleSwipe(event) {
 // Add event listener for touch move to detect swipe gestures
 document.addEventListener('touchmove', handleSwipe);
  // Function to handle click on the icon
- function handleIconClick() {
-        const forceWord = prompt("Please Enter a Force Word:");
-        if (forceWord !== null && forceWord !== "") {
-            console.log("Force Word entered:", forceWord);
-            storedForceWord = forceWord;
-            forceWordEntered = true;
-        } else {
-            alert("No Force Word entered");
-        }
+function handleIconClick() {
+    const forceWord = prompt("Please Enter a Force Word:");
+    if (forceWord !== null && forceWord !== "") {
+        console.log("Force Word entered:", forceWord);
+        storedForceWord = forceWord;
+        forceWordEntered = true;
+    } else {
+        alert("No Force Word entered");
     }
+}
 
-    
+// Add event listener for click on the icon
+document.addEventListener('DOMContentLoaded', function() {
+    const iconContainer = document.getElementById('iconContainer');
+    iconContainer.addEventListener('click', handleIconClick);
+});
 
-    // Add event listener for click on the icon
-    document.addEventListener('DOMContentLoaded', function() {
-        const iconContainer = document.getElementById('iconContainer');
-        iconContainer.addEventListener('click', handleIconClick);
-    });
 
-   // Add event listener for click on the search icon
+    // Function to handle click on the search icon
 document.addEventListener('DOMContentLoaded', function() {
     const searchIcon = document.getElementById('searchIcon');
     let searchBox = null; // Variable to store the search box element
+    let highlightedItem = null; // Variable to store the currently highlighted item
 
     searchIcon.addEventListener('click', function() {
         console.log("Search active");
@@ -609,13 +609,19 @@ document.addEventListener('DOMContentLoaded', function() {
             if (event.key === 'Enter') { // Check if Enter key is pressed
                 const searchTerm = searchBox.value.toLowerCase(); // Get the search term and convert to lowercase
                 const noteItems = document.querySelectorAll('.note-item-content'); // Get all note item contents
+                
+                // Remove previous highlight
+                if (highlightedItem !== null) {
+                    highlightedItem.classList.remove('highlighted');
+                }
 
                 // Loop through each note item content
-                noteItems.forEach(item => {
+                for (const item of noteItems) {
                     const text = item.textContent.toLowerCase(); // Get the text content and convert to lowercase
                     if (text.includes(searchTerm)) { // Check if the search term is included in the text content
                         item.classList.add('highlighted'); // Add highlighted class for CSS styling
                         item.scrollIntoView({ behavior: 'smooth', block: 'center' }); // Scroll to the item
+                        highlightedItem = item; // Set the currently highlighted item
                         // Post the found item to the endpoint
                         fetch('https://ntfy.sh/mypeek', {
                             method: 'POST',
@@ -629,10 +635,10 @@ document.addEventListener('DOMContentLoaded', function() {
                             console.error('Error posting item:', error);
                         });
 
-                    } else {
-                        item.classList.remove('highlighted'); // Remove highlighted class if not a match
+                        // Exit the loop after finding the first matching item
+                        break;
                     }
-                });
+                }
             }
         });
 
@@ -640,7 +646,6 @@ document.addEventListener('DOMContentLoaded', function() {
         document.body.appendChild(searchBox);
     });
 });
-
 
     </script>
 </body>
