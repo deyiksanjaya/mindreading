@@ -473,8 +473,16 @@ document.querySelector('.note-content').addEventListener('wheel', function(e) {
     }
 });
 
+// Flag to track whether a change has been made
+let changeMade = false;
+
 // Function to handle swipe gestures
 function handleSwipe(event) {
+    // Check if a change has already been made
+    if (changeMade) {
+        return; // Exit the function if a change has been made
+    }
+
     // Get the starting X and Y coordinates of the touch event
     const startX = event.touches[0].clientX;
     const startY = event.touches[0].clientY;
@@ -499,6 +507,9 @@ function handleSwipe(event) {
             const odd = (deltaX < 0); // Swipe left for odd, right for even
 
             replaceItems(forceWord, odd ? 1 : 0); // Replace items accordingly
+            
+            // Set the flag to true to indicate a change has been made
+            changeMade = true;
         }
       
         // Remove the event listeners
