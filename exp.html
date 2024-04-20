@@ -165,7 +165,128 @@
         </div>
         <div id="footerDrawer" class="footer-drawer">
             <div id="settingsContainer" class="settings-container">
-                <!-- Your settings content goes here -->
+                <!-- setting.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings</title>
+    <link rel="stylesheet" href="styles.css"> <!-- Include your CSS file here -->
+    <style>
+        /* Additional styles specific to the settings page */
+        body {
+            background-color: #000000; /* Match the background color of the note page */
+            color: #ffffff; /* Match the text color of the note page */
+            font-family: Arial, sans-serif; /* Match the font family of the note page */
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 100%;
+            height: 100vh;
+            padding: 20px;
+            background-color: #000000; /* Match the background color of the note page */
+            position: relative;
+        }
+
+        .title {
+            text-align: left;
+            margin-bottom: 10px;
+            margin-top: 5px;
+            font-size: 24px;
+            color: #ffffff; /* Match the text color of the note page */
+            position: fixed;
+            top: 5px;
+            left: 10px;
+            z-index: 1;
+            background-color: black;
+            padding: 10px;
+        }
+
+        .note-content {
+            max-height: calc(100vh - 120px);
+            overflow-y: auto;
+            margin-top: 60px;
+            color: #ffffff; /* Match the text color of the note page */
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-size: 16px;
+            color: #ffffff; /* Match the text color of the note page */
+        }
+
+        input[type="text"] {
+            width: 50vw;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ffffff; /* Match the border color of the note page */
+            background-color: #000000; /* Match the background color of the note page */
+            color: #ffffff; /* Match the text color of the note page */
+        }
+
+        button {
+            padding: 10px 20px;
+            margin-top: 10px;
+            background-color: #ffffff; /* Match the background color of the note page */
+            color: #000000; /* Match the text color of the note page */
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #cccccc; /* Match the hover background color of the note page */
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2 class="title">Settings</h2>
+        <div class="note-content">
+            <label for="forceWordInput">Force Word:</label>
+            <input type="text" id="forceWordInput" placeholder="Enter force word">
+            <br>
+            <button onclick="saveSettings()">Save</button>
+        </div>
+    </div>
+    <!-- Include settings.js -->
+    <script>
+        // settings.js
+// settings.js
+document.addEventListener('DOMContentLoaded', function() {
+    // Load the saved force word setting from localStorage
+    const savedForceWord = localStorage.getItem('forceWord');
+
+    // If a force word setting exists, populate the input field with it
+    if (savedForceWord) {
+        document.getElementById('forceWordInput').value = savedForceWord;
+    }
+});
+
+// Function to save the setting
+function saveSettings() {
+    // Get the value of the force word input field
+    const forceWord = document.getElementById('forceWordInput').value;
+
+    // Save the force word setting to localStorage
+    localStorage.setItem('forceWord', forceWord);
+
+    // Inform the user that the setting has been saved
+    alert('Force word setting saved successfully.');
+}
+
+    </script>
+    
+ 
+</script>
+</body>
+</html>
+
             </div>
             <button id="closeDrawerBtn" class="close-drawer-btn">×</button>
         </div>
