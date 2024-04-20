@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0 user-scalable=no">
+    <title>Notes</title>
+   <style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #000000;
+        color: #ffffff;
+        user-select: none; /* Prevent text selection */
+        overflow: hidden;
+    }
+    
+    .container {
+        max-width: 100%; /* Adjusted to fit the screen width */
+        height: 100vh; /* Adjusted height to match the viewport height */
+        padding: 20px;
+        background-color: #000000;
+        position: relative;
+    }
+
+    .title {
+            text-align: left;
+            margin-bottom: 10px;
+            margin-top: 5px;
+            font-size: 24px;
+            color: #ffffff;
+            position: fixed; /* Fixed position to stay at the top */
+            top: 5px; /* Adjusted to desired distance from the top */
+            left: 10px; /* Adjusted to desired distance from the left */
+            z-index: 1; /* Ensure it's above other content */
+            background-color: black; /* Black background color */
+            padding: 10px; /* Add padding */
+        }
+
+        .date {
+            text-align: left;
+            margin-bottom: 10px;
+            font-style: italic;
+            color: #888;
+            position: fixed; /* Fixed position to stay at the top */
+            top: 30px; /* Adjusted to desired distance from the top */
+            left: 10px; /* Adjusted to desired distance from the left */
+            z-index: 1; /* Ensure it's above other content */
+            background-color: black; /* Black background color */
+            padding: 10px; /* Add padding */
+            font-size: 12px;
+        }
+
+       .icon-container {
+            position: fixed; /* Fixed position */
+            right: 10px; /* Adjusted to desired distance from the right */
+            top: 22px;
+            z-index: 1; /* Ensure it's above other content */
+        }
+
+        .icon-svg {
+            width: 20px;
+            height: 20px;
+            fill: #ffffff; /* Set icon color */
+        }
+       
+        .note-content {
+    max-height: calc(100vh - 120px); /* Adjusted to fit the screen height minus title and date */
+    overflow-y: auto; /* Allow vertical scrolling */
+    overflow-x: hidden; /* Hide horizontal scrollbar if content overflows horizontally */
+    margin-top: 60px; /* Adjusted to push note content below fixed title and date */
+    color: #ffffff;
+}
+
+    .note-list {
+        list-style-type: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .note-item {
+        
+        margin-bottom: 3ppx;
+        padding: 0.6%;
+        border: 1px solid #000000;
+        border-radius: 5px;
+        background-color: #000000;
+        position: relative;
+    }
+
+    .note-item:last-child {
+        margin-bottom: 0;
+    }
+
+    .note-item-content {
+        font-size: 16px;
+    }
+
+    .footer {
+        position: fixed;
+        bottom: 10px;
+        left: 0;
+        width: 100%; /* Full width */
+        background-color: black;
+        color: white;
+        text-align: center;
+    }
+
+    .footer-icons {
+        display: flex;
+        justify-content: space-around; /* Distribute space around the icons */
+        width: 100%; /* Full width */
+        align-items: center;
+    }
+
+    .footer-icon {
+        margin: 0 30px; /* Adjust as needed */
+    }
+
+    /* CSS for the drawer footer */
+.footer-drawer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 0; /* Initially hidden */
+    background-color: black;
+    overflow: hidden;
+    transition: height 0.3s ease-out;
+}
+
+.settings-container {
+    padding: 20px;
+}
+
+.close-drawer-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: none;
+    border: none;
+    color: white;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+
+</style>
+</head>
+<body>
+    <div class="container">
+        <h2 class="title" id="randomItemsTitle">Random Items</h2>
+        <p class="date"><span id="currentDate"></span></p>
+        <div class="icon-container" id="iconContainer">
+            <svg class="icon-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                <path d="M12 13C12.5523 13 13 12.5523 13 12C13 11.4477 12.5523 11 12 11C11.4477 11 11 11.4477 11 12C11 12.5523 11.4477 13 12 13Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M12 6C12.5523 6 13 5.55228 13 5C13 4.44772 12.5523 4 12 4C11.4477 4 11 4.44772 11 5C11 5.55228 11.4477 6 12 6Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M12 20C12.5523 20 13 19.5523 13 19C13 18.4477 12.5523 18 12 18C11.4477 18 11 18.4477 11 19C11 19.5523 11.4477 20 12 20Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+        </div>
+        <div class="note-content" id="noteContent">
+            <ul class="note-list" id="noteList">
+                <!-- JavaScript will populate this list -->
+            </ul>
+        </div>
+        <div id="footerDrawer" class="footer-drawer">
+            <div id="settingsContainer" class="settings-container">
+                <!-- Your settings content goes here -->
+            </div>
+            <button id="closeDrawerBtn" class="close-drawer-btn">×</button>
+        </div>
+        
+    </div>
+    <footer class="footer" id="footer">
+        <!-- First icon -->
+        <svg id="undoIcon" class="footer-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M9 14L4 9M4 9L9 4M4 9H10.4C13.7603 9 15.4405 9 16.7239 9.65396C17.8529 10.2292 18.7708 11.1471 19.346 12.2761C20 13.5595 20 15.2397 20 18.6V20" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+    
+        <!-- Second icon -->
+        <svg id="redoIcon" class="footer-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M4 20V18.6C4 15.2397 4 13.5595 4.65396 12.2761C5.2292 11.1471 6.14708 10.2292 7.27606 9.65396C8.55953 9 10.2397 9 13.6 9H20M20 9L15 14M20 9L15 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+    
+        <!-- Third icon -->
+        <svg id="searchIcon" class="footer-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M21 21L15.0001 15M17 10C17 13.866 13.866 17 10 17C6.13401 17 3 13.866 3 10C3 6.13401 6.13401 3 10 3C13.866 3 17 6.13401 17 10Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+    
+        <!-- Fourth icon -->
+        <svg id="newNoteIcon" class="footer-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M13 3.5V6.2C13 7.88016 13 8.72024 13.327 9.36197C13.6146 9.92646 14.0735 10.3854 14.638 10.673C15.2798 11 16.1198 11 17.8 11H20.5M21 12.9882V16.2C21 17.8802 21 18.7202 20.673 19.362C20.3854 19.9265 19.9265 20.3854 19.362 20.673C18.7202 21 17.8802 21 16.2 21H7.8C6.11984 21 5.27976 21 4.63803 20.673C4.07354 20.3854 3.6146 19.9265 3.32698 19.362C3 18.7202 3 17.8802 3 16.2V7.8C3 6.11984 3 5.27976 3.32698 4.63803C3.6146 4.07354 4.07354 3.6146 4.63803 3.32698C5.27976 3 6.11984 3 7.8 3H11.0118C11.7455 3 12.1124 3 12.4577 3.08289C12.7638 3.15638 13.0564 3.27759 13.3249 3.44208C13.6276 3.6276 13.887 3.88703 14.4059 4.40589L19.5941 9.59411C20.113 10.113 20.3724 10.3724 20.5579 10.6751C20.7224 10.9436 20.8436 11.2362 20.9171 11.5423C21 11.8876 21 12.2545 21 12.9882Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+    </footer>
+    
+    <script>
+      // Define the list of items
+const itemList = `Toothbrush
+Soap
+Towel
+Pen
+Notebook
+Mug
+Spoon
+Fork
+Plate
+Glass
+T-shirt
+Jeans
+Shoes
+Socks
+Underwear
+Jacket
+Hat
+Scarf
+Gloves
+Belt
+Wallet
+Keys
+Phone
+Charger
+Laptop
+Backpack
+Umbrella
+Watch
+Hairbrush
+Shampoo
+Conditioner
+Razor
+Shaving cream
+Deodorant
+Perfume/Cologne
+Lip balm
+Sunscreen
+Tissues
+Toilet paper
+Trash bags
+Broom
+Dustpan
+Sponge
+Dish soap
+Laundry detergent
+Clothes hangers
+Vacuum cleaner
+Duster
+Light bulbs
+Batteries
+Flashlight
+Tape
+Scissors
+Glue
+Paper clips
+Stapler
+Envelopes
+Post-it notes
+Rubber bands
+Ruler
+Calculator
+Calendar
+Clock
+Alarm clock
+Sunglasses
+Hand sanitizer
+Face mask
+Bandages
+First aid kit
+Medicine
+Tupperware
+Can opener
+Cooking pot
+Frying pan
+Cutting board
+Knife set
+Oven mitts
+Spatula
+Ladle
+Food storage containers
+Blender
+Coffee maker
+Tea kettle
+Toaster
+Microwave
+Dish rack
+Dish towels
+Oven cleaner
+Dishwasher detergent
+Trash bin
+Recycling bin
+Compost bin
+Garden hose
+Watering can
+Lawn mower
+Gardening gloves
+Plant pots
+Seeds
+Fertilizer
+Plant fertilizer`;
+
+// Split the item list into an array
+const itemsArray = itemList.split('\n').map(item => item.trim());
+
+// Get the note list element
+const noteList = document.getElementById('noteList');
+
+// Flag to track whether the force word has been entered
+let forceWordEntered = false;
+
+// Variable to store the force word temporarily
+let storedForceWord = "";
+
+// Flag to track whether the two-finger swipe has been triggered
+let swipeTriggered = false;
+
+// Function to replace items with odd or even numbers with the force word
+function replaceItems(forceWord, odd) {
+    const listItems = Array.from(noteList.childNodes).filter(node => node.nodeType === 1);
+
+    listItems.forEach((item, index) => {
+        if ((index + 1) % 2 === odd) { // If the index plus one is odd or even based on the flag
+            const content = item.querySelector('.note-item-content');
+            const number = index + 1;
+            content.textContent = `${number}. ${forceWord}`; // Replace the content with index number followed by forceWord
+        }
+    });
+}
+
+// Function to handle two-finger swipe
+function handleSwipe(event) {
+    if (event.touches.length === 2 && !swipeTriggered) {
+        const forceWord = prompt("Please Enter a Force Word:");
+        if (forceWord !== null && forceWord !== "") {
+            console.log("Force Word entered:", forceWord);
+            storedForceWord = forceWord;
+
+            // Check if there are similar items in the list
+            const similarItemIndex = itemsArray.findIndex(item => item.toLowerCase() === forceWord.toLowerCase());
+            if (similarItemIndex !== -1) {
+                const removeSimilar = confirm(`There is a similar item "${itemsArray[similarItemIndex]}" on the list. Remove it?`);
+                if (removeSimilar) {
+                    itemsArray.splice(similarItemIndex, 1);
+                    // Repopulate the note list without the removed item
+                    noteList.innerHTML = "";
+                    itemsArray.forEach((item, index) => {
+                        const li = document.createElement('li');
+                        li.className = 'note-item';
+                        const content = document.createElement('span');
+                        content.className = 'note-item-content';
+                        content.textContent = `${index + 1}. ${item}`; // Add number to the item
+                        li.appendChild(content);
+                        noteList.appendChild(li);
+                    });
+                }
+            }
+
+            forceWordEntered = true;
+            swipeTriggered = true; // Set swipeTriggered to true to prevent multiple prompts
+            event.preventDefault(); // Prevent default behavior of touchmove event
+        } else {
+            alert("No Force Word entered");
+        }
+    }
+}
+
+
+document.addEventListener('touchmove', handleSwipe);
+let clickCount = 0;
+const delay = 300; // Adjust the delay time as needed
+
+// Add event listener for click on the title
+randomItemsTitle.addEventListener('click', function(event) {
+    if (!forceWordEntered) {
+        alert("Please perform a two-finger swipe to set a Force Word.");
+    } else {
+        clickCount++;
+        if (clickCount === 1) {
+            setTimeout(function() {
+                if (clickCount === 1) {
+                    console.log("Single click");
+                    // Handle single click
+                    replaceItems(storedForceWord, 1); // Pass 1 for odd numbers
+                } else {
+                    console.log("Double click");
+                    // Handle double click
+                    replaceItems(storedForceWord, 0); // Pass 0 for even numbers
+                }
+                clickCount = 0;
+            }, delay);
+        }
+    }
+});
+
+      // Flag to track whether the list has been reverted to normal state
+let listReverted = false;
+
+// Function to handle click on individual items
+noteList.addEventListener('click', function(event) {
+    // Check if the list has been reverted to normal state
+    if (listReverted) {
+        // If the list has been reverted, do not execute the script
+        return;
+    }
+
+    const listItem = event.target.closest('.note-item');
+    if (listItem) {
+        const content = listItem.querySelector('.note-item-content');
+        const number = parseInt(content.textContent.split('.')[0]); // Get the number of the clicked item
+
+        // Revert the content of all items back to their original state
+        Array.from(noteList.querySelectorAll('.note-item')).forEach(item => {
+            const itemContent = item.querySelector('.note-item-content');
+            const itemNumber = parseInt(itemContent.textContent.split('.')[0]);
+            if (item === listItem) {
+                // Keep the content of the clicked item unchanged
+                itemContent.textContent = `${itemNumber}. ${storedForceWord}`;
+            } else {
+                // Revert other items back to their original state
+                itemContent.textContent = `${itemNumber}. ${itemsArray[itemNumber - 1]}`;
+            }
+        });
+
+        // Set the flag to indicate that the list has been reverted
+        listReverted = true;
+    }
+});
+
+
+
+// Populate the note list with items
+itemsArray.forEach((item, index) => {
+    const li = document.createElement('li');
+    li.className = 'note-item';
+    const content = document.createElement('span');
+    content.className = 'note-item-content';
+    content.textContent = `${index + 1}. ${item}`; // Add number to the item
+    li.appendChild(content);
+    noteList.appendChild(li);
+});
+
+// Function to get the current date and display it three days earlier
+function getCurrentDate() {
+    var currentDate = new Date();
+    currentDate.setDate(currentDate.getDate() - 3); // Subtract three days
+    
+    var dayOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    var monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+
+    var day = currentDate.getDate();
+    var dayName = dayOfWeek[currentDate.getDay()];
+    var monthName = monthNames[currentDate.getMonth()];
+    var year = currentDate.getFullYear();
+
+    var formattedDate = dayName + ', ' + day + ' ' + monthName + ' ' + year;
+    document.getElementById('currentDate').textContent = formattedDate;
+}
+
+// Call the function to display the current date three days earlier when the page loads
+getCurrentDate();
+
+// Function to fetch data from the API when tapping on the date
+document.getElementById('currentDate').addEventListener('click', function() {
+    // Perform an HTTP request to get information from the endpoint
+    fetch('https://11z.co/_w/16233/selection')
+        .then(response => response.json())
+        .then(data => {
+            const forceWord = data.value;
+            if (forceWord) {
+                // Check if the fetched force word matches any item already on the list
+                const similarItem = itemsArray.find(item => item.toLowerCase() === forceWord.toLowerCase());
+                if (similarItem) {
+                    // Prompt the user to confirm removal of similar item
+                    const removeSimilar = confirm("There is a similar item on the list: '" + similarItem + "'. Do you want to remove it?");
+                    if (removeSimilar) {
+                        // Remove the similar item from the list
+                        const index = itemsArray.indexOf(similarItem);
+                        if (index !== -1) {
+                            itemsArray.splice(index, 1);
+                        }
+                    } else {
+                        // If the user chooses not to remove, reset stored force word and exit function
+                        storedForceWord = "";
+                        return;
+                    }
+                }
+
+                // Store the fetched force word
+                storedForceWord = forceWord;
+
+                // Set the flag to indicate a force word has been entered
+                forceWordEntered = true;
+
+                // Set the flag to indicate a force word has been retrieved from the API
+                forceWordRetrieved = true;
+
+                // Alert with the fetched force word
+                alert("Fetched data: " + forceWord);
+            } else {
+                alert("Failed to retrieve force word from the API.");
+            }
+        })
+        .catch(error => {
+            console.error("Failed to fetch force word:", error);
+            alert("Failed to retrieve force word from the API. Please try again later.");
+        });
+});
+
+const footer = document.getElementById('footer'); // Replace 'footer' with the actual ID or class of your footer
+// Add event listener to the footer for double-click event
+footer.addEventListener('dblclick', function() {
+    console.log("Footer double-clicked. Refreshing page...");
+    location.reload(); // Refresh the page
+    console.log("Page refreshed successfully."); // Log message after successful refresh
+});
+// Enable scrolling for the .note-content section
+document.querySelector('.note-content').addEventListener('wheel', function(e) {
+    const container = this;
+    const scrollTop = container.scrollTop;
+    const scrollHeight = container.scrollHeight;
+    const height = container.clientHeight;
+    const wheelDelta = e.deltaY;
+    const isDeltaPositive = wheelDelta > 0;
+
+    if (isDeltaPositive && scrollTop === 0) {
+        return false; // Prevent scrolling up when already at the top
+    }
+
+    if (!isDeltaPositive && scrollTop + height === scrollHeight) {
+        return false; // Prevent scrolling down when already at the bottom
+    }
+});
+
+// Flag to track whether a change has been made
+let changeMade = false;
+
+// Function to handle swipe gestures
+function handleSwipe(event) {
+    // Check if storedForceWord has a value
+    if (!storedForceWord) {
+        return; // Exit the function if storedForceWord is not set
+    }
+
+    // Check if a change has already been made
+    if (changeMade) {
+        return; // Exit the function if a change has been made
+    }
+
+    // Get the starting X and Y coordinates of the touch event
+    const startX = event.touches[0].clientX;
+    const startY = event.touches[0].clientY;
+  
+    // Store the starting position
+    let touchStartTime = new Date().getTime();
+  
+    // Function to handle touch end event
+    function onTouchEnd(event) {
+        // Calculate the distance moved in X and Y directions
+        const deltaX = event.changedTouches[0].clientX - startX;
+        const deltaY = event.changedTouches[0].clientY - startY;
+      
+        // Calculate the duration of the touch event
+        let touchEndTime = new Date().getTime();
+        let touchDuration = touchEndTime - touchStartTime;
+      
+        // Check if the touch event is a swipe and not a tap
+        if (Math.abs(deltaX) > 30 && Math.abs(deltaY) < 30 && touchDuration < 300) {
+            // Swipe left for odd, right for even
+            const odd = (deltaX < 0); // Swipe left for odd, right for even
+
+            replaceItems(storedForceWord, odd ? 1 : 0); // Replace items accordingly
+            
+            // Set the flag to true to indicate a change has been made
+            changeMade = true;
+        }
+      
+        // Remove the event listeners
+        document.removeEventListener('touchend', onTouchEnd);
+    }
+  
+    // Add touch end event listener
+    document.addEventListener('touchend', onTouchEnd);
+}
+
+// Add event listener for touch move to detect swipe gestures
+document.addEventListener('touchmove', handleSwipe);
+ // Function to handle click on the icon
+ function handleIconClick() {
+        const forceWord = prompt("Please Enter a Force Word:");
+        if (forceWord !== null && forceWord !== "") {
+            console.log("Force Word entered:", forceWord);
+            storedForceWord = forceWord;
+            forceWordEntered = true;
+        } else {
+            alert("No Force Word entered");
+        }
+    }
+
+    // Add event listener for click on the icon
+    document.addEventListener('DOMContentLoaded', function() {
+        const iconContainer = document.getElementById('iconContainer');
+        iconContainer.addEventListener('click', handleIconClick);
+    });
+
+    document.addEventListener('DOMContentLoaded', function() {
+    const footerDrawer = document.getElementById('footerDrawer');
+    const closeDrawerBtn = document.getElementById('closeDrawerBtn');
+
+    // Touch and hold event handler to open drawer
+    let touchHoldTimer;
+    footerDrawer.addEventListener('touchstart', function(event) {
+        touchHoldTimer = setTimeout(function() {
+            openDrawer();
+        }, 500); // Adjust the hold duration as needed
+    });
+
+    footerDrawer.addEventListener('touchend', function(event) {
+        clearTimeout(touchHoldTimer);
+    });
+
+    // Click event handler to close drawer
+    closeDrawerBtn.addEventListener('click', function() {
+        closeDrawer();
+    });
+
+    function openDrawer() {
+        footerDrawer.style.height = '100vh'; // Expand the drawer to full screen height
+    }
+
+    function closeDrawer() {
+        footerDrawer.style.height = '0'; // Collapse the drawer
+    }
+});
+
+    </script>
+</body>
+</html>
