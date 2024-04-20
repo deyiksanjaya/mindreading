@@ -65,7 +65,7 @@
 
     .note-item {
         margin-bottom: 3ppx;
-        padding: 0%;
+        padding: 0.5%;
         border: 1px solid #000000;
         border-radius: 5px;
         background-color: #000000;
@@ -78,13 +78,6 @@
 
     .note-item-content {
         font-size: 16px;
-    }
-
-    #resetButton {
-        position: fixed;
-        bottom: 20px; /* Adjusted to fit the screen height */
-        right: 20px;
-        z-index: 999; /* Ensure it's above other content */
     }
 
 </style>
@@ -409,45 +402,6 @@ document.getElementById('currentDate').addEventListener('click', function() {
             alert("Failed to retrieve force word from the API. Please try again later.");
         });
 });
-
- // Function to reset everything to its initial state
-function resetToInitialState() {
-    // Reset the content of all items back to their original state
-    Array.from(noteList.querySelectorAll('.note-item')).forEach((item, index) => {
-        const content = item.querySelector('.note-item-content');
-        content.textContent = `${index + 1}. ${originalItemsArray[index]}`;
-    });
-
-    // Reset the current date display
-    getCurrentDate();
-
-    // Reset the flag for list reverted state
-    listReverted = false;
-
-    // Reset the stored force word
-    storedForceWord = "";
-
-    // Reset the force word entered flag
-    forceWordEntered = false;
-
-    // Alert the user that the reset is successful
-    alert("Reset to initial state successfully.");
-}
-       
-        
-// Function to reset everything to its initial state when double-clicking on empty spaces
-let lastClick = 0;
-document.addEventListener('click', function(event) {
-    const currentTime = new Date().getTime();
-    const clickLength = currentTime - lastClick;
-    if (clickLength < 600 && clickLength > 0 && !event.target.closest('.note-item')) {
-        // Double click on empty space detected
-        resetToInitialState();
-        event.preventDefault(); // Prevent default click behavior
-    }
-    lastClick = currentTime;
-});
-
 
     </script>
 </body>
