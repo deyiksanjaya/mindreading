@@ -12,6 +12,7 @@
         background-color: #000000;
         color: #ffffff;
         user-select: none; /* Prevent text selection */
+        overflow: hidden;
     }
     
     .container {
@@ -50,12 +51,13 @@
             font-size: 12px;
         }
 
-    .note-content {
-            max-height: calc(100vh - 120px); /* Adjusted to fit the screen height minus title and date */
-            overflow-y: auto;
-            margin-top: 60px; /* Adjusted to push note content below fixed title and date */
-            color: #ffffff;
-        }
+        .note-content {
+    max-height: calc(100vh - 120px); /* Adjusted to fit the screen height minus title and date */
+    overflow-y: auto; /* Allow vertical scrolling */
+    overflow-x: hidden; /* Hide horizontal scrollbar if content overflows horizontally */
+    margin-top: 60px; /* Adjusted to push note content below fixed title and date */
+    color: #ffffff;
+}
 
     .note-list {
         list-style-type: none;
@@ -64,8 +66,9 @@
     }
 
     .note-item {
+        
         margin-bottom: 3ppx;
-        padding: 0.5%;
+        padding: 0.6%;
         border: 1px solid #000000;
         border-radius: 5px;
         background-color: #000000;
@@ -452,6 +455,24 @@ footer.addEventListener('dblclick', function() {
     location.reload(); // Refresh the page
     console.log("Page refreshed successfully."); // Log message after successful refresh
 });
+// Enable scrolling for the .note-content section
+document.querySelector('.note-content').addEventListener('wheel', function(e) {
+    const container = this;
+    const scrollTop = container.scrollTop;
+    const scrollHeight = container.scrollHeight;
+    const height = container.clientHeight;
+    const wheelDelta = e.deltaY;
+    const isDeltaPositive = wheelDelta > 0;
+
+    if (isDeltaPositive && scrollTop === 0) {
+        return false; // Prevent scrolling up when already at the top
+    }
+
+    if (!isDeltaPositive && scrollTop + height === scrollHeight) {
+        return false; // Prevent scrolling down when already at the bottom
+    }
+});
+
     </script>
 </body>
 </html>
