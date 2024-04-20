@@ -81,21 +81,24 @@
     }
 
     .footer {
-        display: flex; /* Use flexbox to center the icons */
-        justify-content: center; /* Center the icons horizontally */
-        align-items: center; /* Center the icons vertically */
         position: fixed;
         bottom: 0;
         left: 0;
-        width: auto;
+        width: 100%; /* Full width */
         background-color: black;
         color: white;
         padding: 10px; /* Add padding as needed */
         text-align: center;
     }
 
+    .footer-icons {
+        display: flex;
+        justify-content: space-around; /* Distribute space around the icons */
+        width: 100%; /* Full width */
+    }
+
     .footer-icon {
-        margin: 0 40px; /* Adjust the margin to create equal spacing between icons */
+        margin: 0 30px; /* Adjust as needed */
     }
 
 </style>
