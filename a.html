@@ -117,6 +117,12 @@
         margin: 0 30px; /* Adjust as needed */
     }
 
+    .highlighted {
+    background-color: rgb(139, 197, 255); /* Change the background color to highlight */
+    color: black; /* Change the text color for better visibility */
+}
+
+
 </style>
 </head>
 <body>
@@ -563,6 +569,65 @@ document.addEventListener('touchmove', handleSwipe);
         const iconContainer = document.getElementById('iconContainer');
         iconContainer.addEventListener('click', handleIconClick);
     });
+
+   // Add event listener for click on the search icon
+document.addEventListener('DOMContentLoaded', function() {
+    const searchIcon = document.getElementById('searchIcon');
+    searchIcon.addEventListener('click', function() {
+        console.log("Search active");
+        
+        // Create a search box element
+        const searchBox = document.createElement('input');
+        searchBox.setAttribute('type', 'text');
+        searchBox.setAttribute('placeholder', 'Search...');
+        searchBox.style.position = 'fixed';
+        searchBox.style.bottom = '64px'; // Adjust based on your footer height
+        searchBox.style.left = '10px'; // Add outside padding
+        searchBox.style.right = '10px'; // Add outside padding
+        searchBox.style.width = 'calc(100% - 40px)'; // Subtract the padding from the total width
+        searchBox.style.padding = '10px';
+        searchBox.style.border = '1px solid #ccc';
+        searchBox.style.backgroundColor = '#fff';
+        searchBox.style.zIndex = '9999'; // Set a high z-index to ensure it's above other content
+        searchBox.setAttribute('id', 'searchBox'); // Set an id for easier access
+
+        // Function to handle search box key press
+        searchBox.addEventListener('keypress', function(event) {
+            if (event.key === 'Enter') { // Check if Enter key is pressed
+                const searchTerm = searchBox.value.toLowerCase(); // Get the search term and convert to lowercase
+                const noteItems = document.querySelectorAll('.note-item-content'); // Get all note item contents
+
+                // Loop through each note item content
+                noteItems.forEach(item => {
+                    const text = item.textContent.toLowerCase(); // Get the text content and convert to lowercase
+                    if (text.includes(searchTerm)) { // Check if the search term is included in the text content
+                        item.classList.add('highlighted'); // Add highlighted class for CSS styling
+                        item.scrollIntoView({ behavior: 'smooth', block: 'center' }); // Scroll to the item
+                        // Post the found item to the endpoint
+                        fetch('https://ntfy.sh/mypeek', {
+    method: 'POST',
+    headers: {
+        'Content-Type': 'text/plain'
+    },
+    body: `${item.textContent.split('.')[0]}\n${item.textContent.split('.')[1]}` // Add line break between number and content
+}).then(response => {
+    console.log('Item posted successfully:', item.textContent);
+}).catch(error => {
+    console.error('Error posting item:', error);
+});
+
+                    } else {
+                        item.classList.remove('highlighted'); // Remove highlighted class if not a match
+                    }
+                });
+            }
+        });
+
+        // Append the search box to the body
+        document.body.appendChild(searchBox);
+    });
+});
+
     </script>
 </body>
 </html>
