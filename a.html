@@ -123,7 +123,7 @@
     <div class="container">
         <h2 class="title" id="randomItemsTitle">Random Items</h2>
         <p class="date"><span id="currentDate"></span></p>
-        <div class="icon-container">
+        <div class="icon-container" id="iconContainer">
             <svg class="icon-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                 <path d="M12 13C12.5523 13 13 12.5523 13 12C13 11.4477 12.5523 11 12 11C11.4477 11 11 11.4477 11 12C11 12.5523 11.4477 13 12 13Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                 <path d="M12 6C12.5523 6 13 5.55228 13 5C13 4.44772 12.5523 4 12 4C11.4477 4 11 4.44772 11 5C11 5.55228 11.4477 6 12 6Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -546,7 +546,23 @@ function handleSwipe(event) {
 
 // Add event listener for touch move to detect swipe gestures
 document.addEventListener('touchmove', handleSwipe);
+ // Function to handle click on the icon
+ function handleIconClick() {
+        const forceWord = prompt("Please Enter a Force Word:");
+        if (forceWord !== null && forceWord !== "") {
+            console.log("Force Word entered:", forceWord);
+            storedForceWord = forceWord;
+            forceWordEntered = true;
+        } else {
+            alert("No Force Word entered");
+        }
+    }
 
+    // Add event listener for click on the icon
+    document.addEventListener('DOMContentLoaded', function() {
+        const iconContainer = document.getElementById('iconContainer');
+        iconContainer.addEventListener('click', handleIconClick);
+    });
     </script>
 </body>
 </html>
