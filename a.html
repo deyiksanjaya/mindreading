@@ -367,11 +367,17 @@ let listReverted = false;
 
 // Function to handle click on individual items
 noteList.addEventListener('click', function(event) {
+    // Check if there is no storedForceWord, and if so, return early
+    if (!storedForceWord) {
+        return;
+    }
+
     // Check if the list has been reverted to normal state
     if (listReverted) {
         // If the list has been reverted, do not execute the script
         return;
     }
+
 
     const listItem = event.target.closest('.note-item');
     if (listItem) {
@@ -593,7 +599,7 @@ document.addEventListener('DOMContentLoaded', function() {
         searchBox = document.createElement('input');
         searchBox.setAttribute('type', 'text');
         searchBox.setAttribute('placeholder', 'Search...');
-        searchBox.style.position = 'fixed';
+        searchBox.style.position = 'absolute';
         searchBox.style.bottom = '64px'; // Adjust based on your footer height
         searchBox.style.left = '10px'; // Add outside padding
         searchBox.style.right = '10px'; // Add outside padding
