@@ -34,7 +34,7 @@
         <button id="copy-to-clipboard">Copy to Clipboard</button>
         <!-- Button to open Note app -->
         <br>
-        <button id="open-note" style="display: none;">Open Note</button>
+        <button id="open-note">Open Note</button>
     </div>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
@@ -59,26 +59,26 @@
                         fetchedDataDisplay.textContent = `Anda akan memikirkan ${fetchedData}`;
                         // Show the copy to clipboard button
                         copyToClipboardButton.style.display = 'inline-block';
+                        // Show the open note button
+                        openNoteButton.style.display = 'inline-block';
+
+                        // Add event listener to the copy to clipboard button
+                        copyToClipboardButton.addEventListener('click', () => {
+                            const textToCopy = fetchedDataDisplay.textContent;
+                            navigator.clipboard.writeText(textToCopy)
+                                .then(() => {
+                                    console.log('Text copied to clipboard:', textToCopy);
+                                })
+                                .catch(err => {
+                                    console.error('Failed to copy text: ', err);
+                                });
+                        });
                     })
                     .catch(error => {
                         console.error('Error fetching data:', error);
                         fetchedDataDisplay.textContent = 'Failed to fetch data. Try again.';
                     });
             };
-
-            // Add event listener to the copy to clipboard button
-            copyToClipboardButton.addEventListener('click', () => {
-                const textToCopy = fetchedDataDisplay.textContent;
-                navigator.clipboard.writeText(textToCopy)
-                    .then(() => {
-                        console.log('Text copied to clipboard:', textToCopy);
-                        // Show the open note button after copying to clipboard
-                        openNoteButton.style.display = 'inline-block';
-                    })
-                    .catch(err => {
-                        console.error('Failed to copy text: ', err);
-                    });
-            });
 
             // Add event listener to the open note button
             openNoteButton.addEventListener('click', () => {
