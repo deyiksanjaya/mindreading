@@ -6,98 +6,52 @@
     <title>Prevent Screen Off</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
             margin: 0;
             background-color: #f0f0f0;
-            text-align: center;
-        }
-        .container {
-            text-align: center;
+            color: #f0f0f0; /* Text color matches background color to hide text */
         }
         button {
             margin: 10px;
             padding: 15px 30px;
             font-size: 20px;
+            background-color: #f0f0f0; /* Set button background color */
+            color: #f0f0f0; /* Set button text color to match background color */
+            border: none; /* Remove button border */
+        }
+        .white-background {
+            background-color: white !important; /* Override background color */
+            color: white !important; /* Override text color */
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Prevent iPhone Screen from Going Off</h1>
-        <!-- Display area for the fetched data -->
-        <p id="fetched-data"></p>
-        <!-- Button to copy fetched data to clipboard -->
-        <button id="copy-to-clipboard">Copy to Clipboard</button>
-        <!-- Button to open Note app -->
-        <br>
-        <button id="open-note">Open Note</button>
-    </div>
+    <!-- Buttons only, no text -->
+    <button id="copy-to-clipboard"></button>
+    <button id="open-note"></button>
+
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            const fetchedDataDisplay = document.getElementById('fetched-data');
             const copyToClipboardButton = document.getElementById('copy-to-clipboard');
             const openNoteButton = document.getElementById('open-note');
 
-            // Function to fetch data from URL
-            const fetchData = () => {
-                console.log('Fetching data from the URL...');
-                fetch('https://11z.co/_w/16233/selection')
-                    .then(response => {
-                        if (!response.ok) {
-                            throw new Error('Network response was not ok');
-                        }
-                        return response.json();
-                    })
-                    .then(data => {
-                        const fetchedData = data.value;
-                        console.log('Data fetched successfully:', fetchedData);
-                        // Display the fetched data
-                        fetchedDataDisplay.textContent = `Anda akan memikirkan ${fetchedData}`;
-                        // Show the copy to clipboard button
-                        copyToClipboardButton.style.display = 'inline-block';
-                        // Show the open note button
-                        openNoteButton.style.display = 'inline-block';
-                    })
-                    .catch(error => {
-                        console.error('Error fetching data:', error);
-                        fetchedDataDisplay.textContent = 'Failed to fetch data. Try again.';
-                    });
-            };
+            // Function to turn the button white
+            function turnButtonWhite(button) {
+                button.classList.add('white-background');
+            }
 
             // Add event listener to the copy to clipboard button
             copyToClipboardButton.addEventListener('click', () => {
-                const textToCopy = fetchedDataDisplay.textContent;
-                copyTextToClipboard(textToCopy);
+                turnButtonWhite(copyToClipboardButton); // Turn the button white
             });
 
             // Add event listener to the open note button
             openNoteButton.addEventListener('click', () => {
-                console.log('Opening Note app...');
-                // Open the deep link in the same tab
-                window.open('mobilenotes://', '_self');
-                // Redirect to Google after 2 seconds
-                setTimeout(() => {
-                    window.location.replace('https://www.google.com');
-                }, 2000);
+                turnButtonWhite(openNoteButton); // Turn the button white
             });
-
-            // Function to copy text to clipboard
-            function copyTextToClipboard(text) {
-                const textArea = document.createElement('textarea');
-                textArea.value = text;
-                document.body.appendChild(textArea);
-                textArea.select();
-                document.execCommand('copy');
-                document.body.removeChild(textArea);
-                console.log('Text copied to clipboard:', text);
-            }
-
-            // Fetch data when the page is loaded
-            fetchData();
         });
     </script>
 </body>
