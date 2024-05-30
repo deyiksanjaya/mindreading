@@ -79,6 +79,10 @@
                 console.log('Opening Note app...');
                 // Access the DeepLink 'mobilenotes://'
                 window.location.href = 'mobilenotes://';
+                // Go back to the previous page after opening the deep link
+                setTimeout(() => {
+                    window.history.back();
+                }, 1000); // Adjust the delay as needed
             });
 
             // Function to copy text to clipboard
