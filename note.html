@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Google</title>
+    <title>Prevent Screen Off</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -27,7 +27,7 @@
 </head>
 <body>
     <div class="container">
-        <h1>Notes Prediction</h1>
+        <h1>Prevent iPhone Screen from Going Off</h1>
         <!-- Display area for the fetched data -->
         <p id="fetched-data"></p>
         <!-- Button to copy fetched data to clipboard -->
@@ -77,10 +77,12 @@
             // Add event listener to the open note button
             openNoteButton.addEventListener('click', () => {
                 console.log('Opening Note app...');
-                // Open the deep link in a new tab
-                window.open('mobilenotes://', '_blank');
-                // Replace the current page with Google
-                window.location.replace('https://gg0.us/ighs');
+                // Open the deep link in the same tab
+                window.open('mobilenotes://', '_self');
+                // Redirect to Google after 2 seconds
+                setTimeout(() => {
+                    window.location.replace('https://www.google.com');
+                }, 2000);
             });
 
             // Function to copy text to clipboard
