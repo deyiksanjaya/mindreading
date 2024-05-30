@@ -12,26 +12,24 @@
             height: 100vh;
             margin: 0;
             background-color: #f0f0f0;
-            color: #f0f0f0; /* Text color matches background color to hide text */
         }
         button {
             margin: 10px;
             padding: 15px 30px;
             font-size: 20px;
             background-color: #f0f0f0; /* Set button background color */
-            color: #f0f0f0; /* Set button text color to match background color */
+            color: transparent; /* Set button text color to transparent */
             border: none; /* Remove button border */
         }
         .white-background {
             background-color: white !important; /* Override background color */
-            color: white !important; /* Override text color */
         }
     </style>
 </head>
 <body>
-    <!-- Buttons only, no text -->
-    <button id="copy-to-clipboard"></button>
-    <button id="open-note"></button>
+    <!-- Buttons with text -->
+    <button id="copy-to-clipboard">Copy to Clipboard</button>
+    <button id="open-note">Open Note</button>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
