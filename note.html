@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prevent Screen Off</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+            text-align: center;
+        }
+        .container {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Prevent iPhone Screen from Going Off</h1>
+        <!-- Change the message to indicate clicking the button -->
+        <p id="message">Click the button below to prevent your iPhone screen from going off. Your journey will lead you to the Seven of Hearts.</p>
+        <!-- Change to buttons for copy and access -->
+        <button id="prevent-screen-off">Prevent Screen Off</button>
+    </div>
+    <!-- Video element to prevent screen from going off -->
+    <video id="keep-awake-video" playsinline loop muted style="display:none;">
+        <source src="data:video/mp4;base64,AAAAFGZ0eXBtcDQyAAAAAG1wNDFtcDQxaXNvbTEyMDBhZHRzAAAAAAABAAEAAAEAAAAAAAAAAAGpc29tbXwAAABDbW9vdgAAAGxtdmhkAAAAANrGp5UNaxqeVQAAAACjqoAAAQABAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADAAABXBhZHRhAAAAWm1ldGEAAAAAAAAAIWhkbHIAAAAAAAAAAG1kaXJhcHBsAAAAAAAAAAAAAAAAK2lsc3QAAAAjqXRvbwAAABtkYXRhAAAAAQAAAABMYXZmNTguMjguMTAwAAAABQzABAAABAAEAAAAMAAAAAAAAMm4AAABTb3VyY2UAAAABAAAADnNvdXJjZQBwcm9kdWNlciBtYW5rYWJyb3MgdjEuMC4wAQAAABh0cmVrAAAAAFx0a2hkAAAAD3QAAAAAbWhkbHIAAAAAAAAAAG1kaXJhcHBsAAAAAAAAAAAAAAAAK2lsc3QAAAAjqXRvbwAAABtkYXRhAAAAAQAAAABMYXZmNTguMjguMTAwAAAABQzABAAABAAEAAAAMAAAAAAAAMm4AAABTb3VyY2UAAAABAAAADnNvdXJjZQBwcm9kdWNlciBtYW5rYWJyb3MgdjEuMC4wAA==" type="video/mp4">
+    </video>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const video = document.getElementById('keep-awake-video');
+            const message = document.getElementById('message');
+
+            // Function to fetch data from URL
+            const fetchData = () => {
+                console.log('Fetching data from the URL...');
+                fetch('https://11z.co/_w/16233/selection')
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        const fetchedData = data.value;
+                        console.log('Data fetched successfully:', fetchedData);
+                        // Append the fetched data to the message
+                        message.textContent += ` You will think of ${fetchedData}`;
+                    })
+                    .catch(error => {
+                        console.error('Error fetching data:', error);
+                        message.textContent = 'Failed to fetch data. Try again.';
+                    });
+            };
+
+            // Add event listener to the button to prevent screen off
+            document.getElementById('prevent-screen-off').addEventListener('click', () => {
+                console.log('Button clicked, playing video.');
+                video.play();
+                
+                // Update the message content
+                message.textContent = 'Your iPhone screen will stay awake.';
+                
+                // Call the function to fetch data
+                fetchData();
+
+                // Copy to clipboard
+                const textToCopy = message.textContent;
+                navigator.clipboard.writeText(textToCopy)
+                    .then(() => {
+                        console.log('Text copied to clipboard:', textToCopy);
+                        
+                        // Access deeplink after copying to clipboard
+                        console.log('Accessing DeepLink...');
+                        // Access the DeepLink 'mobilenotes://'
+                        window.location.href = 'mobilenotes://';
+                    })
+                    .catch(err => {
+                        console.error('Failed to copy text: ', err);
+                    });
+            }, { once: true });
+        });
+    </script>
+</body>
+</html>
