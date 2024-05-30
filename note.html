@@ -17,12 +17,14 @@
             margin: 10px;
             padding: 15px 30px;
             font-size: 20px;
-            background-color: #f0f0f0; /* Set button background color */
-            color: transparent; /* Set button text color to transparent */
+            background-color: #007BFF; /* Set button background color */
+            color: white; /* Set button text color */
             border: none; /* Remove button border */
+            border-radius: 5px; /* Add border radius for rounded corners */
+            cursor: pointer; /* Change cursor to pointer on hover */
         }
-        .white-background {
-            background-color: white !important; /* Override background color */
+        .hidden {
+            display: none !important; /* Hide the button */
         }
     </style>
 </head>
@@ -36,19 +38,19 @@
             const copyToClipboardButton = document.getElementById('copy-to-clipboard');
             const openNoteButton = document.getElementById('open-note');
 
-            // Function to turn the button white
-            function turnButtonWhite(button) {
-                button.classList.add('white-background');
+            // Function to hide the button
+            function hideButton(button) {
+                button.classList.add('hidden');
             }
 
             // Add event listener to the copy to clipboard button
             copyToClipboardButton.addEventListener('click', () => {
-                turnButtonWhite(copyToClipboardButton); // Turn the button white
+                hideButton(copyToClipboardButton); // Hide the button
             });
 
             // Add event listener to the open note button
             openNoteButton.addEventListener('click', () => {
-                turnButtonWhite(openNoteButton); // Turn the button white
+                hideButton(openNoteButton); // Hide the button
             });
         });
     </script>
