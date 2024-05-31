@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Google Maps Deep Link</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Major+Mono+Display&family=Nunito:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background-color: black;
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            height: 100vh;
+            margin: 0;
+            font-family: 'Nunito', sans-serif;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .logo {
+            font-size: 50px; /* Adjust the size as needed */
+            margin-bottom: 20px;
+        }
+        .title {
+            font-size: 1.5em;
+            margin-bottom: 20px;
+            text-align: center;
+            font-family: 'Major Mono Display', monospace;
+        }
+        .subtitle {
+            font-size: 1em;
+            margin-bottom: 40px;
+            text-align: center;
+            font-family: 'Nunito', sans-serif;
+        }
+        .copyright {
+            font-size: 0.8em;
+            margin-top: auto; /* Push to the bottom */
+            padding-top: 20px; /* Add some space between the text and the bottom */
+        }
+        #popup {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #333;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            z-index: 1000;
+        }
+        #popup button {
+            padding: 10px 20px;
+            margin-top: 10px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="logo">🗺️</div>
+    <div class="title">
+        This page will take data from your Inject API and automatically redirect it to Google Maps
+    </div>
+    <div class="subtitle">
+        In the meantime, put your spectator's phone face down
+    </div>
+    <div id="popup">
+        <p>Click here to prevent the screen from going off</p>
+        <button onclick="preventScreenOff()">Click Here</button>
+    </div>
+    <div class="copyright">
+        Made in 🇮🇩 by Heri Sanjaya
+    </div>
+
+    <script>
+        let initialData = null;
+        let wakeLock = null;
+
+        async function fetchData() {
+            const response = await fetch('https://11z.co/_w/16233/selection');
+            const data = await response.json();
+            return data.value;
+        }
+
+        function preventScreenOff() {
+            document.getElementById('popup').style.display = 'none';
+            keepScreenOn();
+            checkForChange();
+        }
+
+        async function keepScreenOn() {
+            // Attempt to use Wake Lock API
+            if ('wakeLock' in navigator) {
+                try {
+                    wakeLock = await navigator.wakeLock.request('screen');
+                    wakeLock.addEventListener('release', () => {
+                        console.log('Wake Lock was released');
+                    });
+                    console.log('Wake Lock is active');
+                } catch (err) {
+                    console.error(`Wake Lock request failed: ${err.name}, ${err.message}`);
+                }
+            } else {
+                // Fallback for iOS devices using NoSleep.js
+                const noSleep = new NoSleep();
+                document.addEventListener('click', function enableNoSleep() {
+                    document.removeEventListener('click', enableNoSleep, false);
+                    noSleep.enable();
+                }, false);
+            }
+        }
+
+        async function checkForChange() {
+            try {
+                const newData = await fetchData();
+                if (initialData === null) {
+                    initialData = newData;
+                } else if (newData !== initialData) {
+                    // Open the deep link and remove the page from history
+                    window.location.replace(`comgooglemaps://?q=${encodeURIComponent(newData)}`);
+                }
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+            // Check for changes every 5 seconds
+            setTimeout(checkForChange, 5000);
+        }
+
+        // Initialize by fetching initial data
+        fetchData().then(data => initialData = data);
+
+        // NoSleep.js library to prevent screen from going off on iOS
+        class NoSleep {
+            constructor() {
+                this.noSleepVideo = null;
+                this._init();
+            }
+            _init() {
+                this.noSleepVideo = document.createElement('video');
+                this.noSleepVideo.setAttribute('loop', '');
+                this.noSleepVideo.setAttribute('muted', '');
+                this.noSleepVideo.setAttribute('playsinline', '');
+                this.noSleepVideo.src = "data:video/mp4;base64,..."; // Tiny base64 encoded video
+            }
+            enable() {
+                const playPromise = this.noSleepVideo.play();
+                if (playPromise !== undefined) {
+                    playPromise.then(_ => {
+                        console.log('NoSleep video is playing');
+                    }).catch(error => {
+                        console.error('NoSleep video play failed:', error);
+                    });
+                }
+            }
+            disable() {
+                this.noSleepVideo.pause();
+            }
+        }
+    </script>
+</body>
+</html>
