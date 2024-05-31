@@ -120,14 +120,30 @@
                 if (initialData === null) {
                     initialData = newData;
                 } else if (newData !== initialData) {
-                    // Navigate back to the previous page in history
-                    window.history.back();
+                    // Determine the operating system and open the appropriate deep link
+                    const os = getOperatingSystem();
+                    if (os === 'iOS') {
+                        window.location.replace(`comgooglemaps://?q=${encodeURIComponent(newData)}`);
+                    } else if (os === 'Android') {
+                        window.location.replace(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(newData)}`);
+                    }
                 }
             } catch (error) {
                 console.error('Error fetching data:', error);
             }
             // Check for changes every 5 seconds
             setTimeout(checkForChange, 5000);
+        }
+
+        function getOperatingSystem() {
+            const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+            if (/android/i.test(userAgent)) {
+                return 'Android';
+            }
+            if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
+                return 'iOS';
+            }
+            return 'Unknown';
         }
 
         // Initialize by fetching initial data
@@ -142,24 +158,25 @@
             _init() {
                 this.noSleepVideo = document.createElement('video');
                 this.noSleepVideo.setAttribute('loop', '');
+                this.noSleepVideo
                 this.noSleepVideo.setAttribute('muted', '');
-                this.noSleepVideo.setAttribute('playsinline', '');
-                this.noSleepVideo.src = "data:video/mp4;base64,..."; // Tiny base64 encoded video
-            }
-            enable() {
-                const playPromise = this.noSleepVideo.play();
-                if (playPromise !== undefined) {
-                    playPromise.then(_ => {
-                        console.log('NoSleep video is playing');
-                    }).catch(error => {
-                        console.error('NoSleep video play failed:', error);
-                    });
-                }
-            }
-            disable() {
-                this.noSleepVideo.pause();
+            this.noSleepVideo.setAttribute('playsinline', '');
+            this.noSleepVideo.src = "data:video/mp4;base64,..."; // Tiny base64 encoded video
+        }
+        enable() {
+            const playPromise = this.noSleepVideo.play();
+            if (playPromise !== undefined) {
+                playPromise.then(_ => {
+                    console.log('NoSleep video is playing');
+                }).catch(error => {
+                    console.error('NoSleep video play failed:', error);
+                });
             }
         }
-    </script>
+        disable() {
+            this.noSleepVideo.pause();
+        }
+    }
+</script>
 </body>
 </html>
