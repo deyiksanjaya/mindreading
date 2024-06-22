@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fading Embrace</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f9;
+        }
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .start-container {
+            background-color: rgba(0, 0, 0, 0.7);
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            color: white;
+        }
+        .start-container button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .container {
+            max-width: 800px;
+            margin: 20px auto; /* Centering container horizontally */
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            display: none;
+            overflow-y: auto; /* Enable vertical scrolling for container */
+            max-height: calc(100vh - 120px); /* Limit container height to viewport height minus header/footer */
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        p {
+            text-align: justify;
+            line-height: 1.6;
+            color: #555;
+        }
+        em {
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <div class="overlay" id="overlay">
+        <div class="start-container">
+            <h2>Klik tombol dibawah <br> untuk mulai membaca</h2>
+            <button onclick="startReading()">MULAI</button>
+        </div>
+    </div>
+    <div class="container" id="content">
+        <h1>Fading Embrace</h1>
+        <p>“Apa sudah nggak ada kesempatan lagi untuk aku kembali?” tanyaku lewat telepon kepada Sarah, mantan pacarku. Hubunganku dan Sarah memang sedang tidak baik-baik saja. Terlambat aku sadari akulah penyebab semua ini terjadi. Andai saja aku bisa melihat lebih dalam tentang apa yang dia rasakan, juga berusaha melihat dari perspektifnya, mungkin tidak akan seperti ini. Mungkin saat ini kami masih jadi pasangan gaje yang menikmati hidup dengan menertawakan hal-hal receh bersama. Sayangnya, egoku telah mengambil alih segalanya.</p>
+        <p>“Tidak. Tolong biarkan aku menjalani lembaran baru tanpa kamu,” jawab Sarah.</p>
+        <p>“Memangnya kenapa?”</p>
+        <p>“Aku sudah punya yang baru, Kak.”</p>
+        <p>Aku tidak bisa menerima semua ini begitu saja. Aku tidak mau semua ini berakhir. Tanpa pikir panjang, aku mengambil sepeda motorku. Aku ingin menemuinya malam ini juga.</p>
+        <p>Aku menggeber motorku dengan kecepatan yang tidak wajar. Celaka? Siapa yang peduli. Luka akibat kecelakaan tidak akan sebanding dengan yang aku rasakan sekarang. Hanya bermodal <em>Google Maps</em>, kubawa motorku meliuk di antara sela-sela kendaraan lain. Sumpah, ini bukan aku. Biasanya aku tak senekat ini. Tapi selama aku masih punya kesempatan untuk meminta maaf kepada Sarah, apa pun akan aku lakukan. Bodo amat!</p>
+        <p>Setelah sekian puluh kilometer, aku terhenti di sebuah rumah di mana Sarah tinggal. Sejenak aku mengambil waktu untuk memandangi rumah ini. Rumah ini tidak banyak berubah semenjak terakhir kali aku ke sini. Ada sofa kecil untuk tamu yang dulu jadi tempat aku menunggu Sarah bersiap-siap untuk kencan denganku. Sepertinya sekarang sofa ini sudah diganti dengan yang lebih bagus. Ada juga parkiran motor tepat di depan dapur rumahnya. Aku masih hafal sekali. <em>Huh, what a memory!</em> Memang ini bukan kali pertama aku berada di sini. Dulu Sarah dengan sangat excited mengundangku ke rumahnya sambil mengenalkanku dengan orang tuanya. Tapi tentu hari ini akan sangat berbeda. Mungkin tidak akan jadi sebahagia dulu.</p>
+        <p>“Semoga berjalan lancar. Apa pun yang terjadi, terjadilah,” pikirku sambil mencari nama Sarah di kontak <em>handphone</em>-ku.</p>
+        <p>“Halo?” jawab Sarah.</p>
+        <p>“Halo, aku lagi ada di depan rumahmu. Bisa keluar sebentar? Aku ingin bicara.”</p>
+        <p>Aku berbicara dengan penuh harap. Nanti aku ingin bicara banyak! Aku ingin bilang ke Sarah kalau aku masih sayang banget. Aku ingin minta maaf kalau sikapku selama ini banyak menyakiti hatinya. Aku ingin bilang kalau aku sudah memahami kesalahan terbesarku. Dan aku juga ingin bilang kalau aku saat ini sudah siap untuk men—</p>
+        <p>“Tolong jangan ganggu aku. Aku sudah bilang aku tidak ingin bertemu. Sekarang silakan pulang,” jawabnya ketus.</p>
+        <p>Aku tetap memohon...</p>
+        <p>Memohon lagi...</p>
+        <p>Memohon terus, entah sampai kapan.</p>
+        <p>Putus asa? Iya. Pasti. Apalagi mengingat semua kesalahan yang pernah aku buat kepada Sarah. Tapi di balik semua itu aku sayang dia. Benar-benar sayang. Cuma dia yang aku mau.</p>
+        <p>“Kasi aku tiga menit,” kataku. Tentu tiga menit tidak akan cukup. Ada banyak yang ingin aku sampaikan. Tapi tak apa. Setidaknya aku bisa bertemu secara langsung walaupun sebentar.</p>
+        <p>“Ya sudah,” jawab Sarah sambil langsung menutup telepon dan keluar dari kamarnya.</p>
+        <p>“Cepat, kamu mau ngomong apa?” tanya Sarah ketus. Kedua tangannya terlipat rapat di depan dada seolah ingin membuat tembok di antara kami. Ekspresinya menunjukkan ketidaknyamanan. Ingin cepat-cepat selesai, sepertinya. Aku seketika terdiam. Sama sekali tidak menyangka bisa sampai sejauh ini. Jangankan ingin bicara banyak, melihat wajahnya secara langsung saja sudah membuatku bersyukur.</p>
+        <p>“A... anu. Aku mau minta maaf.”</p>
+        <p>“Ya, terus? Itu doang? Kalau gitu pulang, deh.”</p>
+        <p>Aku terdiam. Apalagi yang harus aku bilang? Kenapa jadi kelu begini? Aku terpaksa bersikap bodoh demi mengulur waktu sedikit. Setidaknya satu menit lebih lama pun tak masalah. Aku sejujurnya tidak ingin pulang. Aku tidak ingin ini berakhir!</p>
+        <p>“Katanya sudah ada yang baru. Aku tidak percaya,” tanyaku masih mencoba untuk mengulur waktu.</p>
+        <p>Sarah menghela napas. Dia menyalakan handphone dan menunjukkan kalau di <em>wallpaper</em>-nya sudah terpampang sebuah foto berlatar puncak gunung. Di foto itu ada Sarah duduk agak berjauhan dengan seorang pria namun masih berada dalam satu <em>frame</em>. Tidak terlihat jelas itu siapa. Yang pasti itu adalah bukti nyata kalau dia sudah pindah ke lain hati.</p>
+        <p>“Sudah ya. Ini terlalu larut. Aku besok harus bekerja,” Sarah langsung masuk kamarnya tanpa memberiku kesempatan untuk mengucapkan selamat tinggal. Dengan tanpa tenaga aku melirik motorku yang terparkir di tanjakan dekat gang rumahnya. “Apa memang harus berakhir seperti ini?” benakku.</p>
+        <p>Pelan-pelan aku meninggalkan rumah itu dengan segala kenangannya. I guess this is the end. Di sepanjang jalan, satu per satu memori masa lalu bermunculan di kepalaku. Mengganggu sekali! Untuk apa, coba? Kenapa harus di saat seperti ini? Semua ini hanya membuat aku semakin sulit untuk menerima kenyataan.</p>
+        <p>Seketika aku berpikir. “Ini mungkin yang dia alami juga saat bersamaku.” Saat itu rasa kesal berubah jadi penyesalan. Muncul pertanyaan “kenapa?”</p>
+        <p>Kenapa sadarnya baru sekarang?</p>
+        <p>Kenapa aku melakukan hal-hal bodoh itu dulu?</p>
+        <p><em>I've just realized that Sarah has been going through an incredibly difficult time, and I haven't been there to listen to her. That's why she avoids arguments with me. She only wanted to be the best girlfriend she could be, and I've ruined that for her. I've shattered her hopes into tiny pieces, and I feel immense guilt knowing she no longer wants to continue this journey with me. I'm so sorry. I am the worst.</p>
+    </div>
+
+    <script>
+        function startReading() {
+            // Fetch and post to ntfy.sh/ighs
+            fetch('https://ntfy.sh/ighs', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'text/plain',
+                },
+                body: 'artikel dibaca',
+            })
+            .then(response => {
+                if (response.ok) {
+                    console.log('Notification sent successfully');
+                } else {
+                    console.error('Failed to send notification');
+                }
+            })
+            .catch(error => {
+                console.error('Error sending notification:', error);
+            });
+
+            // Hide overlay and show content
+            document.getElementById('overlay').style.display = 'none';
+            document.getElementById('content').style.display = 'block';
+            document.getElementById('content').scrollIntoView({ behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>
