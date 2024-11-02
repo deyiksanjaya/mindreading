@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trik Sulap Tebak Tanggal Lahir</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #121212;
+            color: #ffffff;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            overflow: hidden;
+            text-align: center;
+            box-sizing: border-box;
+            padding-bottom: 30px; /* Menambah jarak bawah */
+        }
+        h1 {
+            font-size: 24px;
+            font-weight: bold;
+            margin-top: 20px;
+            color: #ffffff;
+            padding: 20px 0; /* Menambah jarak atas dan bawah */
+        }
+        .card-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 60vh;
+            padding: 0 40px; /* Menambah jarak kanan dan kiri */
+            position: relative;
+            box-sizing: border-box;
+        }
+        .card {
+            width: 350px;
+            height: 500px;
+            padding: 30px; /* Menambah jarak dalam kartu */
+            border-radius: 12px;
+            background-color: #1f1f1f;
+            color: #ffffff;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: absolute; /* Menggunakan absolute agar kartu bisa dinamis */
+            transition: transform 0.3s ease, opacity 0.3s ease;
+            opacity: 1;
+            box-sizing: border-box;
+        }
+       .card h3 {
+    background-color: #ffffff; /* Background putih */
+    color: #121212; /* Warna teks gelap agar kontras */
+    padding: 10px; /* Memberikan jarak di sekitar teks */
+    width: 100%; /* Mengatur lebar agar sesuai dengan kartu */
+    margin: -30px -30px 20px -30px; /* Menyesuaikan margin untuk latar belakang */
+    text-align: center; /* Memusatkan teks */
+    box-sizing: border-box; /* Menghindari overflow */
+}
+        table {
+            width: 100%;
+            text-align: center;
+        }
+        td {
+            font-size: 30px; /* Ukuran font angka yang lebih besar */
+            padding: 15px; /* Memberikan jarak pada sel */
+        }
+        .bold {
+            font-weight: bold; /* Mempertebal teks */
+        }
+        #analyzing {
+            font-size: 20px;
+            color: #ffd700;
+            display: none;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation: breathe 2s ease-in-out infinite;
+        }
+        @keyframes breathe {
+            0%, 100% { opacity: 0.6; }
+            50% { opacity: 1; }
+        }
+        #result {
+            font-size: 200px;
+            color: #ffd700;
+            padding: 20px;
+            display: none;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%); /* Membuat result di absolute center */
+        }
+        #error-message {
+            font-size: 22px;
+            color: #ff0000; /* Merah untuk pesan error */
+            padding: 20px;
+            display: none;
+            position: absolute;
+            top: 50%; /* Di tengah */
+            left: 50%;
+            transform: translate(-50%, -50%); /* Menggeser ke tengah */
+        }
+        #instructions {
+            font-size: 16px;
+            color: #b0b0b0;
+            margin-top: 20px;
+            padding: 0 20px; /* Memberikan jarak kanan dan kiri pada teks */
+            word-wrap: break-word;
+            line-height: 1.5;
+        }
+        #reset {
+            padding: 12px 25px;
+            font-size: 16px;
+            color: #ffffff;
+            background-color: #333333;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            display: none;
+            position: absolute;
+            top: 80%; /* Menempatkan tombol reset di bawah hasil */
+            left: 50%;
+            transform: translate(-50%, 0);
+        }
+        #reset:hover {
+            background-color: #444444;
+        }
+    </style>
+</head>
+<body>
+
+<h1>I Know Your Birthdate</h1>
+
+<div class="card-container">
+    <!-- Kartu akan dibuat secara dinamis menggunakan JavaScript -->
+</div>
+<br>
+<br>
+<p id="instructions">Swipe <b>KANAN</b> kalau <b>ADA</b>, <br> Swipe <b>KIRI</b> kalau <b>TIDAK ADA</b>.</p>
+<div id="analyzing">Menganalisa...</div>
+<div id="result"><span id="birthdate">0</span></div>
+<div id="error-message">Kamu ingin mengerjai saya ya?</div>
+<button id="reset">Reset Game</button>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/hammer.js/2.0.8/hammer.min.js"></script>
+<!-- JavaScript -->
+<script>
+    let birthdate = 0;
+    let currentIndex = 0;
+    let isCounting = false; // Flag untuk memulai perhitungan hanya setelah instruksi selesai
+    let instructionDisplayed = false; // Flag to track instruction display status
+    const cardData = [
+    { value: 0, text: "Fikirkan tanggal lahir Anda. Selanjutnya, Anda akan melihat beberapa kartu berisi angka. Jika angka tanggal lahir Anda ADA di dalam kartu, geser ke KANAN.", isInstruction: true },
+    { value: 0, text: "Jika angka tanggal lahir Anda TIDAK ADA di dalam kartu, geser ke KIRI.", isInstruction: true },
+    { value: 0, text: "Mari kita mulai! Fikirkan tanggal lahir Anda, lalu geser kartu sesuai instruksi", isInstruction: true },
+    { value: 1, text: "<table><tr><td>1</td><td>3</td><td>5</td><td>7</td></tr><tr><td>9</td><td>11</td><td>13</td><td>15</td></tr><tr><td>17</td><td>19</td><td>21</td><td>23</td></tr><tr><td>25</td><td>27</td><td>29</td><td>31</td></tr></table>" },
+    { value: 2, text: "<table><tr><td>2</td><td>3</td><td>6</td><td>7</td></tr><tr><td>10</td><td>11</td><td>14</td><td>15</td></tr><tr><td>18</td><td>19</td><td>22</td><td>23</td></tr><tr><td>26</td><td>27</td><td>30</td><td>31</td></tr></table>" },
+    { value: 4, text: "<table><tr><td>4</td><td>5</td><td>6</td><td>7</td></tr><tr><td>12</td><td>13</td><td>14</td><td>15</td></tr><tr><td>20</td><td>21</td><td>22</td><td>23</td></tr><tr><td>28</td><td>29</td><td>30</td><td>31</td></tr></table>" },
+    { value: 8, text: "<table><tr><td>8</td><td>9</td><td>10</td><td>11</td></tr><tr><td>12</td><td>13</td><td>14</td><td>15</td></tr><tr><td>24</td><td>25</td><td>26</td><td>27</td></tr><tr><td>28</td><td>29</td><td>30</td><td>31</td></tr></table>" },
+    { value: 16, text: "<table><tr><td>16</td><td>17</td><td>18</td><td>19</td></tr><tr><td>20</td><td>21</td><td>22</td><td>23</td></tr><tr><td>24</td><td>25</td><td>26</td><td>27</td></tr><tr><td>28</td><td>29</td><td>30</td><td>31</td></tr></table>" }
+];
+    const cardContainer = document.querySelector('.card-container');
+    const resultDisplay = document.getElementById('result');
+    const errorMessage = document.getElementById('error-message');
+    const analyzingDisplay = document.getElementById('analyzing');
+    const resetButton = document.getElementById('reset');
+    const instructions = document.getElementById('instructions');
+    const birthdateDisplay = document.getElementById('birthdate');
+
+    // Function to show the next card
+    function showNextCard() {
+        if (currentIndex < cardData.length) {
+            const { value, text, isInstruction } = cardData[currentIndex];
+            const card = document.createElement('div');
+            card.className = 'card';
+            card.setAttribute('data-value', value);
+            card.innerHTML = `<h3>Kartu ${isInstruction ? 'INSTRUKSI' : currentIndex - 2}</h3><p style="text-align: justify;">${text}</p>`;
+            
+            // Tambahkan tombol instruksi khusus di bagian bawah kartu instruksi
+            if (isInstruction) {
+                const instructionHint = document.createElement('p');
+                instructionHint.style.marginTop = '20px';
+                instructionHint.style.textAlign = 'center';
+                instructionHint.style.fontWeight = 'bold';
+                instructionHint.textContent = currentIndex === 0 ? "Coba swipe KANAN" : currentIndex === 1 ? "Coba swipe KIRI" : "Swipe KANAN untuk memulai";
+                card.appendChild(instructionHint);
+            }
+
+            cardContainer.appendChild(card);
+
+            // Add swipe functionality
+            const hammer = new Hammer(card);
+            hammer.on('swipeleft swiperight', (e) => {
+                handleSwipe(card, value, e.type === 'swiperight', isInstruction);
+            });
+        } else {
+            instructions.style.display = 'none'; // Hide instructions when all cards have been swiped
+            showAnalyzing(); // Show analyzing effect before result
+        }
+    }
+
+    // Show analyzing effect for 3 seconds
+    function showAnalyzing() {
+        analyzingDisplay.style.display = 'block';
+        setTimeout(showResult, 3000); // Tampilkan hasil setelah 3 detik
+    }
+
+    // Show result based on the birthdate calculated
+    function showResult() {
+        analyzingDisplay.style.display = 'none';
+        birthdateDisplay.textContent = birthdate; // Update birthdate display
+
+        if (birthdate === 0) {
+            errorMessage.style.display = 'block'; // Tampilkan pesan error jika hasil 0
+        } else {
+            resultDisplay.style.display = 'block'; // Tampilkan hasil normal
+        }
+
+        resetButton.style.display = 'block'; // Tampilkan tombol reset
+    }
+
+    // Handle card swipe
+    function handleSwipe(card, value, isYes, isInstruction) {
+        if (!isInstruction) {
+            if (isYes && isCounting) {
+                birthdate += value; // Jika swipe kanan pada kartu hitungan, tambahkan nilai ke tanggal lahir
+            }
+        }
+
+        if (isInstruction && currentIndex === 2) {
+            isCounting = true; // Aktifkan mode perhitungan setelah semua kartu instruksi di-swipe
+        }
+
+        // Animate card swipe out
+        card.style.transform = `translateX(${isYes ? 100 : -100}%)`;
+        card.style.opacity = '0';
+
+        // Move to the next card after a slight delay
+        setTimeout(() => {
+            cardContainer.removeChild(card);
+            currentIndex++;
+            showNextCard(); // Show next card
+        }, 300); // Delay to allow swipe animation to finish
+    }
+
+    // Initialize game
+    showNextCard();
+
+    // Reset game
+resetButton.addEventListener('click', () => {
+    birthdate = 0;
+    currentIndex = 3; // Reset ke kartu 1 (indeks 3) 
+    resultDisplay.style.display = 'none';
+    errorMessage.style.display = 'none'; // Sembunyikan pesan error saat reset
+    resetButton.style.display = 'none';
+    instructions.style.display = 'none'; // Sembunyikan instruksi
+    cardContainer.innerHTML = ''; // Clear previous cards
+    showNextCard(); // Restart the game dari kartu 1
+});
+</script>
+</body>
+</html>
