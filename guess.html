@@ -184,7 +184,7 @@
             const card = document.createElement('div');
             card.className = 'card';
             card.setAttribute('data-value', value);
-            card.innerHTML = `<h3>Kartu ${isInstruction ? 'INSTRUKSI' : currentIndex - 2}</h3><p style="text-align: justify;">${text}</p>`;
+            card.innerHTML = `<h3>KARTU ${isInstruction ? 'INSTRUKSI' : currentIndex - 2}</h3><p style="text-align: justify;">${text}</p>`;
             
             // Tambahkan tombol instruksi khusus di bagian bawah kartu instruksi
             if (isInstruction) {
