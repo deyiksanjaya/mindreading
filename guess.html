@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Trik Sulap Tebak Tanggal Lahir</title>
+    <title>Tebak Tanggal Lahir</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -27,6 +27,12 @@
             color: #7D5846;
             padding: 20px 0; /* Menambah jarak atas dan bawah */
         }
+        /* Mengatur font size khusus untuk kata tertentu */
+.special-size {
+    font-size: 90px; /* ubah ini ke ukuran yang diinginkan */
+    font-weight: bold; /* contoh tambahan styling */
+    color: #BB8D76; /* jika ingin warna juga berbeda */
+}
         .card-container {
             display: flex;
             justify-content: center;
@@ -90,9 +96,9 @@
             50% { opacity: 1; }
         }
         #result {
-            font-size: 200px;
+            font-size: 20px;
             color: #BB8D76;
-            padding: 20px;
+            padding: 5px;
             display: none;
             position: absolute;
             top: 50%;
@@ -135,6 +141,17 @@
         #reset:hover {
             background-color: #7D5846;
         }
+        
+        #traits {
+            font-size: 30px;
+            color: #BB8D76;
+            padding: 5px;
+            display: none;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%); /* Membuat result di absolute center */
+        }
     </style>
 </head>
 <body>
@@ -147,10 +164,10 @@
 <br>
 <br>
 <p id="instructions">Swipe <b>KANAN</b> kalau <b>ADA</b>, <br> Swipe <b>KIRI</b> kalau <b>TIDAK ADA</b>.</p>
-<div id="analyzing">Menganalisa...</div>
+<div id="analyzing">Bentar ya, lagi dianalisa...</div>
 <div id="result"><span id="birthdate">0</span></div>
 <div id="error-message">Kamu ingin mengerjai saya ya?</div>
-<button id="reset">Reset Game</button>
+<button id="reset">Main Lagi</button>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/hammer.js/2.0.8/hammer.min.js"></script>
 <!-- JavaScript -->
@@ -160,9 +177,9 @@
     let isCounting = false; // Flag untuk memulai perhitungan hanya setelah instruksi selesai
     let instructionDisplayed = false; // Flag to track instruction display status
     const cardData = [
-    { value: 0, text: "Fikirkan tanggal lahir Anda. Selanjutnya, Anda akan melihat beberapa kartu berisi angka. Jika angka tanggal lahir Anda ADA di dalam kartu, geser ke KANAN.", isInstruction: true },
-    { value: 0, text: "Jika angka tanggal lahir Anda TIDAK ADA di dalam kartu, geser ke KIRI.", isInstruction: true },
-    { value: 0, text: "Mari kita mulai! Fikirkan tanggal lahir Anda, lalu geser kartu sesuai instruksi", isInstruction: true },
+    { value: 0, text: "Pikirkan tanggal lahir kamu. Sebentar lagi kamu akan lihat beberapa kartu berisi angka. Kalau angka tanggal lahir kamu ADA di kartu itu, geser ke KANAN ya!", isInstruction: true },
+    { value: 0, text: "Kalau angka tanggal lahir kamu TIDAK ADA di kartu itu, geser aja ke KIRI.", isInstruction: true },
+    { value: 0, text: "Oke, kita mulai! Ingat tanggal lahir kamu dan geser kartu sesuai instruksi tadi.", isInstruction: true },
     { value: 1, text: "<table><tr><td>1</td><td>3</td><td>5</td><td>7</td></tr><tr><td>9</td><td>11</td><td>13</td><td>15</td></tr><tr><td>17</td><td>19</td><td>21</td><td>23</td></tr><tr><td>25</td><td>27</td><td>29</td><td>31</td></tr></table>" },
     { value: 2, text: "<table><tr><td>2</td><td>3</td><td>6</td><td>7</td></tr><tr><td>10</td><td>11</td><td>14</td><td>15</td></tr><tr><td>18</td><td>19</td><td>22</td><td>23</td></tr><tr><td>26</td><td>27</td><td>30</td><td>31</td></tr></table>" },
     { value: 4, text: "<table><tr><td>4</td><td>5</td><td>6</td><td>7</td></tr><tr><td>12</td><td>13</td><td>14</td><td>15</td></tr><tr><td>20</td><td>21</td><td>22</td><td>23</td></tr><tr><td>28</td><td>29</td><td>30</td><td>31</td></tr></table>" },
@@ -215,19 +232,75 @@
         setTimeout(showResult, 3000); // Tampilkan hasil setelah 3 detik
     }
 
-    // Show result based on the birthdate calculated
-    function showResult() {
-        analyzingDisplay.style.display = 'none';
-        birthdateDisplay.textContent = birthdate; // Update birthdate display
+    // Pemetaan karakter berdasarkan nomor hasil
+const karakterTraits = {
+    1: "Kamu tipe bos besar, pede dan nggak takut maju duluan.",
+    2: "Bawaannya vibes adem, ngerti banget cara bikin orang nyaman.",
+    3: "Kamu seniman sejati, imajinasi kamu suka liar tapi keren.",
+    4: "Kamu tipe grindset, selalu siap ngerjain hal-hal sampai kelar.",
+    5: "Kamu petualang banget, hidup rasanya kurang kalau nggak ada drama seru.",
+    6: "Kamu hati banget orangnya, kayak lem di circle pertemanan kamu.",
+    7: "Kamu suka merenung dalam-dalam, kayak punya sisi 'filosofis' gitu.",
+    8: "Ambisi kamu gede, kayak mesin turbo kalau udah ngejar mimpi.",
+    9: "Kamu tulus banget, selalu siap kasih bantuan tanpa pamrih.",
+    10: "Kamu ball of energy, nggak bisa diem, selalu pengen explore.",
+    11: "Visi kamu tuh besar, sering mikirin dunia bisa jadi lebih baik gimana.",
+    12: "Kamu easygoing abis, semua orang kayaknya pengen nongkrong sama kamu.",
+    13: "Kamu otak-otak cerdas yang suka eksplorasi hal baru.",
+    14: "Fleksibel banget, bisa jadi apa aja sesuai situasi.",
+    15: "Kamu soulful, kadang baper sih, tapi bikin hidup berwarna.",
+    16: "Kamu anaknya logis, problem solver yang top banget.",
+    17: "Positif vibes kamu nular banget, selalu bikin orang happy.",
+    18: "Kreatif tapi tetep solutif, bisa bikin hidup lebih gampang.",
+    19: "Kamu fighter abis, nggak gampang tumbang sama tantangan.",
+    20: "Kamu badut circle, humoris dan bikin orang ngakak terus.",
+    21: "Kamu wise, kadang kayak orang tua bijak yang kasih nasihat.",
+    22: "Kamu konsisten dan selalu bisa diandelin, orangnya tegas.",
+    23: "Kamu paham banget perasaan orang lain, pendengar yang asik.",
+    24: "Ide-ide kamu out of the box banget, selalu inovatif.",
+    25: "Kamu kuat mental, apapun yang datang bisa kamu lewatin.",
+    26: "Charm kamu nggak main-main, orang sering klepek-klepek.",
+    27: "Kamu rapih banget, planner ulung di segala situasi.",
+    28: "Ambisi tinggi, fokus, nggak mudah keganggu sama hal sepele.",
+    29: "Suka mikir hal-hal dalam, kayak ngegali arti hidup gitu.",
+    30: "Hati kamu penuh cinta, bawaannya sayang sama semua orang.",
+    31: "Unik banget, jiwa bebas yang nggak suka ikut aturan standar."
+};
 
-        if (birthdate === 0) {
-            errorMessage.style.display = 'block'; // Tampilkan pesan error jika hasil 0
-        } else {
-            resultDisplay.style.display = 'block'; // Tampilkan hasil normal
-        }
+// Fungsi untuk menampilkan hasil
+function showResult() {
+    analyzingDisplay.style.display = 'none';
+    birthdateDisplay.textContent = birthdate; // Perbarui tampilan tanggal lahir
 
+    // Cek apakah tanggal lahir valid
+    if (birthdate >= 1 && birthdate <= 31) {
+        resultDisplay.innerHTML = `<strong><span class="special-size">${birthdate}</span><strong>`;
+        resultDisplay.style.display = 'block'; // Tampilkan hasil normal
         resetButton.style.display = 'block'; // Tampilkan tombol reset
+
+        // Panggil fungsi baru untuk menampilkan karakter di bawah hasil
+        displayKarakterTraits(birthdate);
+    } else {
+        errorMessage.style.display = 'block'; // Tampilkan pesan error jika hasil tidak valid
     }
+}
+
+// Fungsi untuk menampilkan karakter traits
+function displayKarakterTraits(birthdate) {
+    const deskripsiKarakter = karakterTraits[birthdate];
+    
+    // Hapus deskripsi karakter sebelumnya jika ada
+    const existingTraitsDisplay = document.getElementById('traitsDisplay');
+    if (existingTraitsDisplay) {
+        existingTraitsDisplay.remove();
+    }
+    
+    // Buat elemen div baru untuk karakter traits
+    const traitsDisplay = document.createElement('div'); 
+    traitsDisplay.id = 'traitsDisplay'; // Tambahkan ID untuk menghapus di kemudian hari
+    traitsDisplay.innerHTML = `<i>${deskripsiKarakter}<i>`;
+    resultDisplay.appendChild(traitsDisplay); // Tambahkan tampilan karakter di bawah hasil
+}
 
     // Handle card swipe
     function handleSwipe(card, value, isYes, isInstruction) {
