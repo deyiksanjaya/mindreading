@@ -1,18 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="google-adsense-account" content="ca-pub-6759744213321680"> 
+    <meta name="google-adsense-account" content="ca-pub-6759744213321680">
     <title>Mind Reading Genie</title>
     <link rel="icon" href="https://i.ibb.co/VVzrHSN/logo.png" type="image/png">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lobster&display=swap">
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6759744213321680"
-     crossorigin="anonymous"></script>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6759744213321680" crossorigin="anonymous"></script>
     <style>
-        /* Styles remain unchanged for brevity. */
-
+        /* Styling */
+        /* Body and Layout Styling */
         body {
             display: flex;
             flex-direction: column;
@@ -24,18 +22,19 @@
             padding: 0;
             text-align: center;
         }
-        
-        footer {
-            margin-top: auto;
-            padding: 1em;
+
+        header, footer {
             background-color: #4682B4;
+            padding: 1em;
             color: #fff;
         }
 
         header {
-            padding: 1em;
-            background-color: #4682B4;
             border-bottom: 2px solid #fff;
+        }
+
+        footer {
+            margin-top: auto;
         }
 
         h1, h2, p {
@@ -49,10 +48,11 @@
             font-size: 1.5em;
         }
 
+        /* Main Section Styling */
         section {
             position: relative;
             padding: 2em;
-            max-width: 800px; /* Set a maximum width for better readability on larger screens */
+            max-width: 800px;
             margin: 0 auto;
         }
 
@@ -64,6 +64,7 @@
             border-radius: 8px;
         }
 
+        /* Overlay Styling */
         .input-overlay, .text-overlay {
             position: absolute;
             top: 50%;
@@ -77,8 +78,9 @@
             opacity: 0;
         }
 
+        /* Message Box Styling */
         .con {
-            background-color: rgba(62, 64, 149, 0.7); /* Complementary Blue with transparency */
+            background-color: rgba(62, 64, 149, 0.7);
             padding: 1em;
             border-radius: 8px;
             display: none;
@@ -93,13 +95,8 @@
         }
 
         @keyframes breathe {
-            from {
-                opacity: 0.5;
-            }
-
-            to {
-                opacity: 1;
-            }
+            from { opacity: 0.5; }
+            to { opacity: 1; }
         }
 
         .con-text {
@@ -107,6 +104,39 @@
             color: #fff;
         }
 
+        /* Input and Button Styling */
+        input, button {
+            padding: 0.5em 1em;
+            font-size: 1em;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: opacity 0.5s, visibility 0.5s;
+        }
+
+        input {
+            outline: none;
+            text-align: center;
+            padding: 0.5em;
+        }
+
+        input.masked {
+            text-shadow: none;
+            color: black;
+        }
+
+        button {
+            background-color: #3E4095;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        button:active {
+            transform: scale(0.95);
+        }
+
+        /* Popup Styling */
         .excuse-popup {
             display: none;
             position: fixed;
@@ -127,61 +157,7 @@
             text-align: center;
         }
 
-        .retry-button {
-            background-color: #3E4095;
-            color: #fff;
-            padding: 10px;
-            border: none;
-            cursor: pointer;
-            border-radius: 4px;
-        }
-
-        footer {
-            padding: 1em;
-            background-color: #4682B4;
-        }
-
-        input, button {
-            padding: 0.5em 1em;
-            font-size: 1em;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            transition: opacity 0.5s, visibility 0.5s;
-        }
-
-        input {
-            outline: none;
-            text-shadow: 2px 2px 4px #3E4095;
-text-align: center; /* Center the text in the input */
-    padding: 0.5em; /* Add padding for better aesthetics */
-        }
-
-        input.masked {
-            text-shadow: none;
-            color: black;
-        }
-
-        input:focus {
-            text-shadow: none;
-        }
-
-        button {
-    background-color: #3E4095;
-    color: #fff;
-    border: none;
-    cursor: pointer;
-    margin-top: 10px; /* Add margin to the top to create space */
-    border-radius: 8px;
-}
-
-button:active {
-    transform: scale(0.95);
-}
-        button:active {
-            transform: scale(0.95);
-        }
-
-        /* Responsive styles for smaller screens */
+        /* Responsive Styling */
         @media only screen and (max-width: 600px) {
             section {
                 padding: 1em;
@@ -197,6 +173,7 @@ button:active {
         }
     </style>
 </head>
+
 <body>
     <header>
         <h1>I Know Your Thought</h1>
@@ -214,16 +191,26 @@ button:active {
         </div>
         <h2>Welcome to This Magical Journey</h2>
         <p>Think of anything. When you are ready, say the mantra.</p>
-        <br>
-        <br>
-        <img src="https://i.ibb.co.com/L9RV1md/HEIF-Image.jpg" alt="Genie Image">
+        <img src="https://i.ibb.co.com/yWF0tbQ/IMG-7429.png" alt="Genie Image">
     </section>
 
     <footer>
-        <p>&copy; 2023 IGHS Mind. All rights reserved.</p>
+        <p onclick="handleRedirect()">&copy; <span id="year"></span> IGHS Mind. All rights reserved.</p>
     </footer>
 
-   <script>
+    <script>
+        // Set the current year
+        document.getElementById('year').textContent = new Date().getFullYear();
+
+        // Function to handle footer click/tap to redirect
+        function handleRedirect() {
+            window.location.href = 'notouch.html';
+        }
+
+        // Add touch event for mobile
+        document.querySelector('footer p').addEventListener('touchstart', handleRedirect);
+        
+        // Additional JavaScript functions
         var originalInput;
         var doubleClicked = false;
         var mindReadingStarted = false;
@@ -267,12 +254,12 @@ button:active {
                     setTimeout(function () {
                         var searchURL = "https://www.google.com/search?tbm=isch&q=" + encodeURIComponent(userTypedText);
                         window.location.href = searchURL;
-                    }, 5000); // Wait for 5 seconds before redirecting
+                    }, 5000);
                 } else {
                     if (!doubleClicked) {
                         setTimeout(function () {
                             con.innerHTML = "<p class='con-text'>It seems the cosmic vibes are a bit fuzzy right now.</p>";
-                        }, 2000); // Wait for 2 seconds before changing the message
+                        }, 2000);
                     }
                 }
             }
@@ -293,17 +280,6 @@ button:active {
                 inputElement.placeholder = "Say the mantra...";
             }
         }
-
-        // New script for redirecting to notouch.html
-        function handleRedirect() {
-            window.location.href = 'notouch.html';
-        }
-
-        // Register the event listener for clicks
-        document.querySelector('footer p').addEventListener('click', handleRedirect);
-
-        // Register the event listener for touches
-        document.querySelector('footer p').addEventListener('touchstart', handleRedirect);
     </script>
 </body>
 </html>
