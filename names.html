@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>What's the Meaning of Your Name?</title>
+    <title>What Does Your Name Say About You?</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
     <style>
         /* Color palette */
@@ -139,13 +139,13 @@
 <body>
     <div class="container">
         <div id="input-container">
-            <h2>What's the Meaning of Your Name?</h2>
+            <h2>What Does Your Name Say About You?</h2>
             <div class="separator"></div>
             <br>
             <br>
-            <p>Enter Your Nickname:</p>
-            <input type="text" id="name" placeholder="Nickname">
-            <button id="generate-button" onclick="generateAdjectives()">Show Adjectives</button>
+            <p>Enter Your First Name:</p>
+            <input type="text" id="name" placeholder="Your First Name">
+            <button id="generate-button" onclick="generateAdjectives()">Discover</button>
         </div>
 
         <div id="result-container" class="hidden">
@@ -153,122 +153,120 @@
             <br>
             <br>
             <div class="result visible">
-                <p id="adjective-result"><i></i></p>
                 <p id="name-result"></p>
+                <p>The words that are linked to your name are :</p>
+                <p id="adjective-result"><i></i></p>
                 <button onclick="resetPage()">Try Again</button>
             </div>
         </div>
     </div>
 
     <script>
-        const adjectives = {
-    A: ["Areté", "Amphilogous", "Athanatos"], // "Virtue", "Ambiguous", "Immortal"
-    B: ["Basileios", "Bathys", "Benevolent"], // "Royal", "Deep", "Benevolent"
-    C: ["Charis", "Catharós", "Compassionate"], // "Grace", "Pure", "Compassionate"
-    D: ["Dikaios", "Dynamis", "Dionysian"], // "Just", "Powerful", "Of Dionysus (energetic)"
-    E: ["Eunoia", "Eminent", "Enduring"], // "Goodwill", "Eminent", "Enduring"
-    F: ["Phobos-Free", "Pistos", "Fortunate"], // "Fearless", "Faithful", "Fortunate"
-    G: ["Gnosis", "Genios", "Generous"], // "Knowledge", "Genius", "Generous"
-    H: ["Hagnos", "Hyparchos", "Hilarious"], // "Holy", "Leader", "Cheerful"
-    I: ["Idiosyncratic", "Intelligent", "Inviting"], // "Unique", "Intelligent", "Inviting"
-    J: ["Jocund", "Juvenile", "Jubilant"], // "Merry", "Youthful", "Jubilant"
-    K: ["Kalos", "Kenon", "Kardiakos"], // "Beautiful", "Emptied/Free", "Of the Heart"
-    L: ["Loyal", "Lysios", "Luminous"], // "Faithful", "Liberator", "Radiant"
-    M: ["Megas", "Merciful", "Mystikos"], // "Great", "Merciful", "Mystical"
-    N: ["Nomikos", "Neos", "Nurturing"], // "Lawful", "New", "Nurturing"
-    O: ["Optimistēs", "Oristeas", "Orator"], // "Optimistic", "Mountain Dreamer", "Speaker"
-    P: ["Philanthropos", "Polytimos", "Phronimos"], // "Lover of Humanity", "Precious", "Prudent"
-    Q: ["Quick-Witted", "Quality"], 
-    R: ["Rhetor", "Rare", "Rhododaktulos"], // "Speaker", "Rare", "Rose-fingered (poetic)"
-    S: ["Sophos", "Simple", "Symphoros"], // "Wise", "Simple", "Beneficial"
-    T: ["Thalassios", "Tenacious", "Therapeutikos"], // "Of the Sea", "Tenacious", "Healing"
-    U: ["Unique", "Uranios"], // "One of a Kind", "Heavenly"
-    V: ["Virtuous", "Vigilant"], 
-    W: ["Wise", "Welcome"],
-    X: ["Xenial", "Xenodochial"], // "Hospitable", "Hospitable to Strangers"
-    Y: ["Youthful", "Yearning"],
-    Z: ["Zephyros", "Zelos"], // "West Wind", "Zeal"
+       const adjectives = {
+    A: ["Extra", "Stamina", "Ultra"],
+    B: ["Numb", "Plumb", "Robust"],
+    C: ["Electric", "Specific", "Majestic"],
+    D: ["Broad", "Avid", "Weird"],
+    E: ["Brave", "Gentle", "Sincere"],
+    F: ["Chief", "Brief", "Stiff"],
+    G: ["Strong", "Charming", "Big"],
+    H: ["Lavish", "Harsh", "Brash"],
+    I: ["Giovani", "Mini", "Anti"],
+    J: ["Conj", "Raj", "Banj"],
+    K: ["Quick", "Sleek", "Thick"],
+    L: ["Mystical", "Cool", "Vital"],
+    M: ["Calm", "Warm", "Chasm"],
+    N: ["Mean", "Green", "Open"],
+    O: ["Nervoso", "Pro", "Slow"],
+    P: ["Sharp", "Deep", "Crisp"],
+    Q: ["Opaque", "Antique", "Unique"],
+    R: ["Clear", "Bizarre", "Popular"],
+    S: ["Endless", "Timeless", "Hopeless"],
+    T: ["Swift", "Bright", "Great"],
+    U: ["Virtuous", "Blue", "True"],
+    V: ["Massive", "Creative", "Curv"],
+    W: ["New", "Shadow", "Narrow"],
+    X: ["Complex", "Relax", "Inflex"],
+    Y: ["Mighty", "Happy", "Lazy"],
+    Z: ["Haz", "Fizz", "Blitz"]
 };
 
-        const barnumStatements = [
-    "possesses a uniquely creative side that shines in unexpected ways, often surprising and inspiring those around them",
-    "has a natural talent for making others feel at ease, creating a comfortable and welcoming environment",
-    "is incredibly attentive to loved ones, always noticing the small details that make a big difference",
-    "relies on a strong intuition that often proves to be right, guiding them in making wise decisions",
-    "approaches new experiences with boundless enthusiasm and an open heart, embracing life's changes with positivity",
-    "is known among friends as a great listener, someone who truly hears others and provides thoughtful support",
-    "stays deeply focused on personal goals, displaying a level of commitment that others admire",
-    "remains remarkably calm even in challenging situations, bringing a sense of stability and reassurance to others",
-    "is highly valued for a warm and friendly nature, effortlessly making friends and building lasting connections",
-    "radiates an inspiring energy that uplifts others, often motivating friends and family with an encouraging spirit",
-    "views the world from a unique perspective, finding beauty and meaning where others may not see it",
-    "shows exceptional adaptability, seamlessly adjusting to life's twists and turns without losing focus",
-    "often sparks inspiration in those around, encouraging others to pursue their dreams and passions",
-    "has an innate ability to see the good in every situation, finding hope even in difficult times",
-    "reflects deeply on the meaning of life, contemplating big questions and seeking personal understanding",
-    "feels a profound connection to nature, finding peace and renewal in the natural world",
-    "balances logic with emotion, bringing a thoughtful approach to relationships and decision-making",
-    "is constantly seeking self-improvement, dedicated to personal growth and bettering oneself",
-    "understands the feelings of others well, often providing empathy and comfort without needing words",
-    "has a resilient spirit that rises to meet challenges, inspiring others to persevere in their own struggles",
-    "has a talent for spotting opportunities where others see obstacles, finding creative solutions to problems",
-    "is driven by a strong curiosity and eagerness to learn, embracing new knowledge and ideas enthusiastically",
-    "displays admirable steadfastness in beliefs and values, gaining the respect and trust of others",
-    "has a natural empathy and understanding, making them a trusted confidant and a compassionate friend",
-    "is always striving to create harmony, promoting peace and understanding in every interaction",
-    "has an adventurous spirit, embracing new experiences with open arms and a sense of wonder",
-    "draws people in with a captivating personality, naturally attracting positive attention and admiration",
-    "expresses feelings with clarity and openness, building strong and honest connections with others",
-    "brings a calming presence to those in distress, soothing worries with genuine care and warmth",
-    "has a vibrant, positive energy that lights up any room and inspires those nearby",
-    "is keenly observant, noticing meaningful details that others might overlook and appreciating life's small joys",
-    "is known for a genuine generosity, always willing to help without expecting anything in return",
-    "holds a deep love for learning and personal growth, constantly evolving and expanding horizons",
-    "thinks creatively and outside the box, offering fresh ideas and a novel approach to problem-solving",
-    "loves to share joy and happiness, spreading smiles and positive vibes wherever they go",
-    "naturally brings happiness to those around them, leaving a lasting impression of kindness and joy",
-    "is admired for a determined approach to life, facing challenges with courage and resilience",
-    "acts as a bridge in friendships, fostering connection and unity among diverse groups of people",
-    "is appreciated for unwavering loyalty and honesty, making them a trustworthy and reliable friend",
-    "possesses a clear and purposeful vision for the future, often inspiring others to pursue their own dreams",
-    "brings a sense of peace to difficult situations, helping others find clarity and calm amidst challenges",
-    "is known for wisdom and insight, offering valuable advice that others seek in times of uncertainty",
-    "has a giving nature that knows no bounds, often putting others' needs above their own",
-    "is a steady support for friends, providing strength and comfort through life's highs and lows",
-    "forgives others with a generous heart, finding strength in letting go of past hurts",
-    "is incredibly reliable in emergencies, always the first to offer help when it's needed most",
-    "is self-motivated and naturally inspires others, often acting as a source of encouragement and drive",
-    "is admired for dedication to the people and causes that matter, showing a commitment that rarely falters"
+
+const barnumStatements = [
+    "possess a uniquely creative side that shines in unexpected ways, often surprising and inspiring those around them",
+    "have a natural talent for making others feel at ease, creating a comfortable and welcoming environment",
+    "are incredibly attentive to loved ones, always noticing the small details that make a big difference",
+    "rely on a strong intuition that often proves to be right, guiding them in making wise decisions",
+    "approach new experiences with boundless enthusiasm and an open heart, embracing life's changes with positivity",
+    "are known among friends as great listeners, someone who truly hears others and provides thoughtful support",
+    "stay deeply focused on personal goals, displaying a level of commitment that others admire",
+    "remain remarkably calm even in challenging situations, bringing a sense of stability and reassurance to others",
+    "are highly valued for a warm and friendly nature, effortlessly making friends and building lasting connections",
+    "radiate an inspiring energy that uplifts others, often motivating friends and family with an encouraging spirit",
+    "view the world from a unique perspective, finding beauty and meaning where others may not see it",
+    "show exceptional adaptability, seamlessly adjusting to life's twists and turns without losing focus",
+    "often spark inspiration in those around, encouraging others to pursue their dreams and passions",
+    "have an innate ability to see the good in every situation, finding hope even in difficult times",
+    "reflect deeply on the meaning of life, contemplating big questions and seeking personal understanding",
+    "feel a profound connection to nature, finding peace and renewal in the natural world",
+    "balance logic with emotion, bringing a thoughtful approach to relationships and decision-making",
+    "are constantly seeking self-improvement, dedicated to personal growth and bettering oneself",
+    "understand the feelings of others well, often providing empathy and comfort without needing words",
+    "have a resilient spirit that rises to meet challenges, inspiring others to persevere in their own struggles",
+    "have a talent for spotting opportunities where others see obstacles, finding creative solutions to problems",
+    "are driven by a strong curiosity and eagerness to learn, embracing new knowledge and ideas enthusiastically",
+    "display admirable steadfastness in beliefs and values, gaining the respect and trust of others",
+    "have a natural empathy and understanding, making them trusted confidants and compassionate friends",
+    "are always striving to create harmony, promoting peace and understanding in every interaction",
+    "have an adventurous spirit, embracing new experiences with open arms and a sense of wonder",
+    "draw people in with a captivating personality, naturally attracting positive attention and admiration",
+    "express feelings with clarity and openness, building strong and honest connections with others",
+    "bring a calming presence to those in distress, soothing worries with genuine care and warmth",
+    "have a vibrant, positive energy that lights up any room and inspires those nearby",
+    "are keenly observant, noticing meaningful details that others might overlook and appreciating life's small joys",
+    "are known for genuine generosity, always willing to help without expecting anything in return",
+    "hold a deep love for learning and personal growth, constantly evolving and expanding horizons",
+    "think creatively and outside the box, offering fresh ideas and a novel approach to problem-solving",
+    "love to share joy and happiness, spreading smiles and positive vibes wherever they go",
+    "naturally bring happiness to those around them, leaving a lasting impression of kindness and joy",
+    "are admired for a determined approach to life, facing challenges with courage and resilience",
+    "act as bridges in friendships, fostering connection and unity among diverse groups of people",
+    "are appreciated for unwavering loyalty and honesty, making them trustworthy and reliable friends",
+    "possess a clear and purposeful vision for the future, often inspiring others to pursue their own dreams",
+    "bring a sense of peace to difficult situations, helping others find clarity and calm amidst challenges",
+    "are known for wisdom and insight, offering valuable advice that others seek in times of uncertainty",
+    "have a giving nature that knows no bounds, often putting others' needs above their own",
+    "are steady support for friends, providing strength and comfort through life's highs and lows",
+    "forgive others with generous hearts, finding strength in letting go of past hurts",
+    "are incredibly reliable in emergencies, always the first to offer help when it's needed most",
+    "are self-motivated and naturally inspire others, often acting as a source of encouragement and drive",
+    "are admired for dedication to the people and causes that matter, showing a commitment that rarely falters"
 ];
 
-        function generateAdjectives() {
+
+function generateAdjectives() {
     const name = document.getElementById("name").value.trim();
     console.log("Input Name: ", name);
     if (!name) {
-        alert("Please enter a nickname!");
+        alert("Please enter a name!");
         console.error("Empty input");
         return;
     }
 
-    let modifiedName = "";
-
-    for (let char of name.toUpperCase()) {
-        if (char >= 'B' && char <= 'Z') {
-            modifiedName += String.fromCharCode(char.charCodeAt(0) - 1);
-        } else if (char === 'A') {
-            modifiedName += 'Z';
-        } else {
-            modifiedName += char;
-        }
-    }
-    console.log("Modified Name: ", modifiedName);
-
+    const modifiedName = name.toUpperCase();  // Use the name as-is
     let adjectiveResult = "";
     let nameResult = "";
+    const usedAdjectives = new Set();  // Create a Set to track used adjectives
 
     for (let char of modifiedName) {
         if (adjectives[char]) {
-            const randomAdj = adjectives[char][Math.floor(Math.random() * adjectives[char].length)];
+            let randomAdj;
+            // Keep picking a new adjective until one is found that hasn't been used yet
+            do {
+                randomAdj = adjectives[char][Math.floor(Math.random() * adjectives[char].length)];
+            } while (usedAdjectives.has(randomAdj));  // Check if the adjective is already used
+            
+            usedAdjectives.add(randomAdj);  // Mark this adjective as used
             adjectiveResult += randomAdj + ", ";
             nameResult += `<span style="color: var(--button-color); font-weight: bold">${char}</span> `;
         }
@@ -277,13 +275,14 @@
     adjectiveResult = adjectiveResult.slice(0, -2);  // Remove the trailing comma and space
     const randomBarnum = barnumStatements[Math.floor(Math.random() * barnumStatements.length)];
 
-    // Update the result format to match your specifications
+    
+    document.getElementById("name-result").innerHTML = `<strong>You ${randomBarnum}.</strong>`;
     document.getElementById("adjective-result").innerHTML = `${adjectiveResult}`;
-    document.getElementById("name-result").innerHTML = `The people named ${name} ${randomBarnum}`;
 
     document.getElementById("input-container").classList.add("hidden");
     document.getElementById("result-container").classList.remove("hidden");
 }
+
         function resetPage() {
             document.getElementById("name").value = "";
             document.getElementById("input-container").classList.remove("hidden");
