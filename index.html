@@ -1,245 +1,1009 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-<meta name="mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-  <title>Clean Sketch by Heri Sanjaya</title>
-  <link rel="manifest" href="manifest.json">
+  <meta charset="UTF-8" />
+  <title>iOS 18 Stopwatch with Psychic Mode</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <style>
-  
-    body, html {
-      -webkit-user-select: none; /* Chrome, Safari, iOS Safari */
-  -moz-user-select: none; /* Firefox */
-  -ms-user-select: none; /* Internet Explorer/Edge */
-  user-select: none;
+    html, body {
       margin: 0;
       padding: 0;
+      background: black;
+      color: white;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      height: 100vh;
       overflow: hidden;
+      display: flex;
+      flex-direction: column;
     }
-    canvas {
+
+    .time-display {
+      font-size: 90px;
+      font-weight: 100;
+      text-align: center;
+      margin-top: 92px; /* Adjusted for iPhone 13 */
+      letter-spacing: 2px;
+      font-variant-numeric: tabular-nums;
+      font-feature-settings: "tnum";
+      text-rendering: optimizeLegibility;
+      transition: all 0.1s ease-in-out;
+    }
+
+    .controls {
+      position: relative;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin: 66px 0 0 0; /* Adjusted for realistic spacing */
+      padding: 0 26px 20px;
+    }
+
+    .controls::after {
+      content: "";
       display: block;
+      height: 1px;
+      background-color: #222;
+      width: 90%;
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    .btn {
+      width: 74px;
+      height: 74px;
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 17px;
+      font-weight: 400;
+      border: none;
+      outline: none;
+      cursor: pointer;
+      background-color: #333;
+      color: #aaa;
+      user-select: none;
+      transition: background-color 0.1s ease;
+    }
+
+    .lap-btn {
+      background-color: #333;
+      color: #aaa;
+    }
+
+    .lap-btn:disabled {
+      opacity: 0.6;
+      cursor: default;
+    }
+
+    .start-btn {
+      background-color: #013a1c;
+      color: #00ff4c;
+      transition: transform 0.1s ease, background-color 0.3s ease;
+    }
+
+    .stop-btn {
+      background-color: #3c0000;
+      color: #ff3b30;
+      transition: transform 0.1s ease, background-color 0.3s ease;
+    }
+
+    .btn:active {
+      transform: scale(0.96);
+    }
+
+    .dot-indicators {
+      text-align: center;
+    }
+
+    .dot {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      margin: 0 4px;
+      border-radius: 50%;
+      background-color: gray;
+    }
+
+    .dot.active {
+      background-color: white;
+    }
+
+    .laps {
+      margin: 4px auto;
+      max-height: 200px;
+      overflow-y: auto;
+      width: 90%;
+      font-size: 16px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .laps ul {
+      padding: 0;
+      list-style: none;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .laps li {
+      display: flex;
+      justify-content: space-between;
+      padding: 4px 0;
+      border-bottom: 1px solid #333;
+      font-variant-numeric: tabular-nums;
+      font-feature-settings: "tnum";
+      line-height: 1.4;
+      height: 28px;
+      transition: color 0.3s ease;
+    }
+
+    .laps li.fastest {
+      color: #00ff4c;
+    }
+
+    .laps li.slowest {
+      color: #ff453a;
+    }
+
+    .lap-time {
+      min-width: 70px;
+      text-align: right;
+    }
+
+    .tabs {
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+      height: 84px;
+      background: black;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+    }
+
+    .tab {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      font-size: 11px;
+      color: #bbb;
+      cursor: pointer;
+    }
+
+    .tab img {
+      width: 26px;
+      height: 26px;
+      margin-bottom: 4px;
+      filter: brightness(1.2);
+      opacity: 0.5;
+      transition: filter 0.2s, opacity 0.2s;
+    }
+
+    .tab.active {
+      color: #ff9500;
+    }
+
+    .tab.active img {
+      opacity: 1;
+      filter: invert(57%) sepia(96%) saturate(1636%) hue-rotate(359deg) brightness(104%) contrast(106%);
+    }
+    
+    /* Psychic Mode Overlay */
+    .psychic-overlay {
       position: fixed;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
-      z-index: -1; /* Send canvas to the background */
-    }
-    .container {
-      position: fixed;
-      bottom: 10%; /* Adjusted position */
-      width: 100%;
+      background: rgba(0, 0, 0, 0.9);
       display: flex;
       justify-content: center;
-      background-color: transparent;
-      flex-direction: column; /* Align items vertically */
-      align-items: center; /* Center items horizontally */
+      align-items: center;
+      z-index: 1000;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s, visibility 0.3s;
     }
-    .clear-button {
-      width: 50px;
-      height: 50px;
-      background-image: url('https://i.ibb.co.com/PCPTP4n/delete-button-svgrepo-com.png');
-      background-size: cover;
-      cursor: pointer;
-      margin-bottom: 10px; /* Added margin to lower the clear button */
+    
+    .psychic-overlay.active {
+      opacity: 1;
+      visibility: visible;
     }
-    .secret-button {
-      user-select: auto;
-      width: 50px;
-      height: 50px;
-      background-color: rgb(255, 255, 255); /* Make the button visible */
-      cursor: pointer;
-      margin-bottom: -60px; /* Added margin to lower the prank button */
-    }
-    .allow-select {
-  user-select: auto; /* Allow text selection for specific elements */
+    
+.psychic-container {
+  background: #1c1c1e;
+  border-radius: 12px; /* Slightly smaller border-radius */
+  padding: 18px; /* Further reduced padding */
+  width: 220px; /* Even smaller width for the container */
+  text-align: center;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4); /* Softer shadow */
+  position: absolute;
+  left: 2%; /* Maintained middle-left position */
+  top: 50%;
+  transform: translateY(-50%);
 }
+
+.psychic-title {
+  font-size: 18px; /* Smaller title font size */
+  margin-bottom: 12px; /* Reduced margin */
+  color: #ff9500;
+}
+
+.psychic-input {
+  font-size: 32px; /* Adjusted font size for numbers */
+  letter-spacing: 6px; /* Slightly tighter letter spacing to fit */
+  padding: 8px 12px; /* Adjusted padding */
+  background: #2c2c2e;
+  border-radius: 9px; /* Smaller border-radius for input */
+  margin-bottom: 18px; /* Adjusted margin */
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum";
+  color: white;
+  width: 140px; /* Increased width to fit numbers better */
+  text-align: center;
+  border: 2px solid #3a3a3c;
+  margin-left: auto;   /* <--- NEW: Centers the element horizontally */
+  margin-right: auto;  /* <--- NEW: Centers the element horizontally */
+  /* OR a shorthand: margin: 0 auto 18px auto; */
+  /* (I'll keep margin-bottom separate for clarity, but you could combine) */
+}
+
+
+    .psychic-input.active {
+      border-color: #ff9500;
+    }
+    
+    .psychic-instruction {
+      font-size: 14px;
+      color: #aaa;
+      margin-bottom: 30px;
+    }
+    
+    .psychic-mode-indicator {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: rgba(255, 149, 0, 0.2);
+      color: #ff9500;
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 14px;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    
+    .psychic-mode-indicator.active {
+      opacity: 1;
+    }
+    
+    .number-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-top: 10px;
+    }
+    
+    .number-btn {
+      background: #333;
+      color: white;
+      border: none;
+      border-radius: 12px;
+      height: 60px;
+      font-size: 24px;
+      cursor: pointer;
+      transition: background 0.1s;
+    }
+    
+    .number-btn:active {
+      background: #444;
+    }
+    
+    .close-btn {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: none;
+      border: none;
+      color: #aaa;
+      font-size: 24px;
+      cursor: pointer;
+    }
+    
+    .close-btn:hover {
+      color: white;
+    }
   </style>
 </head>
 <body>
-  <canvas id="canvas"></canvas>
-  <div class="container">
-    <div class="clear-button" ontouchstart="restoreCanvas()" ontouchend="clearCanvas()" onmousedown="restoreCanvas()" onmouseup="clearCanvas()"></div>
-    <div class="secret-button" ontouchstart="handlePrankMode()" onmousedown="handlePrankMode()"></div>
+  <div class="time-display" id="stopwatch">00:00.00</div>
+
+  <div class="controls">
+    <button class="btn lap-btn" id="lapBtn" disabled aria-label="Lap or Reset">Lap</button>
+    <div class="dot-indicators">
+      <span class="dot active"></span><span class="dot"></span>
+    </div>
+    <button class="btn start-btn" id="startBtn" aria-label="Start or Stop">Start</button>
   </div>
+
+  <div class="laps" id="laps">
+    <ul id="lapList"></ul>
+  </div>
+
+  <div class="tabs">
+    <div class="tab" id="worldClockTab">
+      <img src="https://img.icons8.com/ios-filled/50/ffffff/worldwide-location.png" />
+      <div>World Clock</div>
+    </div>
+    <div class="tab" id="alarmsTab">
+      <img src="https://img.icons8.com/ios-filled/50/ffffff/alarm.png" />
+      <div>Alarms</div>
+    </div>
+    <div class="tab active">
+      <img src="https://img.icons8.com/ios-filled/50/ffffff/stopwatch.png" />
+      <div>Stopwatch</div>
+    </div>
+    <div class="tab" id="timerTab">
+      <img src="https://img.icons8.com/ios-filled/50/ffffff/timer.png" />
+      <div>Timers</div>
+    </div>
+  </div>
+  
+  <!-- Psychic Mode Overlay -->
+  <div class="psychic-overlay" id="psychicOverlay">
+    <div class="psychic-container">
+      <div class="psychic-title">Psychic Mode</div>
+      <div class="psychic-input" id="psychicInput">00</div>
+      <div class="psychic-instruction">Enter two-digit millisecond target</div>
+      <div class="number-grid">
+  <button class="number-btn" data-number="1">1</button>
+  <button class="number-btn" data-number="2">2</button>
+  <button class="number-btn" data-number="3">3</button>
+  <button class="number-btn" data-number="4">4</button>
+  <button class="number-btn" data-number="5">5</button>
+  <button class="number-btn" data-number="6">6</button>
+  <button class="number-btn" data-number="7">7</button>
+  <button class="number-btn" data-number="8">8</button>
+  <button class="number-btn" data-number="9">9</button>
+  <button class="number-btn" id="clearBtn">⌫</button>  <button class="number-btn" data-number="0">0</button>  </div>
+      </div>
+    </div>
+  </div>
+
   <script>
-    const canvas = document.getElementById('canvas');
-    const ctx = canvas.getContext('2d');
+let startTime = 0;
+let elapsed = 0;
+let running = false;
+let laps = [];
+let animationFrame;
+let lastDisplay = "";
+let startButtonDisabled = false;
+let psychicTarget = null;
+let psychicTimeout = null;
+let mindReadingMode = false; // Mind Reading Mode flag
+let fixedStopMillis = null; // Stores the chosen "sum to 9" value for the main display when stopped
 
-    // Function to set canvas size based on screen size
-    function setCanvasSize() {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-    }
+// Variables to prevent consecutive sum-of-9 repeats
+let lastActiveLapMillis = null; // Stores the last sum-of-9 shown on the active lap
+let lastMainStopwatchMillis = null; // Stores the last sum-of-9 chosen for the main display when stopped
 
-    // Set canvas size on page load and when the window is resized
-    setCanvasSize();
-    window.addEventListener('resize', setCanvasSize);
+let rememberedElapsed = 0;
+let rememberedLaps = [];
+let rememberedRunning = false;
+let rememberedMindReadingMode = false; // To remember the state of MRM
 
-    let isDrawing = false;
-    let lastX = 0;
-    let lastY = 0;
 
-    // Variable to store the cleared drawing
-    let clearedImageData;
+// Array of "sum to 9" milliseconds for mind reading mode
+const sumOfNineMillis = ["09", "18", "27", "36", "45", "54", "63", "72", "81", "90"];
 
-    // Variable to store the original drawing before prank mode
-    let originalClearedImageData;
+const stopwatchEl = document.getElementById("stopwatch");
+const startBtn = document.getElementById("startBtn");
+const lapBtn = document.getElementById("lapBtn");
+const lapList = document.getElementById("lapList");
+const dotIndicators = document.querySelector(".dot-indicators");
 
-    // Variable to track prank mode
-    let prankMode = false;
+// Get references to all tab elements by their IDs
+const stopwatchTab = document.getElementById("stopwatchTab"); // Assuming your stopwatch tab has this ID
+const worldClockTab = document.getElementById("worldClockTab");
+const alarmsTab = document.getElementById("alarmsTab");
+const timerTab = document.getElementById("timerTab"); // <-- Reference to the Timer tab
 
-    // Variable to track last touch time
-    let lastTouchTime = 0;
 
-    // Variable to track drawing activity during prank mode
-    let drawingActivity = false;
+const psychicOverlay = document.getElementById("psychicOverlay");
+const psychicInput = document.getElementById("psychicInput");
+const clearBtn = document.getElementById("clearBtn");
+const psychicIndicator = document.getElementById("psychicIndicator");
+const mindReadingIndicator = document.getElementById("mindReadingIndicator");
+const numberBtns = document.querySelectorAll(".number-btn");
 
-    // Variable to store the timer ID
-    let timerId;
 
-    function draw(e) {
-      if (!isDrawing) return;
-      const x = e.clientX || e.touches[0].clientX;
-      const y = e.clientY || e.touches[0].clientY;
-      ctx.strokeStyle = '#000'; // Set stroke color
-      ctx.lineWidth = 5; // Set line width
-      ctx.lineJoin = 'round';
-      ctx.lineCap = 'round';
-      ctx.beginPath();
-      ctx.moveTo(lastX, lastY);
-      ctx.lineTo(x, y);
-      ctx.stroke();
-      lastX = x;
-      lastY = y;
-      // Update last touch time
-      lastTouchTime = Date.now();
-      drawingActivity = true;
-      // Reset the timer whenever the user starts drawing
-      resetTimer();
-    }
+// --- Psychic Mode Logic ---
 
-    canvas.addEventListener('mousedown', (e) => {
-      isDrawing = true;
-      lastX = e.clientX;
-      lastY = e.clientY;
-      // Reset clearedImageData when the user starts drawing again
-      clearedImageData = null;
-      // Update last touch time
-      lastTouchTime = Date.now();
-      drawingActivity = true;
-      // Start the timer
-      startTimer();
-    });
+worldClockTab.addEventListener("click", () => {
+  // Only activate psychic overlay if stopwatch is not running
+  if (!running) {
+    psychicOverlay.classList.add("active");
+    psychicInput.textContent = "--";
+    psychicInput.classList.add("active");
+  } else {
+    // Optionally provide feedback if trying to open psychic mode while running
+    console.log("Cannot enter Psychic Mode while stopwatch is running.");
+  }
+});
 
-    canvas.addEventListener('touchstart', (e) => {
-      isDrawing = true;
-      lastX = e.touches[0].clientX;
-      lastY = e.touches[0].clientY;
-      // Reset clearedImageData when the user starts drawing again
-      clearedImageData = null;
-      // Update last touch time
-      lastTouchTime = Date.now();
-      drawingActivity = true;
-      // Start the timer
-      startTimer();
-    });
+numberBtns.forEach(btn => {
+  if (btn.dataset.number) {
+    btn.addEventListener("click", () => {
+      const digit = btn.dataset.number;
+      let currentValue = psychicInput.textContent.replace(/[^0-9]/g, "");
 
-    canvas.addEventListener('mousemove', draw);
-    canvas.addEventListener('touchmove', draw);
-
-    canvas.addEventListener('mouseup', () => {
-      isDrawing = false;
-      // Update last touch time
-      lastTouchTime = Date.now();
-      drawingActivity = false;
-    });
-    canvas.addEventListener('touchend', () => {
-      isDrawing = false;
-      // Update last touch time
-      lastTouchTime = Date.now();
-      drawingActivity = false;
-    });
-
-    function clearCanvas() {
-      // Store the current drawing before clearing
-      clearedImageData = 
-      ctx.getImageData(0, 0, canvas.width, canvas.height);
-      console.log("Drawing stored");
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-    }
-
-    function restoreCanvas() {
-      // Restore the cleared drawing if it exists
-      if (clearedImageData) {
-        ctx.putImageData(clearedImageData, 0, 0);
-      }
-    }
-
-    function handlePrankMode() {
-      if (!prankMode) {
-        console.log("Prank mode activated");
-        prankMode = true;
-        // Store the original drawing before entering prank mode
-        originalClearedImageData = clearedImageData;
-        // Place a small grey dot on the top left corner to indicate prank mode
-        ctx.fillStyle = '#888';
-        ctx.beginPath();
-        ctx.arc(10, 10, 5, 0, 2 * Math.PI);
-        ctx.fill();
+      if (currentValue === "" || psychicInput.textContent === "--") {
+          currentValue = digit;
+      } else if (currentValue.length < 2) {
+          currentValue = currentValue + digit;
       } else {
-        console.log("Prank mode deactivated");
-        prankMode = false;
-        // Clear the grey dot indicating prank mode
-        ctx.clearRect(0, 0, 20, 20);
-        // Reset drawing activity flag
-        drawingActivity = false;
+          currentValue = (currentValue.slice(1) + digit); // Replace first digit with new one
       }
-    }
 
-    function startTimer() {
-      // Start the timer only if prank mode is active
-      if (prankMode) {
-        // Clear any existing timer
-        clearTimeout(timerId);
-        // Start a new timer
-        timerId = setTimeout(() => {
-          if (!drawingActivity) {
-            // Display the previously stored drawing
-            if (originalClearedImageData) {
-              ctx.putImageData(originalClearedImageData, 0, 0);
-              console.log("Image changed");
-            }
+      psychicInput.textContent = currentValue;
+
+      if (currentValue.length === 2) {
+        setTimeout(() => {
+          psychicOverlay.classList.remove("active");
+          psychicTarget = parseInt(currentValue);
+          if (psychicTarget !== null && !isNaN(psychicTarget)) {
+              // Ensure psychicIndicator exists before trying to access classList
+              if (psychicIndicator) {
+                psychicIndicator.classList.add("active");
+              }
           } else {
-            console.log("Timer reset");
-            // Restart the timer if there's drawing activity
-            startTimer();
+              if (psychicIndicator) {
+                psychicIndicator.classList.remove("active");
+              }
           }
-        }, 6000);
+        }, 300);
+      }
+    });
+  }
+});
+
+clearBtn.addEventListener("click", () => {
+  psychicInput.textContent = "--";
+});
+
+
+// --- Mind Reading Mode Toggle (Alarms Tab) ---
+
+alarmsTab.addEventListener("click", () => {
+  const wasMindReadingMode = mindReadingMode; // Store previous state
+  mindReadingMode = !mindReadingMode; // Toggle the mode
+
+  if (mindReadingMode) { // If Mind Reading Mode was JUST ACTIVATED
+    if (mindReadingIndicator) {
+      mindReadingIndicator.classList.add("active");
+    }
+    console.log("Mind Reading Mode: Activated");
+
+    if (!running) { // If stopwatch is STOPPED when MRM is activated
+      elapsed = 0; // Reset total elapsed time
+      fixedStopMillis = null; // No fixed milliseconds on reset
+      lastMainStopwatchMillis = null; // Reset for main display
+      lastActiveLapMillis = null; // Reset for active lap
+      stopwatchEl.textContent = "00:00.00"; // Display zeros
+      lastDisplay = stopwatchEl.textContent; // Update lastDisplay for consistency
+      laps = []; // Clear all lap data
+      lapList.innerHTML = ""; // Clear lap display
+      lapBtn.disabled = true; // Disable lap button until started
+      lapBtn.textContent = "Lap"; // Reset lap button text
+    }
+    // If running, the active lap will naturally switch to sum-of-9 via updateDisplay/updateActiveLap
+    // The main display stays real time while running.
+
+  } else { // If Mind Reading Mode was JUST DEACTIVATED
+    if (mindReadingIndicator) {
+      mindReadingIndicator.classList.remove("active");
+    }
+    console.log("Mind Reading Mode: Deactivated");
+
+    if (!running) { // If stopwatch is STOPPED when MRM is deactivated
+      fixedStopMillis = null; // Ensure fixed milliseconds are cleared
+      lastMainStopwatchMillis = null; // Clear this too
+      // Re-display main stopwatch time to show real milliseconds
+      stopwatchEl.textContent = formatMainDisplayTime(elapsed);
+      lastDisplay = stopwatchEl.textContent;
+    }
+    lastActiveLapMillis = null; // Clear when MRM is off
+    // If running, the active lap will naturally switch back to real milliseconds.
+  }
+
+  // Always rebuild lap list and update colors to reflect mode changes
+  rebuildLapListDisplay();
+  updateLapColors();
+});
+
+
+// --- Time Formatting Functions ---
+
+// Helper function to get a random "sum to 9" millisecond string that is not the same as the previous one
+function getUniqueSumOfNineMillis(previousMillis = null) {
+    let newMillis;
+    let attempts = 0;
+    const maxAttempts = 100; // Prevent infinite loop in case of single option or bug
+    do {
+        const randomIndex = Math.floor(Math.random() * sumOfNineMillis.length);
+        newMillis = sumOfNineMillis[randomIndex];
+        attempts++;
+        if (attempts > maxAttempts) { // Fallback to just returning it if stuck
+            console.warn("Could not find a unique sum-of-9 millisecond after many attempts.");
+            break;
+        }
+    } while (newMillis === previousMillis);
+    return newMillis;
+}
+
+// This function formats time for the main stopwatch display.
+// It will apply "sum to 9" milliseconds ONLY IF mindReadingMode is active AND
+// the stopwatch is currently stopped (indicated by fixedStopMillis not being null).
+function formatMainDisplayTime(ms) {
+  const totalSeconds = Math.floor(ms / 1000);
+  const minutes = Math.floor(totalSeconds / 60).toString().padStart(2, "0");
+  const seconds = (totalSeconds % 60).toString().padStart(2, "0");
+  let milliseconds;
+
+  // Only apply fixedStopMillis if mindReadingMode is active AND stopwatch is stopped AND fixedStopMillis is set
+  if (mindReadingMode && !running && fixedStopMillis !== null) {
+    milliseconds = fixedStopMillis;
+  } else {
+    // Otherwise, use real milliseconds.
+    milliseconds = Math.floor((ms % 1000) / 10).toString().padStart(2, "0");
+  }
+
+  return `${minutes}:${seconds}.${milliseconds}`;
+}
+
+// Formats time specifically for the actively running Lap 1 or for newly recorded laps.
+// Completed laps store their fixed formatted string.
+function formatLapDisplayTime(ms, isLiveActiveLap = false) {
+  const totalSeconds = Math.floor(ms / 1000);
+  const minutes = Math.floor(totalSeconds / 60).toString().padStart(2, "0");
+  const seconds = (totalSeconds % 60).toString().padStart(2, "0");
+  let milliseconds;
+
+  if (mindReadingMode && isLiveActiveLap) {
+    // Get a unique sum-of-9 millisecond for the active lap
+    milliseconds = getUniqueSumOfNineMillis(lastActiveLapMillis);
+    lastActiveLapMillis = milliseconds; // Store for the next frame
+  } else {
+    // Otherwise, use real milliseconds for the active lap display
+    milliseconds = Math.floor((ms % 1000) / 10).toString().padStart(2, "0");
+  }
+
+  return `${minutes}:${seconds}.${milliseconds}`;
+}
+
+
+// --- Stopwatch Core Functions ---
+
+function updateDisplay() {
+  const now = performance.now();
+  const diff = elapsed + (now - startTime);
+  // Main stopwatch display always uses real time when running.
+  // fixedStopMillis is null here because it's cleared on start.
+  const formatted = formatMainDisplayTime(diff);
+
+  if (formatted !== lastDisplay) {
+    stopwatchEl.textContent = formatted;
+    lastDisplay = formatted;
+  }
+
+  updateActiveLap(now);
+  updateLapColors(); // Call after lap times are updated (important for consistency)
+
+  if (running) {
+    animationFrame = requestAnimationFrame(updateDisplay);
+  }
+}
+
+function updateActiveLap(now) {
+  if (laps.length === 0) return;
+
+  const totalTime = elapsed + (now - startTime);
+  const lapTimeDuration = totalTime - (laps[1] ? laps[1].total : 0);
+
+  laps[0].raw = lapTimeDuration; // Store raw duration for calculations
+
+  // Lap 1 (the active lap) displays based on mindReadingMode and refreshes rapidly
+  // Pass true for isLiveActiveLap to trigger mind-reading logic for active lap
+  laps[0].time = formatLapDisplayTime(lapTimeDuration, true);
+
+  const lap1El = lapList.firstElementChild?.querySelector(".lap-time");
+  if (lap1El) {
+    lap1El.textContent = laps[0].time;
+  }
+}
+
+function updateLapColors() {
+    const lapItems = Array.from(lapList.children);
+    // Exclude the currently running lap (laps[0]) from comparison
+    const completedLapsData = laps.slice(1);
+
+    // Clear existing colors from all lap items
+    lapItems.forEach(li => li.classList.remove("fastest", "slowest"));
+
+    if (completedLapsData.length < 2) {
+        return; // Need at least two completed laps for comparison
+    }
+
+    const completedLapTimes = completedLapsData.map(l => l.raw); // Use raw times for comparison
+    const fastest = Math.min(...completedLapTimes);
+    const slowest = Math.max(...completedLapTimes);
+
+    if (fastest === slowest) {
+        return; // All are the same duration, no coloring
+    }
+
+    // Apply colors to completed laps in the DOM
+    completedLapsData.forEach((lapData, i) => {
+        // laps array is newest first (laps[0] is current, laps[1] is last completed)
+        // DOM is also newest first due to rebuildLapListDisplay's appendChild.
+        // So completedLapsData[i] corresponds to lapItems[i + 1] (since lapItems[0] is current lap)
+        const liElement = lapItems[i + 1];
+        if (!liElement) return;
+
+        if (lapData.raw === fastest) {
+            liElement.classList.add("fastest");
+        } else if (lapData.raw === slowest) {
+            liElement.classList.add("slowest");
+        }
+    });
+}
+
+
+startBtn.onclick = () => {
+  if (startButtonDisabled) return;
+  startButtonDisabled = true;
+  setTimeout(() => (startButtonDisabled = false), 300);
+
+  if (!running) { // START the stopwatch
+    running = true;
+    startTime = performance.now();
+    fixedStopMillis = null; // Clear fixedStopMillis when starting
+    lastMainStopwatchMillis = null; // Clear last chosen value for main display
+    lastActiveLapMillis = null; // Clear last chosen value for active lap when starting new run
+    animationFrame = requestAnimationFrame(updateDisplay);
+    startBtn.textContent = "Stop";
+    startBtn.classList.remove("start-btn");
+    startBtn.classList.add("stop-btn");
+    lapBtn.textContent = "Lap";
+    lapBtn.disabled = false;
+
+    // Start psychic mode if target is set
+    if (psychicTarget !== null && !isNaN(psychicTarget)) {
+      psychicTimeout = setTimeout(() => {
+        if (running) { // Ensure stopwatch is still running when timeout fires
+          running = false;
+          const now = performance.now();
+          elapsed += now - startTime;
+          cancelAnimationFrame(animationFrame);
+
+          // Force milliseconds to psychic target for the main display
+          const totalMs = elapsed;
+          const secondsPart = Math.floor(totalMs / 1000) * 1000;
+          const adjustedMs = secondsPart + (psychicTarget * 10);
+
+          elapsed = adjustedMs;
+          // Psychic stop always forces main display to real time for its final value.
+          fixedStopMillis = null; // Ensure no mind-read effect here
+          lastMainStopwatchMillis = null; // Clear this as it's real time now
+          stopwatchEl.textContent = formatMainDisplayTime(elapsed);
+          lastDisplay = stopwatchEl.textContent;
+
+          startBtn.textContent = "Start";
+          startBtn.classList.remove("stop-btn");
+          startBtn.classList.add("start-btn");
+          lapBtn.textContent = "Reset";
+
+          // When stopped by psychic mode, the active lap should also reflect the final real time.
+          if (laps.length > 0) {
+            laps[0].raw = elapsed - (laps[1] ? laps[1].total : 0); // Update Lap 1's raw duration based on actual stop time
+            laps[0].time = formatMainDisplayTime(laps[0].raw); // Active lap is real here
+            const lap1El = lapList.firstElementChild?.querySelector(".lap-time");
+            if (lap1El) {
+              lap1El.textContent = laps[0].time;
+            }
+          }
+
+          psychicTarget = null;
+          if (psychicIndicator) {
+            psychicIndicator.classList.remove("active");
+          }
+        }
+      }, 6000); // About 6 seconds (6000ms)
+    }
+
+    // Initialize Lap 1 when the stopwatch starts if no laps exist
+    if (laps.length === 0) {
+      // Lap 1 display starts as live, potentially mind-read if mode is on.
+      // Its 'time' property will be dynamically updated by updateActiveLap.
+      const lapObj = { time: formatLapDisplayTime(0, true), raw: 0, total: 0 };
+      laps.unshift(lapObj);
+
+      const li = document.createElement("li");
+      li.innerHTML = `<span>Lap 1</span><span class="lap-time">${lapObj.time}</span>`;
+      lapList.prepend(li); // Keep initial lap at the top
+    }
+  } else { // STOP the stopwatch
+    if (psychicTimeout) {
+      clearTimeout(psychicTimeout);
+      psychicTimeout = null;
+      psychicTarget = null;
+      if (psychicIndicator) {
+        psychicIndicator.classList.remove("active");
       }
     }
 
-    function resetTimer() {
-      // Reset the timer whenever there's drawing activity
-      clearTimeout(timerId);
-      startTimer();
+    running = false;
+    elapsed += performance.now() - startTime;
+    cancelAnimationFrame(animationFrame);
+    startBtn.textContent = "Start";
+    startBtn.classList.remove("stop-btn");
+    startBtn.classList.add("start-btn");
+    lapBtn.textContent = "Reset";
+
+    // When stopped, if mindReadingMode is active, generate and fix the millisecond.
+    if (mindReadingMode) {
+        // Ensure this chosen fixed value is not the same as the previous one displayed on main stopwatch
+        const currentDisplayedMillis = stopwatchEl.textContent.slice(-2);
+        fixedStopMillis = getUniqueSumOfNineMillis(currentDisplayedMillis);
+        lastMainStopwatchMillis = fixedStopMillis; // Store the chosen value
+    } else {
+        fixedStopMillis = null; // Ensure it's null if MRM is off
+        lastMainStopwatchMillis = null; // Clear this
     }
-// Register the service worker
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/service-worker.js')
-          .then(registration => {
-            console.log('Service Worker registered:', registration);
-          })
-          .catch(error => {
-            console.error('Service Worker registration failed:', error);
-          });
-      });
+    stopwatchEl.textContent = formatMainDisplayTime(elapsed); // formatMainDisplayTime now uses fixedStopMillis if MRM active
+    lastDisplay = stopwatchEl.textContent; // Update lastDisplay with the new formatted string
+
+    // When stopped, Lap 1 should show its final REAL time.
+    // This needs to be explicit, as the main display now has mind-read if active.
+    if (laps.length > 0) {
+        laps[0].raw = elapsed - (laps[1] ? laps[1].total : 0); // Update Lap 1's raw duration based on actual stop time
+        laps[0].time = formatMainDisplayTime(laps[0].raw); // fixedStopMillis is only for MAIN display.
+        const lap1El = lapList.firstElementChild?.querySelector(".lap-time");
+        if (lap1El) {
+            lap1El.textContent = laps[0].time;
+        }
+    }
+  }
+  updateLapColors(); // Update colors after start/stop
+};
+
+lapBtn.onclick = () => {
+  if (!running) { // RESET the stopwatch
+    console.log("Resetting stopwatch...");
+    rememberedElapsed = elapsed;
+    rememberedMindReadingMode = mindReadingMode; // Remember MRM state
+    // When remembering, store the *current displayed string* of each lap
+    rememberedLaps = laps.map(l => ({
+      ...l,
+      // For remembered laps, store the 'time' property which already holds the fixed string for completed laps
+      // The active lap (laps[0]) will have its final real value stored here.
+      time: l.time
+    }));
+    rememberedRunning = running;
+
+    stopwatchEl.textContent = "00:00.00";
+    lapList.innerHTML = "";
+    laps = [];
+    elapsed = 0;
+    lapBtn.disabled = true;
+    lapBtn.textContent = "Lap";
+    lastDisplay = "";
+    fixedStopMillis = null; // Clear fixedStopMillis on reset
+    lastMainStopwatchMillis = null; // Reset
+    lastActiveLapMillis = null; // Reset
+
+    if (psychicTarget) {
+      psychicTarget = null;
+      if (psychicIndicator) {
+        clearTimeout(psychicTimeout); // Clear any pending psychic timeout
+        psychicTimeout = null;
+        psychicIndicator.classList.remove("active");
+      }
+    }
+    // Mind reading mode state persists on reset, only indicator is cleared.
+    // If you want mind reading mode to reset on stopwatch reset, uncomment:
+    /*
+    if (mindReadingMode) {
+        mindReadingMode = false;
+        if (mindReadingIndicator) {
+            mindReadingIndicator.classList.remove("active");
+        }
+    }
+    */
+
+  } else { // RECORD a LAP
+    const now = performance.now();
+    const totalTime = elapsed + (now - startTime);
+    const lastTotal = laps[0] ? laps[0].total : 0; // If no previous laps, lastTotal is 0
+    const lapTime = totalTime - lastTotal;
+
+    const totalSecondsLap = Math.floor(lapTime / 1000);
+    const minutesLap = Math.floor(totalSecondsLap / 60).toString().padStart(2, "0");
+    const secondsLap = (totalSecondsLap % 60).toString().padStart(2, "0");
+
+    let displayMilliseconds;
+    if (mindReadingMode) {
+        // For a newly recorded lap, ensure its millisecond is unique from the *previous completed lap's* millisecond.
+        // laps[0] is the *current active* lap, laps[1] is the *last completed* lap.
+        const previousCompletedMillis = laps[0] && laps[0].time ? laps[0].time.slice(-2) : null;
+        displayMilliseconds = getUniqueSumOfNineMillis(previousCompletedMillis);
+    } else {
+        displayMilliseconds = Math.floor((lapTime % 1000) / 10).toString().padStart(2, "0");
     }
 
-  </script>
+    // Construct the formatted time string with the fixed milliseconds
+    const formattedLapTime = `${minutesLap}:${secondsLap}.${displayMilliseconds}`;
+
+    const lapObj = {
+      time: formattedLapTime, // Store the fixed formatted string for completed laps
+      raw: lapTime,           // Always store raw for calculations (fastest/slowest)
+      total: totalTime
+    };
+
+    laps.unshift(lapObj); // Add new lap to the beginning of the array. This is the new Lap 1.
+
+    console.log(`Lap ${laps.length} recorded. Current laps array length: ${laps.length}`); // Debugging log
+
+    rebuildLapListDisplay();
+    updateLapColors(); // Recalculate colors after rebuilding
+  }
+};
+
+// NEW: Function to completely rebuild the lap list DOM, ensuring correct numbering and display.
+function rebuildLapListDisplay() {
+    lapList.innerHTML = ""; // Clear existing DOM elements
+
+    // Loop through the 'laps' array to add items.
+    // The 'laps' array is ordered newest lap first (laps[0] is current, laps[1] is last completed, etc.)
+    // We want to display the newest lap at the top, so we iterate from index 0.
+    for (let i = 0; i < laps.length; i++) {
+        const lapData = laps[i];
+        // The display lap number should count from 1 up to total laps
+        // but needs to be presented correctly relative to the 'newest on top' order.
+        // If laps.length is 3:
+        // i=0 -> Lap 3 (current)
+        // i=1 -> Lap 2 (previous)
+        // i=2 -> Lap 1 (oldest)
+        const displayLapNum = laps.length - i;
+
+        const li = document.createElement("li");
+        let lapTimeContent;
+
+        if (i === 0) { // This is the active Lap 1 (laps[0])
+            // Its 'time' property is updated by `updateActiveLap` dynamically.
+            // When rebuilding, set its content using the dynamic formatter.
+            lapTimeContent = formatLapDisplayTime(lapData.raw, true); // Pass true for isLiveActiveLap
+        } else { // These are completed laps (i > 0)
+            // Use the pre-recorded, fixed 'time' string stored in lapData.time
+            lapTimeContent = lapData.time;
+        }
+
+        li.innerHTML = `<span>Lap ${displayLapNum}</span><span class="lap-time">${lapTimeContent}</span>`;
+        lapList.appendChild(li); // Append to add from newest (top) to oldest (bottom) visually due to CSS flex-direction
+    }
+}
+
+
+function showRememberedState() {
+  if (rememberedLaps.length === 0) return;
+
+  if (running) {
+    cancelAnimationFrame(animationFrame);
+  }
+
+  // Display remembered main stopwatch time.
+  // Temporarily set mindReadingMode to remembered state for display.
+  const tempMindReadingMode = mindReadingMode; // Save current MRM state
+  const tempFixedStopMillis = fixedStopMillis; // Save current fixedStopMillis
+  const tempLastMainStopwatchMillis = lastMainStopwatchMillis; // Save
+  const tempLastActiveLapMillis = lastActiveLapMillis; // Save
+
+  mindReadingMode = rememberedMindReadingMode; // Apply remembered MRM for this display
+  // When showing remembered state, fixedStopMillis needs to be the one that was fixed.
+  // This logic is slightly complex as rememberedFixedStopMillis isn't explicitly stored.
+  // For simplicity, we'll assume if it was stopped and MRM was on, we can reuse lastMainStopwatchMillis.
+  fixedStopMillis = (rememberedRunning === false && rememberedMindReadingMode === true && rememberedElapsed !== 0)
+      ? lastMainStopwatchMillis // If it was stopped in MRM, use the stored fixed value
+      : null;
+
+
+  stopwatchEl.textContent = formatMainDisplayTime(rememberedElapsed); // This will now apply MRM if rememberedMindReadingMode is true
+
+  // Restore previous states after setting content.
+  mindReadingMode = tempMindReadingMode;
+  fixedStopMillis = tempFixedStopMillis;
+  lastMainStopwatchMillis = tempLastMainStopwatchMillis;
+  lastActiveLapMillis = tempLastActiveLapMillis;
+
+  lapList.innerHTML = "";
+  // Display remembered laps. These already have their fixed 'time' strings.
+  // Loop to display them in the newest-on-top order.
+  for (let i = 0; i < rememberedLaps.length; i++) {
+    const lap = rememberedLaps[i];
+    const lapNum = rememberedLaps.length - i; // Correct numbering for display
+    const li = document.createElement("li");
+    li.innerHTML = `<span>Lap ${lapNum}</span><span class="lap-time">${lap.time}</span>`;
+    lapList.appendChild(li); // Append to create newest-on-top order
+  }
+
+  updateLapColors(); // Update colors for the remembered laps
+
+  // After a brief display, revert to the current stopwatch state
+  setTimeout(() => {
+    // If the stopwatch was running when remembered, restart it.
+    if (rememberedRunning) {
+      startTime = performance.now(); // Reset startTime to continue from 'elapsed'
+      animationFrame = requestAnimationFrame(updateDisplay);
+    } else {
+      // If it was stopped, just update the display to current elapsed time.
+      // Revert to current mind reading state for main display
+      stopwatchEl.textContent = formatMainDisplayTime(elapsed); // formatMainDisplayTime will use current fixedStopMillis/MRM
+    }
+    // Rebuild current laps display, ensuring active lap is correct and completed laps retain state
+    rebuildLapListDisplay();
+    updateLapColors(); // Recalculate colors for the current laps
+  }, 2000); // Display remembered state for 2 seconds
+}
+
+dotIndicators.addEventListener("click", showRememberedState);
+
+const tabs = document.querySelectorAll(".tab");
+tabs.forEach((tab) => {
+  tab.addEventListener("click", () => {
+    // Prevent interaction with tabs if psychic overlay is active, unless it's the tab to close it.
+    if (psychicOverlay.classList.contains("active") && tab.id !== "worldClockTab") {
+        return; // Do nothing if psychic overlay is open and user clicks another tab
+    }
+
+    // Always remove 'active' from World Clock and Alarms tabs
+    worldClockTab.classList.remove("active");
+    alarmsTab.classList.remove("active");
+    timerTab.classList.remove("active"); // Ensure Timer tab is also not active visually
+
+    // Ensure Stopwatch tab *always* has the 'active' class
+    stopwatchTab.classList.add("active");
+
+    // --- Specific Tab Functionality ---
+    if (tab.id === "worldClockTab") {
+      if (!running) { // Only allow opening psychic mode if stopwatch is not running
+        psychicOverlay.classList.add("active");
+        psychicInput.textContent = "--";
+        psychicInput.classList.add("active");
+      }
+      return; // Stop further processing for this tab click
+    }
+    if (tab.id === "alarmsTab") {
+        // Alarms tab click already handles mind reading toggle
+        return; // Stop further processing for this tab click
+    }
+    if (tab.id === "timerTab") {
+        console.log("Timer button clicked! Attempting page reload."); // Diagnostic log
+        location.reload(); // This will refresh the entire page
+        return; // Stop all further JavaScript execution as the page is reloading
+    }
+
+    // No default tab activation logic needed here for other tabs,
+    // as only stopwatch should remain highlighted.
+  });
+});
+
+// Ensure stopwatch tab is active on initial page load
+document.addEventListener('DOMContentLoaded', () => {
+    stopwatchTab.classList.add("active");
+});
+</script>
 </body>
 </html>
