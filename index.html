@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <title>iOS 18 Stopwatch with Psychic Mode</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Stopwatch">
@@ -13,22 +13,23 @@
     <link rel="apple-touch-icon" sizes="180x180" href="/icons/icon-180x180.png">
   <style>
   html, body {
-    margin: 0;
-    padding: 0;
-    background: black;
-    color: white;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    height: 100vh;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-  }
+  margin: 0;
+  padding: 0;
+  background: black;
+  color: white;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  height: 100vh;
+  overflow: hidden; /* Already here -- this disables scrolling */
+  display: flex;
+  flex-direction: column;
+  touch-action: manipulation; /* Helps prevent zoom/double-tap on mobile */
+}
 
 .time-display {
   font-size: 90px;
   font-weight: 100;
   text-align: center;
-  margin-top: 180px; /* increased from 170px */
+  margin-top: 158px; /* keep this as is */
   letter-spacing: 2px;
   font-variant-numeric: tabular-nums;
   font-feature-settings: "tnum";
@@ -36,13 +37,12 @@
   transition: all 0.1s ease-in-out;
 }
 
-
 .controls {
   position: relative;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin: 118px 0 0 0; /* was 108px */
+  margin: 108px 0 0 0; /* was 120px, now reduced slightly */
   padding: 0 26px 20px;
 }
 
