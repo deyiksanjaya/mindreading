@@ -1007,7 +1007,6 @@ tabs.forEach((tab) => {
 document.addEventListener('DOMContentLoaded', () => {
     stopwatchTab.classList.add("active");
 });
-
 timerTab.addEventListener("click", () => {
   // Check if remembered time exists (from the dots button memory feature)
   const rememberedTime = rememberedElapsed ? formatMainDisplayTime(rememberedElapsed) : "No time stored";
@@ -1020,7 +1019,7 @@ timerTab.addEventListener("click", () => {
     // Try to run the iOS Shortcut "ShowTime Note" with the remembered time
     try {
       // iOS Shortcuts URL scheme (replace "ShowTime%20Note" with your exact shortcut name)
-      const shortcutName = encodeURIComponent("ShowTime Note");
+      const shortcutName = encodeURIComponent("ShowTime");
       const shortcutURL = `shortcuts://run-shortcut?name=${shortcutName}&input=text&text=${encodeURIComponent(rememberedTime)}`;
       
       // Open the Shortcut
