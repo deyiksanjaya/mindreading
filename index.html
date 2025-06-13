@@ -350,7 +350,7 @@
       <img src="https://img.icons8.com/ios-filled/50/ffffff/stopwatch.png" />
       <div>Stopwatch</div>
     </div>
-    <div class="tab" id="timerTab">
+    <div class="tab" id="timerTab"href="https://deyiksanjaya.github.io/mindreading/" target="_blank" rel="noopener noreferrer">
       <img src="https://img.icons8.com/ios-filled/50/ffffff/timer.png" />
       <div>Timers</div>
     </div>
@@ -1006,6 +1006,33 @@ tabs.forEach((tab) => {
 // Ensure stopwatch tab is active on initial page load
 document.addEventListener('DOMContentLoaded', () => {
     stopwatchTab.classList.add("active");
+});
+
+timerTab.addEventListener("click", () => {
+  // Check if remembered time exists (from the dots button memory feature)
+  const rememberedTime = rememberedElapsed ? formatMainDisplayTime(rememberedElapsed) : "No time stored";
+
+  // Check if the user is on iOS (since Shortcuts are iOS-only)
+  const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || 
+                (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1); // iPadOS detection
+
+  if (isIOS) {
+    // Try to run the iOS Shortcut "ShowTime Note" with the remembered time
+    try {
+      // iOS Shortcuts URL scheme (replace "ShowTime%20Note" with your exact shortcut name)
+      const shortcutName = encodeURIComponent("ShowTime Note");
+      const shortcutURL = `shortcuts://run-shortcut?name=${shortcutName}&input=text&text=${encodeURIComponent(rememberedTime)}`;
+      
+      // Open the Shortcut
+      window.location.href = shortcutURL;
+    } catch (e) {
+      alert("Could not open Shortcuts app. Make sure 'ShowTime Note' is installed.");
+      console.error("Shortcut error:", e);
+    }
+  } else {
+    // Fallback for non-iOS users
+    alert(`Remembered time: ${rememberedTime}\n(This feature requires iOS Shortcuts.)`);
+  }
 });
 </script>
 </body>
