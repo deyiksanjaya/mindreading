@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no"/>
+  <meta name="apple-mobile-web-app-capable" content="yes"/>
+  <meta name="mobile-web-app-capable" content="yes"/>
+  <meta name="theme-color" content="#102040"/>
+  <title>Treasure Hunt</title>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet"/>
+  <style>
+    html, body {
+  margin: 0; padding: 0;
+  height: 100vh; width: 100vw;
+  overflow: hidden;
+  font-family: 'Press Start 2P', monospace;
+  background: #102040;
+}
+
+body {
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: space-between;
+  position: relative;
+}
+
+body::before {
+  content: '';
+  background: url('https://media3.giphy.com/media/v1.Y2lkPTZjMDliOTUycDV5dW51MXNoOHF3eGVjM2E1ZHBna2pxcnlubjZveDhwN3RrbW9iayZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/IeSXccYMz3K4U/giphy.gif') center/cover no-repeat;
+  position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+  opacity: 0.2; z-index: 0;
+}
+
+h1 {
+  z-index: 1;
+  color: #88d0f0;
+  margin: calc(env(safe-area-inset-top, 20px) + 0.8rem) auto 0.2rem;
+  text-align: center;
+  text-shadow: 0 0 2px #88d0f0, 0 0 6px #2cb3e8, 0 0 12px #2cb3e8;
+  animation: arcadeGlow 1.8s infinite alternate ease-in-out;
+}
+
+@keyframes arcadeGlow {
+  0% {
+    text-shadow: 0 0 1px #88d0f0, 0 0 3px #2cb3e8;
+    transform: scale(1);
+  }
+  50% {
+    text-shadow: 0 0 4px #88d0f0, 0 0 10px #2cb3e8, 0 0 20px #2cb3e8;
+    transform: scale(1.02);
+  }
+  100% {
+    text-shadow: 0 0 2px #88d0f0, 0 0 5px #2cb3e8;
+    transform: scale(1);
+  }
+}
+
+p {
+  z-index: 1;
+  color: #fffacd;
+  font-size: 0.6rem;
+  margin: 0.2rem auto 0.8rem;
+  text-align: center;
+}
+
+#grid {
+  z-index: 1;
+  display: grid;
+  grid-template: repeat(5, 1fr) / repeat(5, 1fr);
+  gap: 6px;
+  width: 90vmin; height: 90vmin;
+  margin-bottom: 1.2rem;
+}
+
+.cell {
+  background: #1a2a4f;
+  border: 2px solid #3e78a3;
+  border-radius: 4px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.5rem; cursor: pointer; user-select: none;
+  transition: background 0.2s, color 0.3s;
+}
+
+.cell.revealed {
+  background: #102040;
+  border-color: #3e78a3;
+  cursor: default;
+}
+
+.cell.white-button {
+  background: #fffacd !important;
+  color: #000 !important;
+  border-color: #999 !important;
+}
+
+.confetti {
+  position: fixed;
+  pointer-events: none;
+  font-size: 1rem;
+  opacity: 1;
+  animation: float 2s ease-out forwards;
+  z-index: 2;
+}
+
+@keyframes float {
+  to {
+    transform: translateY(-200px) rotate(360deg);
+    opacity: 0;
+  }
+}
+
+#controls {
+  z-index: 1;
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  width: 90%;
+  max-width: 500px;
+  justify-content: space-between;
+}
+
+#hint, #reset {
+  padding: 0.8rem 1.5rem;
+  font-size: 0.8rem;
+  font-family: inherit;
+  border: none;
+  border-radius: 4px;
+  color: #fff;
+  box-shadow: 2px 2px #0006;
+  flex: 1;
+  cursor: pointer;
+}
+
+#hint {
+  background: #2cb3e8;
+}
+
+#reset {
+  background: #ff6080;
+}
+  </style>
+</head>
+<body>
+  <h1>Treasure Hunt</h1>
+  <p>Find the 💎 -- or use the hint!</p>
+  <div id="grid"></div>
+  <div id="controls">
+    <button id="hint">HINT</button>
+    <button id="reset">RESET</button>
+  </div>
+
+  <script>
+    const grid = document.getElementById('grid');
+    const hintBtn = document.getElementById('hint');
+    const resetBtn = document.getElementById('reset');
+
+    let treasureIndex, magicTreasureIndex;
+    let clickCount = 0, magicMode = false;
+    let clickTrigger = null, hintState = 0, revealedHint = false;
+    let inputBuffer = '';
+
+    function initGame(showGrid = true) {
+      grid.innerHTML = '';
+      clickCount = 0;
+      revealedHint = false;
+
+      treasureIndex = Math.floor(Math.random() * 25);
+
+      for (let i = 0; i < 25; i++) {
+        const c = document.createElement('div');
+        c.className = 'cell';
+        c.dataset.idx = i;
+        c.addEventListener('click', onCellClick);
+        grid.appendChild(c);
+      }
+
+      if (!showGrid) enterInputMode();
+    }
+
+    function onCellClick(e) {
+      const c = e.currentTarget;
+      if (c.classList.contains('revealed')) return;
+
+      if (hintState === 1 && revealedHint) {
+        resetAll();
+        return;
+      }
+
+      clickCount++;
+      c.classList.add('revealed');
+
+      const isMagicHit = magicMode && clickTrigger && clickCount === clickTrigger;
+      const isNormalHit = !magicMode && +c.dataset.idx === treasureIndex;
+
+      if (isMagicHit || isNormalHit) {
+        revealTreasure(c);
+      } else if (!magicMode || clickTrigger) {
+        c.textContent = 'X';
+      }
+    }
+
+    function revealTreasure(c) {
+      c.textContent = '💎';
+      launchConfetti();
+    }
+
+    function handleHint() {
+      hintState++;
+      if (hintState === 1) {
+        const cells = grid.children;
+        const index = magicMode && magicTreasureIndex != null ? magicTreasureIndex : treasureIndex;
+        cells[index].textContent = '💎';
+        revealedHint = true;
+      } else if (hintState === 2) {
+        magicMode = true;
+        inputBuffer = '';
+        clickTrigger = null;
+        initGame(false);
+      }
+    }
+
+    function enterInputMode() {
+      const layout = [
+        { pos: 6, val: '1' }, { pos: 7, val: '2' }, { pos: 8, val: '3' },
+        { pos: 11, val: '4' }, { pos: 12, val: '5' }, { pos: 13, val: '6' },
+        { pos: 16, val: '7' }, { pos: 17, val: '8' }, { pos: 18, val: '9' },
+        { pos: 22, val: '0' }
+      ];
+
+      layout.forEach(({ pos, val }) => {
+        const cell = grid.children[pos];
+        cell.textContent = val;
+        cell.classList.add('revealed', 'white-button');
+        cell.onclick = () => {
+          inputBuffer += val;
+          updateBufferDisplay();
+          if (inputBuffer.length === 2) {
+            clickTrigger = parseInt(inputBuffer, 10);
+            magicTreasureIndex = Math.floor(Math.random() * 25);
+            hideInputMode();
+          }
+        };
+      });
+    }
+
+    function updateBufferDisplay() {
+      const p = document.querySelector('p');
+      p.textContent = 'Input: ' + inputBuffer;
+    }
+
+    function hideInputMode() {
+      document.querySelector('p').textContent = 'Find the 💎';
+      initGame();
+    }
+
+    function launchConfetti() {
+      const emojis = ['💥','✨','🕹️','⭐','🎊'];
+      for (let i = 0; i < 50; i++) {
+        const conf = document.createElement('div');
+        conf.className = 'confetti';
+        conf.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+        conf.style.left = (50 + (Math.random() - 0.5) * 80) + 'vw';
+        conf.style.top = (50 + (Math.random() - 0.5) * 80) + 'vh';
+        conf.style.fontSize = (12 + Math.random() * 24) + 'px';
+        document.body.appendChild(conf);
+        conf.addEventListener('animationend', () => conf.remove());
+      }
+    }
+
+    function resetAll() {
+      hintState = 0;
+      magicMode = false;
+      clickTrigger = null;
+      magicTreasureIndex = null;
+      initGame();
+    }
+
+    hintBtn.onclick = handleHint;
+    resetBtn.onclick = resetAll;
+
+    initGame();
+  </script>
+</body>
+</html>
